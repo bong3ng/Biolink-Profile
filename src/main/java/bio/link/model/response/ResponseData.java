@@ -1,0 +1,18 @@
+package bio.link.model.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+public class ResponseData {
+    private Boolean success;
+    private String message;
+    private List<?> data;
+}
