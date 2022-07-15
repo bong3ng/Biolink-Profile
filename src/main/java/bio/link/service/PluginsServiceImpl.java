@@ -61,6 +61,8 @@ public class PluginsServiceImpl implements PluginsService{
                     .resolve(imagePath).resolve(image.getOriginalFilename());
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
+            } catch (Exception e) {
+            	System.out.println(e.getMessage());
             }
             plugins.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         } else {

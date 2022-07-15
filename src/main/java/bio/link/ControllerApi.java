@@ -1,4 +1,4 @@
-package bio.link.controller;
+package bio.link;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,35 +8,31 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bio.link.model.entity.UserEntity;
-import bio.link.security.jwt.JwtTokenProvider;
-import bio.link.security.payload.LoginRequest;
-import bio.link.security.payload.LoginResponse;
-import bio.link.security.payload.Status;
-import bio.link.security.user.CustomUserDetails;
-import bio.link.security.user.CustomUserService;
-
-
-
-
+import bio.link.jwt.JwtTokenProvider;
+import bio.link.payload.LoginRequest;
+import bio.link.payload.LoginResponse;
+import bio.link.payload.RandomStuff;
+import bio.link.user.CustomUserDetails;
+import bio.link.user.UserEntity;
+import bio.link.user.UserService;
 
 @RestController
 @RequestMapping("/api")
-public class LoginController {
+public class ControllerApi {
 
     @Autowired
     AuthenticationManager authenticationManager;
     
-
+//    @Autowired
+//    UserRepository userRepo;
+//    
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
     @Autowired
-    CustomUserService userService;
-    
-    @Autowired
-    JwtTokenProvider jwtProvider;
+    UserService userService;
 
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -61,19 +57,15 @@ public class LoginController {
         return new LoginResponse(jwt);
     }
 
-    
-    @PostMapping("/login/signup")
-    public Status signUp(@RequestBody UserEntity user) {
-    	return userService.signUpUser(user);
+    // Api /api/random yêu cầu phải xác thực mới có thể request
+    @GetMapping("/random")
+    public RandomStuff randomStuff() {
+        return new RandomStuff("JWT Hợp lệ mới có thể thấy được message này");
     }
     
-    @GetMapping("/test")
-    public Status testzzz(@RequestHeader("Authorization") String header) {
-//    	String[] new_jwt = jwt.split("\\s");
-//    	jwt = new_jwt[1];
-//    	System.out.println(jwtProvider.getUserIdFromJWT(jwt));
-    	System.out.println(jwtProvider.getUserIdFromHeader(header));
-    	return new Status(1 , header);
+    @PostMapping("/login/signup")
+    public RandomStuff signUp(@RequestBody UserEntity user) {
+    	return userService.signUpUser(user);
     }
 
 }

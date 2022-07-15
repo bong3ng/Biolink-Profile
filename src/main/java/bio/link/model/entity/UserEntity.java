@@ -36,5 +36,9 @@ public class UserEntity {
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
 
-    private Long profileId;
+
+    
+    
+    
+    
 }
