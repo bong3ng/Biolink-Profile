@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +24,19 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	@Autowired
+	private JavaMailSender emailSender;
+	
+	public void sendSimpleMessage(
+		      String to, String subject, String text) {
+		        SimpleMailMessage message = new SimpleMailMessage(); 
+		        message.setFrom("vythanhlam100@gmail.com");
+		        message.setTo(to); 
+		        message.setSubject(subject); 
+		        message.setText(text);
+		        emailSender.send(message);
+		    }
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -55,6 +70,9 @@ public class CustomUserService implements UserDetailsService {
     		userRepo.save(user);
     		message.setMessage("Tạo tài khoản thành công.");
     		message.setSuccess(1);
+    		
+    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
+
     	}else if(userFindByUName != null){
     		message.setMessage("Tên username đã tồn tại.");
     		
