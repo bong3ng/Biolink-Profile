@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bio.link.model.entity.UserEntity;
@@ -17,6 +18,7 @@ import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
 import bio.link.security.user.CustomUserDetails;
 import bio.link.security.user.CustomUserService;
+import net.bytebuddy.utility.RandomString;
 
 
 
@@ -61,5 +63,20 @@ public class LoginController {
     public Status signUp(@RequestBody UserEntity user) {
     	return userService.signUpUser(user);
     }
-
+    
+    @PostMapping("/login/forgot")
+    public Status forgotPass(@RequestParam("email") String email) {
+    
+        String token = RandomString.make(30);
+        userService.updateResetPasswordToken(token, email);
+        userService.sendSimpleMessage(email, "Thong bao cap nhat lai mat khau", token);
+        return new Status(1,"ok");
+    }
+    
+    @PostMapping("/login/token")
+    public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
+    	UserEntity userExist = userService.getByResetPasswordToken(token);
+    	userService.updatePassword(userExist, password);
+    	return new Status(1,"ok");
+    }
 }

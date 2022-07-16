@@ -74,7 +74,7 @@ public class PluginsServiceImpl implements PluginsService{
         plugins.setIsHeader(is_header);
         plugins.setIsPlugin(is_plugins);
         plugins.setIsHide(is_hide);
-        plugins.setProfileId(profile_id);
+        
         return pluginsRepository.save(plugins);
     }
     @Override

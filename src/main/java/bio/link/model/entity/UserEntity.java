@@ -35,6 +35,9 @@ public class UserEntity {
     private LocalDate createdAt;
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
-
-    private Long profileId;
+    @Column(name = "userId")
+    private Long userId;
+    
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 }

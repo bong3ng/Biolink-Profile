@@ -1,9 +1,17 @@
 package bio.link.model.entity;
 
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -19,9 +27,13 @@ public class PluginsEntity {
     private String title;
     private String url;
     private String image;
+    @Column(name="is_header")
     private Boolean isHeader;
+    @Column(name="is_plugin")
     private Boolean isPlugin;
+    @Column(name="is_hide")
     private Boolean isHide;
-    private Long profileId;
+    @Column(name="user_id")
+    private Long userId;
 
 }
