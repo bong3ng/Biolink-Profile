@@ -36,9 +36,13 @@ public class UserEntity {
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
 
+<<<<<<< HEAD
 
     
     
     
     
+=======
+    private Long profileId;
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 }

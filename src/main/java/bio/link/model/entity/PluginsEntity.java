@@ -1,5 +1,6 @@
 package bio.link.model.entity;
 
+<<<<<<< HEAD
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+=======
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 
 @Entity
 @Getter
@@ -27,6 +34,7 @@ public class PluginsEntity {
     private String title;
     private String url;
     private String image;
+<<<<<<< HEAD
     @Column(name = "is_header")
     private Boolean isHeader;
     @Column(name = "is_plugin")
@@ -35,5 +43,11 @@ public class PluginsEntity {
     private Boolean isHide;
     @Column(name = "user_id")
     private Long userId;
+=======
+    private Boolean isHeader;
+    private Boolean isPlugin;
+    private Boolean isHide;
+    private Long profileId;
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 
 }

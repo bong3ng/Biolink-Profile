@@ -31,6 +31,12 @@ import bio.link.repository.PluginsRepository;
 @Service
 public class PluginsServiceImpl implements PluginsService{
 
+<<<<<<< HEAD
+=======
+
+//
+
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
     @Autowired
     private PluginsRepository pluginsRepository;
 
@@ -62,7 +68,11 @@ public class PluginsServiceImpl implements PluginsService{
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
             } catch (Exception e) {
+<<<<<<< HEAD
             	System.out.println(e.getMessage());
+=======
+                System.out.println(e.getMessage());
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
             }
             plugins.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         } else {

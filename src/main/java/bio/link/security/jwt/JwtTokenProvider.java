@@ -17,7 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtTokenProvider {
 	private final String JWT_SECRET = "ghtk";
+<<<<<<< HEAD
 	 
+=======
+	
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 	private final Long JWT_EXPIRATION = 604800000L;
 	
 	public String generateToken(CustomUserDetails userDetails) {
@@ -55,6 +59,7 @@ public class JwtTokenProvider {
         }
         return false;
     }
+<<<<<<< HEAD
     
     public Long getUserIdFromHeader(String jwt) {
     	String[] new_jwt = jwt.split("\\s");
@@ -63,4 +68,6 @@ public class JwtTokenProvider {
     }
     
     
+=======
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 }

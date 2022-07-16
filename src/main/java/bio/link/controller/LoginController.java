@@ -5,10 +5,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+=======
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +39,12 @@ public class LoginController {
 
     @Autowired
     CustomUserService userService;
+<<<<<<< HEAD
     
     @Autowired
     JwtTokenProvider jwtProvider;
+=======
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -66,6 +74,7 @@ public class LoginController {
     public Status signUp(@RequestBody UserEntity user) {
     	return userService.signUpUser(user);
     }
+<<<<<<< HEAD
     
     @GetMapping("/test")
     public Status testzzz(@RequestHeader("Authorization") String header) {
@@ -75,5 +84,7 @@ public class LoginController {
     	System.out.println(jwtProvider.getUserIdFromHeader(header));
     	return new Status(1 , header);
     }
+=======
+>>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 
 }
