@@ -1,9 +1,7 @@
 package bio.link.model.entity;
 
-<<<<<<< HEAD
+
 import javax.persistence.Column;
-=======
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,10 +29,7 @@ public class ProfileEntity {
 
     @Lob
     private String image;
-<<<<<<< HEAD
     @Column(name = "user_id")
-=======
 
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
     private Long userId;
 }

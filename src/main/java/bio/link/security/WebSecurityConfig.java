@@ -2,10 +2,7 @@ package bio.link.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-<<<<<<< HEAD
 import org.springframework.context.annotation.Configuration;
-=======
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,11 +17,9 @@ import bio.link.security.jwt.JwtAuthenticationFilter;
 import bio.link.security.user.CustomUserService;
 
 
-<<<<<<< HEAD
-@Configuration
-=======
 
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
+@Configuration
+
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired

@@ -49,15 +49,7 @@ public class PluginsController {
             System.out.println(1);
             return pluginsService.savePlugins(title , url , image , is_header , is_plugin , is_hide, profile_id);
         } else {
-<<<<<<< HEAD
-            System.out.println(2);
-            System.out.println(title);
-            System.out.println(is_header);
-            System.out.println(is_plugin);
-            System.out.println(is_hide);
 
-=======
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
             return pluginsService.savePlugins(title , "" , image , is_header , is_plugin , is_hide, profile_id);
         }
 

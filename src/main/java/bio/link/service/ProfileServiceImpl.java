@@ -143,14 +143,12 @@ public class ProfileServiceImpl implements ProfileService{
 
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
-<<<<<<< HEAD
+
             }catch (Exception e) {
             	System.out.println(e.getMessage());
-=======
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
+
             }
+
             profile.setImage(
                     imagePath.resolve(image.getOriginalFilename())
                             .toString());

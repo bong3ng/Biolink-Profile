@@ -31,18 +31,13 @@ import bio.link.repository.PluginsRepository;
 @Service
 public class PluginsServiceImpl implements PluginsService{
 
-<<<<<<< HEAD
-=======
 
-//
-
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
     @Autowired
     private PluginsRepository pluginsRepository;
 
 
-    public List<PluginsEntity> getPluginsByProfileId(Long profileId) {
-        return pluginsRepository.getPluginsByProfileId(profileId);
+    public List<PluginsEntity> getPluginsByProfileId(Long userId) {
+        return pluginsRepository.getPluginsByProfileId(userId);
     }
 
     public PluginsEntity getPluginsByProfileIdAndTitle(String pluginsTitle ,Long profileId ) {
@@ -68,11 +63,8 @@ public class PluginsServiceImpl implements PluginsService{
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
             } catch (Exception e) {
-<<<<<<< HEAD
             	System.out.println(e.getMessage());
-=======
-                System.out.println(e.getMessage());
->>>>>>> 53508aaae065b12b148fc1b6a7cd23d605c1c8a3
+
             }
             plugins.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         } else {
@@ -81,7 +73,6 @@ public class PluginsServiceImpl implements PluginsService{
         plugins.setIsHeader(is_header);
         plugins.setIsPlugin(is_plugins);
         plugins.setIsHide(is_hide);
-        plugins.setProfileId(profile_id);
         return pluginsRepository.save(plugins);
     }
     @Override
