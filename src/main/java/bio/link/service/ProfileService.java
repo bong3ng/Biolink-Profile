@@ -14,7 +14,20 @@ public interface ProfileService {
 
 	ResponseData getUserProfileByUsername(String username);
 
-	ProfileEntity save(String name, String bio, MultipartFile image) throws IOException;
+	ProfileEntity create(String name,
+						 String bio,
+						 MultipartFile image
+	) throws IOException;
+
+	ProfileEntity update(String name,
+						 String bio,
+						 MultipartFile image
+	) throws IOException;
 
 	List<ProfileEntity> getAll();
+
+	ProfileEntity updateDesign(Long design_id);
+	ProfileEntity updateLogo(Boolean show_logo);
+	ProfileEntity updateNSFW(Boolean show_nsfw);
+
 }

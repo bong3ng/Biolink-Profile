@@ -41,8 +41,8 @@ public class NameController {
             @RequestParam String name,
             @RequestParam String bio,
             @RequestParam MultipartFile image
-            ) throws IOException {
-        return profileService.save(name, bio, image);
+    ) throws IOException {
+        return profileService.create(name, bio, image);
     }
 
     @PutMapping("")
@@ -51,6 +51,27 @@ public class NameController {
             @RequestParam String bio,
             @RequestParam MultipartFile image
     ) throws IOException {
-        return profileService.save(name, bio, image);
+        return profileService.update(name, bio, image);
+    }
+
+    @PutMapping("/active")
+    public ProfileEntity updateDesign(
+            @RequestParam Long design_id
+    ) {
+        return profileService.updateDesign(design_id);
+    }
+
+    @PutMapping("/show-logo")
+    public ProfileEntity updateLogo(
+            @RequestParam Boolean show_logo
+    ) {
+        return profileService.updateLogo(show_logo);
+    }
+
+    @PutMapping("/show-nsfw")
+    public ProfileEntity updateNSFW(
+            @RequestParam Boolean show_nsfw
+    ) {
+        return profileService.updateNSFW(show_nsfw);
     }
 }
