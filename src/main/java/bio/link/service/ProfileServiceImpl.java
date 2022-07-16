@@ -143,9 +143,12 @@ public class ProfileServiceImpl implements ProfileService{
 
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+
+            }catch (Exception e) {
+            	System.out.println(e.getMessage());
+
             }
+
             profile.setImage(
                     imagePath.resolve(image.getOriginalFilename())
                             .toString());

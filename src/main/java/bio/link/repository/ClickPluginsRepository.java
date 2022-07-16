@@ -13,6 +13,8 @@ import bio.link.model.entity.ClickPluginsEntity;
 @Repository
 public interface ClickPluginsRepository extends JpaRepository<ClickPluginsEntity, Long> {
 
+
     @Query(value = "SELECT * FROM click_plugins WHERE date = :date AND plugins_id = :pluginsId LIMIT 1", nativeQuery = true)
+
     ClickPluginsEntity getClickCountByDate(@Param("date") LocalDate date , @Param("pluginsId") Long pluginsId );
 }

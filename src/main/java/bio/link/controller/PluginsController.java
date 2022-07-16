@@ -49,6 +49,7 @@ public class PluginsController {
             System.out.println(1);
             return pluginsService.savePlugins(title , url , image , is_header , is_plugin , is_hide, profile_id);
         } else {
+
             return pluginsService.savePlugins(title , "" , image , is_header , is_plugin , is_hide, profile_id);
         }
 

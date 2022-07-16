@@ -24,6 +24,7 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 	
 	@Autowired
 	private JavaMailSender emailSender;
@@ -37,6 +38,7 @@ public class CustomUserService implements UserDetailsService {
 		        message.setText(text);
 		        emailSender.send(message);
 		    }
+
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -70,8 +72,10 @@ public class CustomUserService implements UserDetailsService {
     		userRepo.save(user);
     		message.setMessage("Tạo tài khoản thành công.");
     		message.setSuccess(1);
+
     		
     		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
+
 
     	}else if(userFindByUName != null){
     		message.setMessage("Tên username đã tồn tại.");

@@ -1,10 +1,10 @@
-package bio.link.security.jwt;
+package bio.link.jwt;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import bio.link.security.user.CustomUserDetails;
+import bio.link.user.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtTokenProvider {
 	private final String JWT_SECRET = "ghtk";
-
+	
 	private final Long JWT_EXPIRATION = 604800000L;
 	
 	public String generateToken(CustomUserDetails userDetails) {
@@ -55,14 +55,4 @@ public class JwtTokenProvider {
         }
         return false;
     }
-
-    
-    public Long getUserIdFromHeader(String jwt) {
-    	String[] new_jwt = jwt.split("\\s");
-    	jwt = new_jwt[1];
-    	return this.getUserIdFromJWT(jwt);
-    }
-    
-    
-
 }

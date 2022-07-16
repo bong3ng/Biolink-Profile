@@ -35,6 +35,11 @@ public class LoginController {
     @Autowired
     CustomUserService userService;
 
+    
+    @Autowired
+    JwtTokenProvider jwtProvider;
+
+
     @Autowired
     private JwtTokenProvider tokenProvider;
 

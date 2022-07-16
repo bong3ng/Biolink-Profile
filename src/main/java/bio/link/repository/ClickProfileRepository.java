@@ -12,7 +12,10 @@ import bio.link.model.entity.ClickProfileEntity;
 @Repository
 public interface ClickProfileRepository extends JpaRepository<ClickProfileEntity , Long> {
 
+
     @Query(value = "SELECT * FROM click_profile WHERE date = :date AND profile_id = :profileId LIMIT 1", nativeQuery = true)
+
     ClickProfileEntity getClickCountByDate(@Param("date") LocalDate date , @Param("profileId") Long profileId);
+
 
 }

@@ -1,5 +1,6 @@
 package bio.link.model.entity;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,13 +28,16 @@ public class PluginsEntity {
     private String title;
     private String url;
     private String image;
-    @Column(name="is_header")
+
+    @Column(name = "is_header")
     private Boolean isHeader;
-    @Column(name="is_plugin")
+    @Column(name = "is_plugin")
     private Boolean isPlugin;
-    @Column(name="is_hide")
+    @Column(name = "is_hide")
     private Boolean isHide;
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long userId;
+    
+
 
 }
