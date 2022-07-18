@@ -71,8 +71,7 @@ public class LoginController {
     
     @PostMapping("/login/signup")
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
-    	userService.register(user, "http://localhost:8080/");
-    	return new Status(1,"ok");
+    	return userService.signUpUser(user);
     }
     
     @GetMapping("/test")

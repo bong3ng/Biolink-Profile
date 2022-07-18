@@ -68,26 +68,33 @@ public class CustomUserService implements UserDetailsService {
 		UserEntity userFindByUName = userRepo.findByUsername(user.getUsername());
 		UserEntity userFindByEmail = userRepo.findByEmail(user.getEmail());
 		
-		
-    	if (userFindByUName == null && userFindByEmail == null) {
-    		LocalDate nowTime = LocalDate.now();
+		if(userFindByUName != null){
+    		message.setMessage("Tên username đã tồn tại.");
+		}else if(userFindByEmail != null) {
+			message.setMessage("Email đã tồn tại.");
+		}else {
+			LocalDate nowTime = LocalDate.now();
     		user.setCreatedAt(nowTime);
     		user.setPassword(passwordEncoder.encode(user.getPassword()));
     		user.setRole("ROLE_USER");
+    		user.setEnabled(true);
     		userRepo.save(user);
     		message.setMessage("Tạo tài khoản thành công.");
     		message.setSuccess(1);
 
     		
-    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
-
-
-    	}else if(userFindByUName != null){
-    		message.setMessage("Tên username đã tồn tại.");
-    		
-    	}else {
-    		message.setMessage("Email đã tồn tại.");
-    	}
+//    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
+    		try {
+				sendVerificationEmail(user, "http://localhost:8080/");
+			} catch (UnsupportedEncodingException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} catch (MessagingException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
 		return message;
 	}
 	
@@ -109,13 +116,13 @@ public class CustomUserService implements UserDetailsService {
 	        throws MessagingException, UnsupportedEncodingException {
 	    String toAddress = user.getEmail();
 	    String fromAddress = "vythanhlam100@gmail.com";
-	    String senderName = "BioLink Profile";
-	    String subject = "Please verify your registration";
-	    String content = "Dear [[name]],<br>"
-	            + "Please click the link below to verify your registration:<br>"
+	    String senderName = "GHTK Profile";
+	    String subject = "Xác thực đăng kí tài khoản ";
+	    String content = "Chào [[name]],<br>"
+	            + "Vui lòng ấn vào đường link phía dưới để xác thực tài khoản:<br>"
 	            + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-	            + "Thank you,<br>"
-	            + "Your company name.";
+	            + "Cảm ơn bạn,<br>"
+	            + "GHTK Profile.";
 	     
 	    MimeMessage message = emailSender.createMimeMessage();
 	    MimeMessageHelper helper = new MimeMessageHelper(message);
