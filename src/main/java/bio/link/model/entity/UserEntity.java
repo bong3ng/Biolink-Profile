@@ -12,13 +12,11 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -35,8 +33,17 @@ public class UserEntity {
     private LocalDate createdAt;
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
+    
+    
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+     
+    private boolean enabled;
+
+	
+
+	
 
 
-    private Long userId;
 
 }

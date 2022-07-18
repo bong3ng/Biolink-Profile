@@ -1,13 +1,19 @@
 package bio.link.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bio.link.model.entity.UserEntity;
@@ -63,8 +69,19 @@ public class LoginController {
 
     
     @PostMapping("/login/signup")
-    public Status signUp(@RequestBody UserEntity user) {
-    	return userService.signUpUser(user);
+    public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
+    	userService.register(user, "http://localhost:8080/");
+    	return new Status(1,"ok");
     }
-
+    
+    @GetMapping("/test")
+    public Status testabc(@RequestParam("token") String token) {
+    	boolean flag = userService.verify(token);
+    	
+    	if(flag) {
+    		return new Status(1,"Ok");
+    	}else {
+    		return new Status(0,"Sai token");
+    	}
+    }
 }
