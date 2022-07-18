@@ -29,7 +29,16 @@ public class ProfileEntity {
 
     @Lob
     private String image;
-    @Column(name = "user_id")
 
+    @Column(name = "design_id")
+    private Long activeDesign;
+
+    @Column(name = "show_logo")
+    private Boolean showLogo;
+
+    @Column(name = "show_nsfw")
+    private Boolean showNSFW;
+
+    @Column(name = "user_id")
     private Long userId;
 }
