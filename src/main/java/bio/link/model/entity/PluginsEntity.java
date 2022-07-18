@@ -28,6 +28,7 @@ public class PluginsEntity {
     private String title;
     private String url;
     private String image;
+
     @Column(name = "is_header")
     private Boolean isHeader;
     @Column(name = "is_plugin")

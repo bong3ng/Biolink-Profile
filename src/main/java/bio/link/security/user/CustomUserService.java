@@ -149,5 +149,28 @@ public class CustomUserService implements UserDetailsService {
 	    }
 	     
 	}
+
+	public void updateResetPasswordToken(String token, String email) {
+        UserEntity user = userRepo.findByEmail(email);
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepo.save(user);
+        } else {
+            System.out.println("Email chua dang ki");
+        }
+    }
+     
+    public UserEntity getByResetPasswordToken(String token) {
+        return userRepo.findByResetPasswordToken(token);
+    }
+     
+    public void updatePassword(UserEntity customer, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+         
+        customer.setResetPasswordToken(null);
+        userRepo.save(customer);
+    }
 	
+
 }

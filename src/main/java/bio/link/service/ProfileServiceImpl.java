@@ -128,12 +128,12 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
-    public ProfileEntity save(String name, String bio, MultipartFile image) throws IOException {
+    public ProfileEntity create(String name, String bio, MultipartFile image) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
 
         ProfileEntity profile = new ProfileEntity();
-        profile.setId(1l);
+        profile.setId(1L);
         profile.setName(name);
         profile.setBio(bio);
         if (image != null && !image.isEmpty()) {
@@ -143,21 +143,70 @@ public class ProfileServiceImpl implements ProfileService{
 
             try (OutputStream os = Files.newOutputStream(file)) {
                 os.write(image.getBytes());
-
-            }catch (Exception e) {
-            	System.out.println(e.getMessage());
-
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-
             profile.setImage(
                     imagePath.resolve(image.getOriginalFilename())
                             .toString());
         }
         else profile.setImage(null);
 
+        profile.setActiveDesign(1L);
+        profile.setShowLogo(true);
+        profile.setShowNSFW(true);
         return profileRepository.save(profile);
-
     }
 
+    @Override
+    public ProfileEntity update(String name, String bio, MultipartFile image) throws IOException {
+        Path staticPath = Paths.get("static");
+        Path imagePath = Paths.get("images");
 
+        ProfileEntity profile = new ProfileEntity();
+        profile.setId(1L);
+        profile.setName(name);
+        profile.setBio(bio);
+        if (image != null && !image.isEmpty()) {
+            Path file = CURRENT_FOLDER.resolve(staticPath)
+                    .resolve(imagePath)
+                    .resolve(image.getOriginalFilename());
+
+            try (OutputStream os = Files.newOutputStream(file)) {
+                os.write(image.getBytes());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            profile.setImage(
+                    imagePath.resolve(image.getOriginalFilename())
+                            .toString());
+        }
+        else profile.setImage(null);
+
+        profile.setActiveDesign(profileRepository.findOneById(1L).getActiveDesign());
+        profile.setShowLogo(profileRepository.findOneById(1L).getShowLogo());
+        profile.setShowLogo(profileRepository.findOneById(1L).getShowLogo());
+        return profileRepository.save(profile);
+    }
+
+    @Override
+    public ProfileEntity updateDesign(Long design_id) {
+        ProfileEntity profile = profileRepository.findOneById(1L);
+        profile.setActiveDesign(design_id);
+        return profileRepository.save(profile);
+    }
+
+    @Override
+    public ProfileEntity updateLogo(Boolean show_logo) {
+        ProfileEntity profile = profileRepository.findOneById(1L);
+        profile.setShowLogo(show_logo);
+        return profileRepository.save(profile);
+    }
+
+    @Override
+    public ProfileEntity updateNSFW(Boolean show_nsfw) {
+        ProfileEntity profile = profileRepository.findOneById(1L);
+        profile.setShowLogo(show_nsfw);
+        return profileRepository.save(profile);
+    }
 }

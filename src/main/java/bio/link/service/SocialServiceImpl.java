@@ -29,7 +29,7 @@ public class SocialServiceImpl implements SocialService {
 
         SocialEntity social = new SocialEntity();
         social.setUrl(url);
-        social.setProfileId(ptofile_id);
+
 
         return socialRepository.save(social);
     }

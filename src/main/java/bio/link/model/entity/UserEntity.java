@@ -39,11 +39,9 @@ public class UserEntity {
     private String verificationCode;
      
     private boolean enabled;
+    
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 
-	
+	}
 
-	
-
-
-
-}

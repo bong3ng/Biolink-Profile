@@ -23,6 +23,7 @@ import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
 import bio.link.security.user.CustomUserDetails;
 import bio.link.security.user.CustomUserService;
+import net.bytebuddy.utility.RandomString;
 
 
 
@@ -84,4 +85,22 @@ public class LoginController {
     		return new Status(0,"Sai token");
     	}
     }
+
+    
+    @PostMapping("/login/forgot")
+    public Status forgotPass(@RequestParam("email") String email) {
+    
+        String token = RandomString.make(30);
+        userService.updateResetPasswordToken(token, email);
+        userService.sendSimpleMessage(email, "Thong bao cap nhat lai mat khau", token);
+        return new Status(1,"ok");
+    }
+    
+    @PostMapping("/login/token")
+    public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
+    	UserEntity userExist = userService.getByResetPasswordToken(token);
+    	userService.updatePassword(userExist, password);
+    	return new Status(1,"ok");
+    }
+
 }
