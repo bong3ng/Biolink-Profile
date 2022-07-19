@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import bio.link.service.ProfileServiceImpl;
 
 @RestController
-@RequestMapping("api/v1.0/profile")
+@RequestMapping("")
 public class ProfileController {
 
     @Autowired
     private ProfileServiceImpl profileService;
 
-    @GetMapping("/{username}/")
+    @GetMapping("/api/{username}")
     public ResponseEntity handle(@PathVariable String username ,
                                @RequestParam("title") String title ,
                                @RequestParam("url") String url ,
@@ -29,7 +29,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.clickUrlOfUsername(username , title , url , isPlugins));
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/profile/{username}")
     public ResponseEntity getProfile(@PathVariable String username) {
         return ResponseEntity.ok(profileService.getUserProfileByUsername(username));
     }

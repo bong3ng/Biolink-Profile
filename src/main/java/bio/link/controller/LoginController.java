@@ -30,7 +30,7 @@ import bio.link.security.user.CustomUserService;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("")
 @CrossOrigin
 public class LoginController {
 
@@ -49,7 +49,7 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/login/form")
+    @PostMapping("/login")
     public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         // Xác thực từ username và password.
@@ -70,7 +70,7 @@ public class LoginController {
     }
 
     
-    @PostMapping("/login/signup")
+    @PostMapping("/signup")
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
     	return userService.signUpUser(user);
     }
@@ -86,14 +86,14 @@ public class LoginController {
     }
 
     
-    @PostMapping("/login/forgot")
+    @PostMapping("/forgotPassword")
     public Status forgotPass(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
     
         
         return userService.sendVerificationForgotPassword(email);
     }
     
-    @PostMapping("/login/processForgot")
+    @PostMapping("/processForgot")
     public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
     	
     	return userService.updatePassword( password, token);
