@@ -19,7 +19,7 @@ public class JwtTokenProvider {
 	private final String JWT_SECRET = "ghtk";
 
 	private final Long JWT_EXPIRATION = 604800000L;
-	
+	//Generate JWT
 	public String generateToken(CustomUserDetails userDetails) {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
@@ -31,6 +31,8 @@ public class JwtTokenProvider {
                  .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                  .compact();
 	}
+	
+	//Lấy userId từ JWT
 	public Long getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
                             .setSigningKey(JWT_SECRET)
@@ -39,7 +41,7 @@ public class JwtTokenProvider {
 
         return Long.parseLong(claims.getSubject());
     }
-
+	//Validate JWT
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);
@@ -56,7 +58,7 @@ public class JwtTokenProvider {
         return false;
     }
 
-    
+    // Get userId từ RequestHeader "Authorization"
     public Long getUserIdFromHeader(String jwt) {
     	String[] new_jwt = jwt.split("\\s");
     	jwt = new_jwt[1];

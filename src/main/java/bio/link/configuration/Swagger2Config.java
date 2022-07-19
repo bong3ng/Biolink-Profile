@@ -25,9 +25,11 @@ public class Swagger2Config {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Bio Link REST API")
-                                   .description("Tất cả API biolink ")
-                                   .contact(new Contact("ghtk", "https://bio.link/", "vythanhlam100@gmail.com"))
+
+        return new ApiInfoBuilder().title("BioLink REST API")
+                                   .description("All REST API biolink")
+                                   .contact(new Contact("ghtk", "https://localhost:8080/", "ghtk@ghtk"))
+
                                    .license("Apache 2.0")
                                    .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                                    .version("1.0.0")

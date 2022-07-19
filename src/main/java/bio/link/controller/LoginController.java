@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
 import bio.link.security.user.CustomUserDetails;
 import bio.link.security.user.CustomUserService;
-import net.bytebuddy.utility.RandomString;
 
 
 
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("")
+@CrossOrigin
 public class LoginController {
 
     @Autowired
@@ -48,7 +49,7 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/login/form")
+    @PostMapping("/login")
     public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         // Xác thực từ username và password.
@@ -69,38 +70,33 @@ public class LoginController {
     }
 
     
-    @PostMapping("/login/signup")
+    @PostMapping("/signup")
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
-    	userService.register(user, "http://localhost:8080/");
-    	return new Status(1,"ok");
+    	return userService.signUpUser(user);
     }
     
-    @GetMapping("/test")
-    public Status testabc(@RequestParam("token") String token) {
-    	boolean flag = userService.verify(token);
-    	
-    	if(flag) {
-    		return new Status(1,"Ok");
-    	}else {
-    		return new Status(0,"Sai token");
-    	}
+ 
+    
+    @GetMapping("/verify")
+    public Status verifyNewAccount(@RequestParam("code") String code) {
+    	boolean flag = userService.verify(code);
+    	if (flag) {
+    		return new Status(1,"Xác thực email thành công.");
+    	}return new Status(0,"Sai liên kết");
     }
 
     
-    @PostMapping("/login/forgot")
-    public Status forgotPass(@RequestParam("email") String email) {
+    @PostMapping("/forgotPassword")
+    public Status forgotPass(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
     
-        String token = RandomString.make(30);
-        userService.updateResetPasswordToken(token, email);
-        userService.sendSimpleMessage(email, "Thong bao cap nhat lai mat khau", token);
-        return new Status(1,"ok");
+        
+        return userService.sendVerificationForgotPassword(email);
     }
     
-    @PostMapping("/login/token")
+    @PostMapping("/processForgot")
     public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
-    	UserEntity userExist = userService.getByResetPasswordToken(token);
-    	userService.updatePassword(userExist, password);
-    	return new Status(1,"ok");
+    	
+    	return userService.updatePassword( password, token);
     }
 
 }
