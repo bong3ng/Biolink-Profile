@@ -12,13 +12,11 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -36,7 +34,19 @@ public class UserEntity {
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
 
+<<<<<<< HEAD
+=======
+    
+    
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+     
+    private boolean enabled;
+
+    
+>>>>>>> ba30f3adb523d0741b504592addcc6641b9736e7
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
-}
+	}
+

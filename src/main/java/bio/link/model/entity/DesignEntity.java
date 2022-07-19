@@ -14,6 +14,9 @@ public class DesignEntity {
 
     private String name;
 
+    @Column(name = "backgroud_img")
+    private String backgroundImg;
+
     private String background;
 
     @Column(name = "btn_radius")
@@ -28,5 +31,9 @@ public class DesignEntity {
     @Column(name = "box_shadoe")
     private String boxShadow;
 
-    private String color;
+    @Column(name = "color_header")
+    private String colorHeader;
+
+    @Column(name = "color_link")
+    private String colorLink;
 }
