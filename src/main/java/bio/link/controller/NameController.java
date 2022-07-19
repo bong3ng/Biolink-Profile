@@ -6,16 +6,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import bio.link.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
@@ -30,48 +24,52 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @GetMapping("")
-    public List<ProfileEntity> get() {
-        return profileService.getAll();
+    public ProfileEntity getProfile(
+            @RequestHeader("Authorization") String jwt
+    ) {
+        return profileService.getProfileByUserId(profileService.convertJwt(jwt));
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileEntity create(
+            @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
             @RequestParam String bio,
             @RequestParam MultipartFile image
     ) throws IOException {
-        return profileService.create(name, bio, image);
+        return profileService.create(name, bio, image, profileService.convertJwt(jwt));
     }
 
     @PutMapping("")
     public ProfileEntity update(
+            @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
             @RequestParam String bio,
             @RequestParam MultipartFile image
     ) throws IOException {
-        return profileService.update(name, bio, image);
+        return profileService.update(name, bio, image, profileService.convertJwt(jwt));
     }
 
     @PutMapping("/active")
     public ProfileEntity updateDesign(
-            @RequestParam Long design_id
+            @RequestHeader("Authorization") String jwt,
+            @RequestParam Long designId
     ) {
-        return profileService.updateDesign(design_id);
+        return profileService.updateDesign(profileService.convertJwt(jwt), designId);
     }
 
     @PutMapping("/show-logo")
-    public ProfileEntity updateLogo(
-            @RequestParam Boolean show_logo
+    public ProfileEntity updateSetting(
+            @RequestHeader("Authorization") String jwt,
+            @RequestParam Boolean showLogo,
+            @RequestParam Boolean showNsfw
     ) {
-        return profileService.updateLogo(show_logo);
+        return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
     }
 
-    @PutMapping("/show-nsfw")
-    public ProfileEntity updateNSFW(
-            @RequestParam Boolean show_nsfw
-    ) {
-        return profileService.updateNSFW(show_nsfw);
-    }
 }

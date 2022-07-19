@@ -34,17 +34,14 @@ public class UserEntity {
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
 
-<<<<<<< HEAD
-=======
-    
+
     
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
      
     private boolean enabled;
 
-    
->>>>>>> ba30f3adb523d0741b504592addcc6641b9736e7
+
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+import bio.link.security.jwt.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
@@ -43,10 +44,12 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ProfileServiceImpl implements ProfileService{
+public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private UserServiceImpl userService;
@@ -159,19 +162,19 @@ public class ProfileServiceImpl implements ProfileService{
         return ResponseData.builder()
                 .success(true).message("CLICK Thành công").data(null).build();
     }
+
     @Override
-    public List<ProfileEntity> getAll() {
-        return (List<ProfileEntity>)
-                profileRepository.findAll();
+    public ProfileEntity getProfileByUserId(Long userId) {
+        return profileRepository.getProfileByUserId(userId);
     }
 
     @Override
-    public ProfileEntity create(String name, String bio, MultipartFile image) throws IOException {
+    public ProfileEntity create(String name, String bio, MultipartFile image, Long userId) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
 
-        ProfileEntity profile = new ProfileEntity();
-        profile.setId(1L);
+        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+//        profile.setId(userId);
         profile.setName(name);
         profile.setBio(bio);
         if (image != null && !image.isEmpty()) {
@@ -193,11 +196,12 @@ public class ProfileServiceImpl implements ProfileService{
         profile.setActiveDesign(1L);
         profile.setShowLogo(true);
         profile.setShowNSFW(true);
+        profile.setUserId(userId);
         return profileRepository.save(profile);
     }
 
     @Override
-    public ProfileEntity update(String name, String bio, MultipartFile image) throws IOException {
+    public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
 
@@ -220,31 +224,30 @@ public class ProfileServiceImpl implements ProfileService{
                             .toString());
         }
         else profile.setImage(null);
-
-        profile.setActiveDesign(profileRepository.findOneById(1L).getActiveDesign());
-        profile.setShowLogo(profileRepository.findOneById(1L).getShowLogo());
-        profile.setShowLogo(profileRepository.findOneById(1L).getShowLogo());
+//
+//        profile.setActiveDesign(profile.getActiveDesign());
+//        profile.setShowLogo(profile.getShowLogo());
+//        profile.setShowNSFW(profile.getShowNSFW());
         return profileRepository.save(profile);
     }
 
     @Override
-    public ProfileEntity updateDesign(Long design_id) {
-        ProfileEntity profile = profileRepository.findOneById(1L);
-        profile.setActiveDesign(design_id);
+    public ProfileEntity updateDesign(Long userId, Long designId) {
+        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+        profile.setActiveDesign(designId);
         return profileRepository.save(profile);
     }
 
     @Override
-    public ProfileEntity updateLogo(Boolean show_logo) {
-        ProfileEntity profile = profileRepository.findOneById(1L);
-        profile.setShowLogo(show_logo);
+    public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw) {
+        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+        profile.setShowLogo(showLogo);
+        profile.setShowNSFW(showNsfw);
         return profileRepository.save(profile);
     }
 
     @Override
-    public ProfileEntity updateNSFW(Boolean show_nsfw) {
-        ProfileEntity profile = profileRepository.findOneById(1L);
-        profile.setShowLogo(show_nsfw);
-        return profileRepository.save(profile);
+    public Long convertJwt(String jwt) {
+        return jwtTokenProvider.getUserIdFromHeader(jwt);
     }
 }

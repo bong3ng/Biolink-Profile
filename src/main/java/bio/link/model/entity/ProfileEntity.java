@@ -30,8 +30,6 @@ public class ProfileEntity {
     @Lob
     private String image;
 
-<<<<<<< HEAD
-=======
     @Column(name = "design_id")
     private Long activeDesign;
 
@@ -41,7 +39,6 @@ public class ProfileEntity {
     @Column(name = "show_nsfw")
     private Boolean showNSFW;
 
->>>>>>> ba30f3adb523d0741b504592addcc6641b9736e7
     @Column(name = "user_id")
     private Long userId;
 }

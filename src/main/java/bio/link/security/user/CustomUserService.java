@@ -98,7 +98,8 @@ public class CustomUserService implements UserDetailsService {
 	     
 	    String randomCode = RandomString.make(64);
 	    user.setVerificationCode(randomCode);
-	    user.setEnabled(false);
+	    user.setEnabled(true);
+		user.setRole("ROLE_USER");
 	     
 	    userRepo.save(user);
 	     
