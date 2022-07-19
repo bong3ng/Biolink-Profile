@@ -10,7 +10,7 @@ import bio.link.model.entity.ProfileEntity;
 @Repository
 public interface ProfileRepository extends JpaRepository<ProfileEntity , Long> {
 
-    @Query(value = "SELECT * FROM profile WHERE user_id = :userId",nativeQuery = true)
+//    @Query(value = "SELECT * FROM profile WHERE user_id = :userId",nativeQuery = true)
     ProfileEntity getProfileByUserId(@Param("userId") Long userId) ;
 
     ProfileEntity findOneById(Long id);

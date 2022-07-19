@@ -18,7 +18,7 @@ public class ClickSocialEntity {
     private Long id;
 
     @Column(name = "click_count")
-    private Integer clickCount;
+    private Long clickCount;
 
     private LocalDate date;
 

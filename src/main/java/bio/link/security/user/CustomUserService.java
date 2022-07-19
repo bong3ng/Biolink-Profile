@@ -98,6 +98,7 @@ public class CustomUserService implements UserDetailsService {
 		return message;
 	}
 
+
 	public Status sendVerificationForgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
 		String token = RandomString.make(30);
 		
@@ -134,6 +135,7 @@ public class CustomUserService implements UserDetailsService {
 		} else {
 			return new Status(0, "Không tìm thấy email");
 		}
+
 	}
 
 	// Gửi Email xác thực đăng kí tài khoản

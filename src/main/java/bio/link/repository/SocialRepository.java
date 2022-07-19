@@ -12,9 +12,9 @@ import bio.link.model.entity.SocialEntity;
 
 @Repository
 public interface SocialRepository extends JpaRepository<SocialEntity, Long> {
-    @Query(value = "SELECT * FROM social WHERE profile_id = :profileId",nativeQuery = true)
-    List<SocialEntity> getAllSocialsByProfileId(@Param("profileId") Long profileId);
+    @Query(value = "SELECT * FROM social WHERE user_id = :userId",nativeQuery = true)
+    List<SocialEntity> getAllSocialsByUserId(@Param("userId") Long userId);
 
-    @Query(value = "SELECT * FROM social WHERE profile_id = :profileId AND name = :socialName LIMIT 1", nativeQuery = true)
-    SocialEntity getSocialByProfileIdAndName(@Param("profileId") Long profileId , @Param("socialName") String socialName);
+    @Query(value = "SELECT * FROM social WHERE user_id = :userId AND name = :socialName LIMIT 1", nativeQuery = true)
+    SocialEntity getSocialByUserIdAndName(@Param("userId") Long userId , @Param("socialName") String socialName);
 }

@@ -17,12 +17,12 @@ public class SocialServiceImpl implements SocialService {
     @Autowired
     private SocialRepository socialRepository;
     @Override
-    public List<SocialEntity> getAllSocialsByProfileId(Long profileId) {
-        return socialRepository.getAllSocialsByProfileId(profileId);
+    public List<SocialEntity> getAllSocialsByUserId(Long userId) {
+        return socialRepository.getAllSocialsByUserId(userId);
     }
     @Override
-    public SocialEntity getSocialByProfileIdAndName(Long profileId , String socialName) {
-        return socialRepository.getSocialByProfileIdAndName(profileId , socialName);
+    public SocialEntity getSocialByUserIdAndName(Long userId , String socialName) {
+        return socialRepository.getSocialByUserIdAndName(userId , socialName);
     }
     @Override
     public SocialEntity saveSocial(String url, Long ptofile_id) {
