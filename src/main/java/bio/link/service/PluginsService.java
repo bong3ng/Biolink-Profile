@@ -8,6 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 import bio.link.model.entity.PluginsEntity;
 
 public interface PluginsService {
+
+
+	List<PluginsEntity> getAllPluginsByUserId(Long userId);
+
+	PluginsEntity getPluginsByUserIdAndTitle(String pluginsTitle, Long userId);
+
 	PluginsEntity savePlugins(
 	        String title,
 	        String url,

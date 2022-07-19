@@ -36,12 +36,15 @@ public class PluginsServiceImpl implements PluginsService{
     private PluginsRepository pluginsRepository;
 
 
-    public List<PluginsEntity> getPluginsByProfileId(Long userId) {
-        return pluginsRepository.getPluginsByProfileId(userId);
+    @Override
+    public List<PluginsEntity> getAllPluginsByUserId(Long userId) {
+        return pluginsRepository.getAllPluginsByUserId(userId);
     }
 
-    public PluginsEntity getPluginsByProfileIdAndTitle(String pluginsTitle ,Long profileId ) {
-        return pluginsRepository.getPluginsByProfileIdAndTitle(profileId , pluginsTitle);
+
+    @Override
+    public PluginsEntity getPluginsByUserIdAndTitle(String pluginsTitle ,Long userId ) {
+        return pluginsRepository.getPluginsByUserIdAndTitle(userId , pluginsTitle);
     }
     @Override
     public PluginsEntity savePlugins(
