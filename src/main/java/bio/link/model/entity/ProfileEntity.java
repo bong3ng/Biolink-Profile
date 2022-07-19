@@ -29,7 +29,7 @@ public class ProfileEntity {
 
     @Lob
     private String image;
-    @Column(name = "user_id")
 
+    @Column(name = "user_id")
     private Long userId;
 }

@@ -13,8 +13,8 @@ import bio.link.model.entity.PluginsEntity;
 public interface PluginsRepository extends JpaRepository<PluginsEntity , Long> {
 
 
-    @Query(value = "SELECT * FROM plugins WHERE profile_id = :profileId",nativeQuery = true)
-    List<PluginsEntity> getPluginsByProfileId(@Param("profileId") Long profileId);
-    @Query(value = "SELECT * FROM plugins WHERE profile_id = :profileId AND title = :pluginsTitle" , nativeQuery = true)
-    PluginsEntity getPluginsByProfileIdAndTitle(@Param("profileId") Long profileId, @Param("pluginsTitle") String pluginsTitle);
+    @Query(value = "SELECT * FROM plugins WHERE user_id = :userId",nativeQuery = true)
+    List<PluginsEntity> getAllPluginsByUserId(@Param("userId") Long userId);
+    @Query(value = "SELECT * FROM plugins WHERE user_id = :userId AND title = :pluginsTitle" , nativeQuery = true)
+    PluginsEntity getPluginsByUserIdAndTitle(@Param("userId") Long userId, @Param("pluginsTitle") String pluginsTitle);
 }

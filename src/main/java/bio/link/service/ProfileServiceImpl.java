@@ -11,11 +11,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +38,11 @@ import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProfileServiceImpl implements ProfileService{
     @Autowired
     private ProfileRepository profileRepository;
@@ -57,30 +65,62 @@ public class ProfileServiceImpl implements ProfileService{
     @Autowired
     private ModelMapper modelMapper;
 
+
+    private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
+
+    private static LocalDate previousDate;
+    private static LocalDate currentDate;
     @Override
     public ResponseData getUserProfileByUsername(String username) {
         UserEntity userEntity = userService.getUserByUsername(username);
-        ProfileEntity profileEntity = profileRepository.getProfileByUserId(userEntity.getId());
-        Long profileId = profileEntity.getId();
-        LocalDate date = LocalDate.now();
+        Long userId = userEntity.getId();
 
-        ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(date , profileId);
-        if(clickProfileEntity == null) {
-            ClickProfileEntity newClick = new ClickProfileEntity(null , 1 , date , profileId);
-            clickProfileRepository.save(newClick);
+        ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
+        Long profileId = profileEntity.getId();
+
+        // khi sang ngày mới, reset HashMap
+        currentDate = LocalDate.now();
+        if(currentDate.minusDays(1).equals(previousDate)) {
+            countClickProfileMap.clear();
+        }
+        previousDate = currentDate;
+
+        Long clickCount = countClickProfileMap.get(profileId);
+        if(clickCount == null) {
+            ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(currentDate, profileId);
+            if(clickProfileEntity == null) {
+                countClickProfileMap.put(profileId , 1L);
+                clickProfileEntity = new ClickProfileEntity(null , 1L,currentDate , profileId);
+            }
+            else {
+                clickCount = clickProfileEntity.getClickCount() + 1;
+                countClickProfileMap.put(profileId , clickCount);
+                clickProfileEntity.setClickCount(clickCount);
+            }
+            clickProfileRepository.save(clickProfileEntity);
         }
         else {
-            ClickProfileEntity newClick = new ClickProfileEntity(clickProfileEntity.getId(),
-                    clickProfileEntity.getClickCount() + 1 ,
-                    date,
-                    profileId);
-            clickProfileRepository.save(newClick);
+            clickCount += 1;
+            countClickProfileMap.put(profileId , clickCount);
+            clickProfileRepository.updateProfileClickCount(currentDate , profileId,clickCount);
         }
 
-        List<SocialEntity> listSocial = socialService.getAllSocialsByProfileId(profileId);
+
+//
+//        ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(presentDate , profileId);
+//        if(clickProfileEntity == null) {
+//            ClickProfileEntity newClick = new ClickProfileEntity(null , 1 , presentDate , profileId);
+//            clickProfileRepository.save(newClick);
+//        }
+//        else {
+//            clickProfileEntity.setClickCount(clickProfileEntity.getClickCount() + 1);
+//            clickProfileRepository.save(clickProfileEntity);
+//        }
+
+        List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
         List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s,SocialDto.class)).collect(Collectors.toList());
 
-        List<PluginsEntity> listPlugins = pluginsService.getPluginsByProfileId(profileId);
+        List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
         List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p , PluginsDto.class)).collect(Collectors.toList());
 
         ProfileDto profileDto = new ProfileDto(username , profileEntity.getName(),profileEntity.getBio(),profileEntity.getImage(), listSocialDto , listPluginsDto );
@@ -89,7 +129,7 @@ public class ProfileServiceImpl implements ProfileService{
 
         return ResponseData.builder()
                 .success(true)
-                .message("Thanh cong")
+                .message("Thành công")
                 .data(list)
                 .build();
     }
@@ -97,29 +137,27 @@ public class ProfileServiceImpl implements ProfileService{
 
     public ResponseData clickUrlOfUsername(String username , String urlTitle ,  String url , Boolean isPlugins) {
         UserEntity userEntity = userService.getUserByUsername(username);
-        ProfileEntity profileEntity = profileRepository.getProfileByUserId(userEntity.getId());
+        Long userId = userEntity.getId();
 
         urlTitle = urlTitle.trim().toLowerCase();
         url = url.trim();
 
         if(isPlugins == null) {
-            SocialEntity socialEntity = socialService.getSocialByProfileIdAndName(profileEntity.getId() , urlTitle);
+            SocialEntity socialEntity = socialService.getSocialByUserIdAndName(userId , urlTitle);
             if(socialEntity == null) {
                 throw new NotFoundException("Khong tim thay link ");
             }
             clickSocialService.countClickSocial(socialEntity);
         }
         else {
-            PluginsEntity pluginsEntity = pluginsService.getPluginsByProfileIdAndTitle(urlTitle, profileEntity.getId());
+            PluginsEntity pluginsEntity = pluginsService.getPluginsByUserIdAndTitle(urlTitle, userId);
             if(pluginsEntity == null) {
-                throw new NotFoundException("Khong tim thay link ");
+                throw new NotFoundException("Không tìm thấy link ");
             }
             clickPluginsService.countClickPlugins(pluginsEntity);
         }
-
-//        return new RedirectView(url);
         return ResponseData.builder()
-                .success(true).message("CLICK Thanh cong").data(null).build();
+                .success(true).message("CLICK Thành công").data(null).build();
     }
     @Override
     public List<ProfileEntity> getAll() {
