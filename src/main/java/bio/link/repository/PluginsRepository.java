@@ -17,4 +17,9 @@ public interface PluginsRepository extends JpaRepository<PluginsEntity , Long> {
     List<PluginsEntity> getAllPluginsByUserId(@Param("userId") Long userId);
     @Query(value = "SELECT * FROM plugins WHERE user_id = :userId AND title = :pluginsTitle" , nativeQuery = true)
     PluginsEntity getPluginsByUserIdAndTitle(@Param("userId") Long userId, @Param("pluginsTitle") String pluginsTitle);
+
+
+    //auth : khanhht13
+    //date : 02/07/2022
+    List<PluginsEntity> findByUserIdOrderByNumLocationAsc(Long userId);
 }

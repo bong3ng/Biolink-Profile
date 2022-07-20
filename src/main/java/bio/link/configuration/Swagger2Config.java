@@ -18,7 +18,7 @@ public class Swagger2Config {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                                                      .apis(RequestHandlerSelectors.any())
+                                                      .apis(RequestHandlerSelectors.basePackage("bio.link.controller"))
                                                       .paths(PathSelectors.any())
                                                       .build()
                                                       .apiInfo(apiEndPointsInfo());

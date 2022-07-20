@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bio.link.model.entity.DesignEntity;
 import bio.link.service.DesignService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("api/design")
@@ -24,7 +26,11 @@ public class DesignController {
 
     @Autowired
     private DesignService designService;
-
+    
+    
+    @ApiOperation(value = "Get All danh sách Themes Design", response = List.class)
+    
+    
     @GetMapping("")
     public List<DesignEntity> get() {
         return designService.getAll();
@@ -65,7 +71,7 @@ public class DesignController {
 
 
     @PostMapping("")
-    public DesignEntity create(
+    public DesignEntity create(@ApiParam(value = "Đối tượng Design cần tạo mới", required = true)
             @RequestBody DesignEntity designEntity
     ) {
         return designService.update(designEntity);

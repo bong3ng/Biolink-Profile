@@ -81,7 +81,7 @@ public class CustomUserService implements UserDetailsService {
 				// Tạo verificationCode
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
-				user.setEnabled(false);
+				user.setEnabled(true);
 
 				userRepo.save(user);
 				sendVerificationEmail(user, "http://localhost:8080/");

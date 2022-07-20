@@ -4,6 +4,7 @@ package bio.link.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,9 +16,10 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/stats")
-    public ResponseEntity getStats() {
-        return ResponseEntity.ok("Trang stats");
+    @GetMapping("/{username}/stats/{days}")
+    public ResponseEntity getStats(@PathVariable String username,
+                                   @PathVariable Integer days) {
+        return ResponseEntity.ok(userService.getStatsByUsername(username , days));
     }
 
     @GetMapping("/link")
