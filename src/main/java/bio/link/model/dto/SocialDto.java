@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SocialDto {
-    private String socialName;
-    private String socialUrl;
+    private String name;
+    private String url;
 }
