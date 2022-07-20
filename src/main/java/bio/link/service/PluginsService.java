@@ -18,13 +18,22 @@ public interface PluginsService {
 	        String title,
 	        String url,
 	        MultipartFile image,
-	        Boolean is_header,
-	        Boolean is_plugins,
-	        Boolean is_hide,
-	        Long profile_id) throws IOException;
-	PluginsEntity saveHeader(String title , Boolean is_header ,  Boolean is_plugins,
-	                   Boolean is_hide);
-	List<PluginsEntity> getAllPlugins();
-	PluginsEntity updatePlugins( String title, String url, MultipartFile image , Long id);
+	        Boolean isHeader,
+	        Boolean isPlugins,
+	        Boolean isHide,
+	        Long userId) throws IOException;
+	PluginsEntity saveHeader(String title , Boolean isHeader ,  Boolean isPlugins,
+	                   Boolean isHide);
+	List<PluginsEntity> getAllPluginsByUserId(long userId);
+
+
+	//update content của plugins.
+	PluginsEntity updateContentPlugins( String title, String url, MultipartFile image , Long id);
+
+
+	//update location ( thay đổi vị trí links , header , plugins )
+	PluginsEntity updateLocationPlugins(List<PluginsEntity> list , long userId);
+
+
 	void deletePluginsById(Long id);
 }

@@ -51,10 +51,10 @@ public class PluginsServiceImpl implements PluginsService{
             String title,
             String url,
             MultipartFile image,
-            Boolean is_header,
-            Boolean is_plugins,
-            Boolean is_hide,
-            Long profile_id) throws IOException {
+            Boolean isHeader,
+            Boolean isPlugins,
+            Boolean isHide,
+            Long userId) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
         PluginsEntity plugins = new PluginsEntity();
@@ -73,9 +73,17 @@ public class PluginsServiceImpl implements PluginsService{
         } else {
             plugins.setImage(null);
         }
-        plugins.setIsHeader(is_header);
-        plugins.setIsPlugin(is_plugins);
-        plugins.setIsHide(is_hide);
+        plugins.setIsHeader(isHeader);
+        plugins.setIsPlugin(isPlugins);
+        plugins.setIsHide(isHide);
+        plugins.setUserId(userId);
+        // bước này để có được id
+        pluginsRepository.save(plugins);
+
+        //gán numLocation = với id vừa sinh ra
+        plugins.setNumLocation(plugins.getId());
+
+        //lưu vào db
         return pluginsRepository.save(plugins);
     }
     @Override
@@ -85,11 +93,11 @@ public class PluginsServiceImpl implements PluginsService{
        return pluginsRepository.save(title_header);
     }
     @Override
-    public List<PluginsEntity> getAllPlugins() {
+    public List<PluginsEntity> getAllPluginsByUserId(long userId) {
        return pluginsRepository.findAll();
     }
     @Override
-    public PluginsEntity updatePlugins( String title , String url, MultipartFile image , Long id) {
+    public PluginsEntity updateContentPlugins( String title , String url, MultipartFile image , Long id) {
         PluginsEntity pluginsUp = pluginsRepository.findById(id).get();
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
@@ -111,6 +119,19 @@ public class PluginsServiceImpl implements PluginsService{
         }
         return pluginsRepository.save(pluginsUp);
     }
+
+    @Override
+    public PluginsEntity updateLocationPlugins(List<PluginsEntity> newList, long userId) {
+        List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
+        for ( int i = 0 ; i <  oldList.size() ; i++) {
+            oldList.get(i).setNumLocation(newList.get(i).getNumLocation());
+        }
+        for (int i = 0 ;  i < oldList.size() ; i++) {
+            pluginsRepository.save(oldList.get(i));
+        }
+        return null;
+    }
+
     @Override
     public void deletePluginsById(Long id) {
         pluginsRepository.deleteById(id);

@@ -2,6 +2,7 @@ package bio.link.controller;
 
 
 import bio.link.model.entity.PluginsEntity;
+import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.PluginsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,23 +23,28 @@ public class PluginsController {
     @Autowired
     private PluginsService pluginsService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
 
     @PostMapping("/plugins")
     @ResponseStatus(HttpStatus.CREATED)
     public PluginsEntity create(@RequestParam String title,
                           @RequestParam String url,
                           @RequestParam MultipartFile image,
-                          @RequestParam(required = false) Boolean is_header ,
-                          @RequestParam(required = false) Boolean is_plugin,
-                          @RequestParam(required = false) Boolean is_hide,
-                          @RequestParam Long profile_id
+                          @RequestParam(required = false) Boolean isHeader ,
+                          @RequestParam(required = false) Boolean isPlugin,
+                          @RequestParam(required = false) Boolean isHide,
+                                @RequestHeader("Authorization") String jwt
     ) throws IOException {
-        if (is_header == null) {
+        if (isHeader == null) {
             System.out.println(1);
-            return pluginsService.savePlugins(title , url , image , is_header , is_plugin , is_hide, profile_id);
+            System.out.println(jwtTokenProvider.getUserIdFromHeader(jwt));
+            return pluginsService.savePlugins(title , url , image , isHeader , isPlugin , isHide, jwtTokenProvider.getUserIdFromHeader(jwt));
+
         } else {
 
-            return pluginsService.savePlugins(title , "" , image , is_header , is_plugin , is_hide, profile_id);
+            return pluginsService.savePlugins(title , "" , image , isHeader , isPlugin , isHide, jwtTokenProvider.getUserIdFromHeader(jwt));
         }
 
     }
@@ -46,20 +52,29 @@ public class PluginsController {
 
 
     @GetMapping("/plugins")
-    public List<PluginsEntity> getAllPlugins() {
-        return  pluginsService.getAllPlugins();
+    public List<PluginsEntity> getAllPlugins(long userId) {
+        return  pluginsService.getAllPluginsByUserId(userId);
     }
 
 
-    @PutMapping("/plugins/{id}")
+    @PutMapping("/plugins/updateContent")
     @ResponseStatus(HttpStatus.CREATED)
-    public PluginsEntity updatePlugins(
+    public PluginsEntity updateContentPlugins(
             @RequestParam String title,
             @RequestParam String url,
             @RequestParam(value = "image", required=false) MultipartFile  image,
             @PathVariable("id") Long id
     ) {
-        return pluginsService.updatePlugins(title , url , image,id);
+        return pluginsService.updateContentPlugins(title , url , image,id);
+    }
+
+
+    //thay đổi vị trí links, header
+    @PutMapping("/plugins/updateLocation")
+    public PluginsEntity updateLocationPlugins(
+            @RequestBody List<PluginsEntity> pluginsEntityList
+    ) {
+        return pluginsService.updateLocationPlugins(pluginsEntityList , 1L);
     }
 
 

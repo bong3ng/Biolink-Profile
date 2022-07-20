@@ -38,6 +38,7 @@ public class PluginsEntity {
     @Column(name = "user_id")
     private Long userId;
     
-
+    @Column(name = "num_location")
+    private Long numLocation;
 
 }
