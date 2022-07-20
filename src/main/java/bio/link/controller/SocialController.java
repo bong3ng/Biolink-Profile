@@ -24,7 +24,9 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.service.SocialService;
 
 @RestController
+@RequestMapping("")
 @CrossOrigin("*")
+
 public class SocialController {
 
     @Autowired
