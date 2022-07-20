@@ -13,15 +13,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 
-import bio.link.security.jwt.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +35,10 @@ import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ProfileRepository;
+import bio.link.repository.UserRepository;
+import bio.link.security.jwt.JwtTokenProvider;
+import bio.link.security.payload.Status;
 import lombok.RequiredArgsConstructor;
-
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +66,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private UserRepository userRepo;
 
 
     private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
@@ -250,4 +252,26 @@ public class ProfileServiceImpl implements ProfileService {
     public Long convertJwt(String jwt) {
         return jwtTokenProvider.getUserIdFromHeader(jwt);
     }
+    @Override
+    public List<UserEntity> getUserByAdmin(){
+    	return userRepo.findAll();
+    }
+    
+    @Override
+    public UserEntity updateUserByAdmin(UserEntity user) {
+    	return userRepo.save(user);
+    	
+    }
+    @Override
+    public Status deleteUserByAdmin(Long id) {
+    	Optional<UserEntity> findUser = userRepo.findById(id);
+    	if (findUser.isPresent()) {
+    		UserEntity userDelete = findUser.get();
+    		userDelete.setStatus(false);
+    		userRepo.save(userDelete);
+    		return new Status(1, "Đã xóa thành công user: " + userDelete.getUsername());
+    	}return new Status(0, "Xóa thất bại, không tìm thấy user");
+    	
+    }
+    
 }

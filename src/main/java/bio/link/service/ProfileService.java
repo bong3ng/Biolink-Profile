@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
+import bio.link.model.entity.UserEntity;
 import bio.link.model.response.ResponseData;
+import bio.link.security.payload.Status;
 
 public interface  ProfileService {
 
@@ -32,5 +34,11 @@ public interface  ProfileService {
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw);
 
 	Long convertJwt(String jwt);
+	
+	List<UserEntity> getUserByAdmin();
+	
+	UserEntity updateUserByAdmin(UserEntity user);
+	
+	Status deleteUserByAdmin(Long id);
 
 }

@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import bio.link.model.entity.UserEntity;
 import bio.link.repository.UserRepository;
+import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.Status;
 
 @Service
@@ -31,18 +31,19 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public void sendSimpleMessage(String to, String subject, String text) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("vythanhlam100@gmail.com");
-		message.setTo(to);
-		message.setSubject(subject);
-		message.setText(text);
-		emailSender.send(message);
-	}
+//	public void sendSimpleMessage(String to, String subject, String text) {
+//		SimpleMailMessage message = new SimpleMailMessage();
+//		message.setFrom("vythanhlam100@gmail.com");
+//		message.setTo(to);
+//		message.setSubject(subject);
+//		message.setText(text);
+//		emailSender.send(message);
+//	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		UserEntity user = userRepo.findByUsername(username);
+		
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
@@ -73,6 +74,7 @@ public class CustomUserService implements UserDetailsService {
 			user.setCreatedAt(nowTime);
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRole("ROLE_USER");
+			user.setStatus(true);
 
 //    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
 			try {
@@ -210,6 +212,15 @@ public class CustomUserService implements UserDetailsService {
 		}return new Status(0, "Đường dẫn không hợp lệ");
 			
 		
+	}
+	
+	public LoginRequest checkStatusAccount(LoginRequest login) {
+		String username = login.getUsername();
+		UserEntity user = userRepo.findByUsername(username);
+		if (!user.isStatus()) {
+			login.setPassword("1");
+		}
+		return login;
 	}
 
 }

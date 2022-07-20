@@ -51,7 +51,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
-
+    	loginRequest = userService.checkStatusAccount(loginRequest);
         // Xác thực từ username và password.
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -98,5 +98,7 @@ public class LoginController {
     	
     	return userService.updatePassword( password, token);
     }
+    
+    
 
 }
