@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("api/design")
+@RequestMapping("api/user/design")
 @CrossOrigin("*")
 public class DesignController {
 
@@ -36,7 +36,7 @@ public class DesignController {
         return designService.getAll();
     }
 
-    @GetMapping("/find/id={id}")
+    @GetMapping("/find/{id}")
     public DesignEntity getDesign(
             @PathVariable("id") Long id
     ) {

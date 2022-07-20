@@ -50,8 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private UserServiceImpl userService;
+//    @Autowired
+//    private UserServiceImpl userService;
     @Autowired
     private ClickProfileRepository clickProfileRepository;
 
@@ -77,7 +77,9 @@ public class ProfileServiceImpl implements ProfileService {
     private static LocalDate currentDate;
     @Override
     public ResponseData getUserProfileByUsername(String username) {
-        UserEntity userEntity = userService.getUserByUsername(username);
+    	//Conflict
+//        UserEntity userEntity = userService.getUserByUsername(username);
+    	UserEntity userEntity = userRepo.findByUsername(username);
         Long userId = userEntity.getId();
 
         ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
@@ -141,7 +143,11 @@ public class ProfileServiceImpl implements ProfileService {
 
 
     public ResponseData clickUrlOfUsername(String username , String urlTitle ,  String url , Boolean isPlugins) {
-        UserEntity userEntity = userService.getUserByUsername(username);
+    	
+    	//Conflict
+//        UserEntity userEntity = userService.getUserByUsername(username);
+    	
+    	UserEntity userEntity = userRepo.findByUsername(username);
         Long userId = userEntity.getId();
 
         urlTitle = urlTitle.trim().toLowerCase();
