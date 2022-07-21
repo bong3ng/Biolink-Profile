@@ -12,6 +12,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+<<<<<<< HEAD
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
@@ -23,16 +24,30 @@ public class Swagger2Config {
                                                       .build()
                                                       .apiInfo(apiEndPointsInfo());
     }
+=======
+//@Configuration
+//@EnableSwagger2
+//public class Swagger2Config {
+//    @Bean
+//    public Docket api() {
+//        return new Docket(DocumentationType.SWAGGER_2).select()
+//                                                      .apis(RequestHandlerSelectors.basePackage("bio.link.controller"))
+//                                                      .paths(PathSelectors.any())
+//                                                      .build()
+//                                                      .apiInfo(apiEndPointsInfo());
+//    }
+//
+//    private ApiInfo apiEndPointsInfo() {
+//
+//        return new ApiInfoBuilder().title("BioLink REST API")
+//                                   .description("All REST API biolink")
+//                                   .contact(new Contact("ghtk", "https://localhost:8080/", "ghtk@ghtk"))
+//
+//                                   .license("Apache 2.0")
+//                                   .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+//                                   .version("1.0.0")
+//                                   .build();
+//    }
+//}
+>>>>>>> minhvt27
 
-    private ApiInfo apiEndPointsInfo() {
-
-        return new ApiInfoBuilder().title("BioLink REST API")
-                                   .description("All REST API biolink")
-                                   .contact(new Contact("ghtk", "https://localhost:8080/", "ghtk@ghtk"))
-
-                                   .license("Apache 2.0")
-                                   .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                                   .version("1.0.0")
-                                   .build();
-    }
-}

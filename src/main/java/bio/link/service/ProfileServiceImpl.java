@@ -13,10 +13,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+
+
+import bio.link.model.dto.DesignDto;
+import bio.link.model.entity.*;
+import bio.link.repository.UserRepository;
+import bio.link.security.jwt.JwtTokenProvider;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import bio.link.model.dto.PluginsDto;
 import bio.link.model.dto.ProfileDto;
 import bio.link.model.dto.SocialDto;
-import bio.link.model.entity.ClickProfileEntity;
-import bio.link.model.entity.PluginsEntity;
-import bio.link.model.entity.ProfileEntity;
-import bio.link.model.entity.SocialEntity;
-import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.ClickProfileRepository;
@@ -50,8 +52,10 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-//    @Autowired
-//    private UserServiceImpl userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private ClickProfileRepository clickProfileRepository;
 
@@ -70,16 +74,24 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private UserRepository userRepo;
 
-
+    @Autowired
+    private  DesignService designService;
     private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
 
     private static LocalDate previousDate;
     private static LocalDate currentDate;
     @Override
+    public UserEntity getUserByUsername(String username) {
+        username = username.trim();
+        UserEntity userEntity = userRepository.findByUsername(username);
+        if(userEntity == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
+        return userEntity;
+    }
+    @Override
     public ResponseData getUserProfileByUsername(String username) {
-    	//Conflict
-//        UserEntity userEntity = userService.getUserByUsername(username);
-    	UserEntity userEntity = userRepo.findByUsername(username);
+        UserEntity userEntity = this.getUserByUsername(username);
         Long userId = userEntity.getId();
 
         ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
@@ -130,7 +142,16 @@ public class ProfileServiceImpl implements ProfileService {
         List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
         List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p , PluginsDto.class)).collect(Collectors.toList());
 
-        ProfileDto profileDto = new ProfileDto(username , profileEntity.getName(),profileEntity.getBio(),profileEntity.getImage(), listSocialDto , listPluginsDto );
+        DesignEntity designEntity = designService.getDesignById(profileEntity.getActiveDesign());
+        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
+
+        ProfileDto profileDto = new ProfileDto( username ,
+                                                profileEntity.getName(),
+                                                profileEntity.getBio(),
+                                                profileEntity.getImage(),
+                                                listSocialDto ,
+                                                listPluginsDto,
+                                                designDto);
         ArrayList<ProfileDto> list = new ArrayList<>();
         list.add(profileDto);
 
@@ -143,11 +164,8 @@ public class ProfileServiceImpl implements ProfileService {
 
 
     public ResponseData clickUrlOfUsername(String username , String urlTitle ,  String url , Boolean isPlugins) {
-    	
-    	//Conflict
-//        UserEntity userEntity = userService.getUserByUsername(username);
-    	
-    	UserEntity userEntity = userRepo.findByUsername(username);
+
+        UserEntity userEntity = this.getUserByUsername(username);
         Long userId = userEntity.getId();
 
         urlTitle = urlTitle.trim().toLowerCase();
