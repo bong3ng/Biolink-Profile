@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import bio.link.service.UserServiceImpl;
 
 @RestController
-@RequestMapping("api/v1.0/user")
+@RequestMapping("")
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/{username}/stats/{days}")
+    @GetMapping("/api/user/{username}/stats/{days}")
     public ResponseEntity getStats(@PathVariable String username,
                                    @PathVariable Integer days) {
         return ResponseEntity.ok(userService.getStatsByUsername(username , days));

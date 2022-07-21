@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "click_profile")
+@Table(name = "click_profiles")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

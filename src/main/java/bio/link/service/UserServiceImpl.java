@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
         username = username.trim();
         UserEntity userEntity = userRepository.findByUsername(username);
         if(userEntity == null) {
-           throw new NotFoundException("Khong tim thay nguoi dung");
+           throw new NotFoundException("Không tìm thấy người dùng");
         }
         return userEntity;
     }
@@ -107,6 +107,6 @@ public class UserServiceImpl implements UserService{
                                 .build();
         list.add(data);
 
-        return new ResponseData(true , "Thanh cong" , list);
+        return new ResponseData(true , "Thành công" , list);
     }
 }

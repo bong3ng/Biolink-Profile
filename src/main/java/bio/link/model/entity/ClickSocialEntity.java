@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@Table(name = "click_social")
+@Table(name = "click_socials")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
