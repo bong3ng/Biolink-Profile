@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
+import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.Status;
@@ -27,6 +29,9 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	@Autowired
+	ProfileRepository profileRepo;
 
 	@Autowired
 	private JavaMailSender emailSender;
@@ -221,6 +226,16 @@ public class CustomUserService implements UserDetailsService {
 			login.setPassword("1");
 		}
 		return login;
+	}
+	
+	public boolean checkFirstLogin(LoginRequest login) {
+		String username = login.getUsername();
+		UserEntity user = userRepo.findByUsername(username);
+		
+		ProfileEntity profile = profileRepo.findByUserId(user.getId());
+		if(profile.getName() == null) {
+			return true;
+		}return false;
 	}
 
 }

@@ -16,10 +16,10 @@ public interface  ProfileService {
 
 	ResponseData getUserProfileByUsername(String username);
 
-	ProfileEntity create(
+	Status create(
 			String name,
 			String bio,
-			MultipartFile image,
+
 			Long userId
 	) throws IOException;
 
@@ -40,5 +40,7 @@ public interface  ProfileService {
 	UserEntity updateUserByAdmin(UserEntity user);
 	
 	Status deleteUserByAdmin(Long id);
+	
+
 
 }

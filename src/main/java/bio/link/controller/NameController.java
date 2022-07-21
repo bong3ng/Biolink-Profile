@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
 import bio.link.security.jwt.JwtTokenProvider;
+import bio.link.security.payload.Status;
 import bio.link.service.ProfileService;
 
 @RestController
@@ -43,13 +44,12 @@ public class NameController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileEntity create(
+    public Status create(
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
-            @RequestParam String bio,
-            @RequestParam MultipartFile image
+            @RequestParam String bio
     ) throws IOException {
-        return profileService.create(name, bio, image, profileService.convertJwt(jwt));
+        return profileService.create(name, bio, profileService.convertJwt(jwt));
     }
 
     @PutMapping("")
@@ -78,5 +78,7 @@ public class NameController {
     ) {
         return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
     }
+    
+    
 
 }
