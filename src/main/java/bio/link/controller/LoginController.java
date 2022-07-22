@@ -30,12 +30,19 @@ import bio.link.security.user.CustomUserService;
 
 
 @RestController
-@RequestMapping("")
-@CrossOrigin
+
+@RequestMapping("/api")
+
+
+@CrossOrigin("*")
+
 public class LoginController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+    
+
+    
     
 
     @Autowired
@@ -51,7 +58,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
-
+    	loginRequest = userService.checkStatusAccount(loginRequest);
         // Xác thực từ username và password.
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -66,7 +73,8 @@ public class LoginController {
 
         // Trả về jwt cho người dùng.
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        return new LoginResponse(jwt);
+        
+        return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest));
     }
 
     
@@ -98,5 +106,8 @@ public class LoginController {
     	
     	return userService.updatePassword( password, token);
     }
+    
+    
+    
 
 }

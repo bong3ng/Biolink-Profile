@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
+import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
+import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.Status;
 
 @Service
@@ -27,22 +29,26 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	@Autowired
+	ProfileRepository profileRepo;
 
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public void sendSimpleMessage(String to, String subject, String text) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("vythanhlam100@gmail.com");
-		message.setTo(to);
-		message.setSubject(subject);
-		message.setText(text);
-		emailSender.send(message);
-	}
+//	public void sendSimpleMessage(String to, String subject, String text) {
+//		SimpleMailMessage message = new SimpleMailMessage();
+//		message.setFrom("vythanhlam100@gmail.com");
+//		message.setTo(to);
+//		message.setSubject(subject);
+//		message.setText(text);
+//		emailSender.send(message);
+//	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		UserEntity user = userRepo.findByUsername(username);
+		
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
@@ -59,6 +65,7 @@ public class CustomUserService implements UserDetailsService {
 
 	// Đăng kí user
 	public Status signUpUser(UserEntity user) {
+		
 		Status message = new Status();
 		message.setSuccess(0);
 		UserEntity userFindByUName = userRepo.findByUsername(user.getUsername());
@@ -73,16 +80,20 @@ public class CustomUserService implements UserDetailsService {
 			user.setCreatedAt(nowTime);
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRole("ROLE_USER");
+			user.setStatus(true);
 
 //    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
 			try {
 				// Tạo verificationCode
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
-				user.setEnabled(true);
+				user.setEnabled(false);
+				ProfileEntity profile = new ProfileEntity();
+				profile.setUserId(user.getId());
+				profileRepo.save(profile);
 
 				userRepo.save(user);
-				sendVerificationEmail(user, "http://localhost:8080/");
+				sendVerificationEmail(user, "http://localhost:3000/");
 
 				message.setMessage("Tạo tài khoản thành công.");
 				message.setSuccess(1);
@@ -210,6 +221,25 @@ public class CustomUserService implements UserDetailsService {
 		}return new Status(0, "Đường dẫn không hợp lệ");
 			
 		
+	}
+	
+	public LoginRequest checkStatusAccount(LoginRequest login) {
+		String username = login.getUsername();
+		UserEntity user = userRepo.findByUsername(username);
+		if (!user.isStatus()) {
+			login.setPassword("1");
+		}
+		return login;
+	}
+	
+	public boolean checkFirstLogin(LoginRequest login) {
+		String username = login.getUsername();
+		UserEntity user = userRepo.findByUsername(username);
+		
+		ProfileEntity profile = profileRepo.findByUserId(user.getId());
+		if(profile == null) {
+			return true;
+		}return false;
 	}
 
 }

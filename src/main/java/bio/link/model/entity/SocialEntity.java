@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-@Table(name = "social")
+@Table(name = "socials")
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocialEntity {

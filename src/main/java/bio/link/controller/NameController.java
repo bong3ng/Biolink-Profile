@@ -4,19 +4,27 @@ package bio.link.controller;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
-import bio.link.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
+import bio.link.security.jwt.JwtTokenProvider;
+import bio.link.security.payload.Status;
 import bio.link.service.ProfileService;
 
 @RestController
-@RequestMapping("api/profile")
+@RequestMapping("api/user/profile")
 @CrossOrigin("*")
 public class NameController {
 
@@ -24,8 +32,6 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("")
     public ProfileEntity getProfile(
@@ -36,13 +42,12 @@ public class NameController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileEntity create(
+    public Status create(
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
-            @RequestParam String bio,
-            @RequestParam MultipartFile image
+            @RequestParam String bio
     ) throws IOException {
-        return profileService.create(name, bio, image, profileService.convertJwt(jwt));
+        return profileService.create(name, bio, profileService.convertJwt(jwt));
     }
 
     @PutMapping("")
@@ -63,7 +68,7 @@ public class NameController {
         return profileService.updateDesign(profileService.convertJwt(jwt), designId);
     }
 
-    @PutMapping("/show-logo")
+    @PutMapping("/setting")
     public ProfileEntity updateSetting(
             @RequestHeader("Authorization") String jwt,
             @RequestParam Boolean showLogo,
@@ -71,5 +76,7 @@ public class NameController {
     ) {
         return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
     }
+    
+    
 
 }

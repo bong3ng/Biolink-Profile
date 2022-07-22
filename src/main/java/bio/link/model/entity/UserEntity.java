@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +38,10 @@ public class UserEntity {
     
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
-     
+
     private boolean enabled;
+    
+    private boolean status;
 
 
     @Column(name = "reset_password_token")

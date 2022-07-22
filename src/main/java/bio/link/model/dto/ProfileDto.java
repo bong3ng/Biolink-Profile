@@ -24,4 +24,5 @@ public class ProfileDto {
     private List<SocialDto> listSocial;
     private List<PluginsDto> listPlugins;
 
+    private DesignDto designDto;
 }

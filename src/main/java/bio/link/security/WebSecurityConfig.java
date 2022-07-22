@@ -59,7 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable()
                 .authorizeRequests()
-                    .antMatchers("/api/*").authenticated() // Cho phép tất cả mọi người truy cập vào 2 địa chỉ này
+                    .antMatchers("/api/user").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/admin").hasRole("ADMIN")// Cho phép tất cả mọi người truy cập vào 2 địa chỉ này
                     .anyRequest().permitAll(); // Tất cả các request khác đều cần phải xác thực mới được truy cập
 
         // Thêm một lớp Filter kiểm tra jwt
