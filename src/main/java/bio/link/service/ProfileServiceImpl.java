@@ -172,7 +172,7 @@ public class ProfileServiceImpl implements ProfileService {
 //        Path staticPath = Paths.get("static");
 //        Path imagePath = Paths.get("images");
 
-		ProfileEntity profile = new ProfileEntity();
+		ProfileEntity profile = profileRepository.findByUserId(userId);
 
 		// profile.setId(userId);
 		profile.setName(name);

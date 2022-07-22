@@ -65,6 +65,7 @@ public class CustomUserService implements UserDetailsService {
 
 	// Đăng kí user
 	public Status signUpUser(UserEntity user) {
+		
 		Status message = new Status();
 		message.setSuccess(0);
 		UserEntity userFindByUName = userRepo.findByUsername(user.getUsername());
@@ -86,10 +87,13 @@ public class CustomUserService implements UserDetailsService {
 				// Tạo verificationCode
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
-				user.setEnabled(true);
+				user.setEnabled(false);
+				ProfileEntity profile = new ProfileEntity();
+				profile.setUserId(user.getId());
+				profileRepo.save(profile);
 
 				userRepo.save(user);
-				sendVerificationEmail(user, "http://localhost:8080/");
+				sendVerificationEmail(user, "http://localhost:3000/");
 
 				message.setMessage("Tạo tài khoản thành công.");
 				message.setSuccess(1);
