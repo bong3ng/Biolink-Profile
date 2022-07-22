@@ -47,7 +47,7 @@ public class PluginsServiceImpl implements PluginsService{
         return pluginsRepository.getPluginsByUserIdAndTitle(userId , pluginsTitle);
     }
     @Override
-    public PluginsEntity savePlugins(
+    public PluginsEntity createLink(
             String title,
             String url,
             MultipartFile image,
@@ -57,9 +57,9 @@ public class PluginsServiceImpl implements PluginsService{
             Long userId) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
-        PluginsEntity plugins = new PluginsEntity();
-        plugins.setUrl(url);
-        plugins.setTitle(title);
+        PluginsEntity links = new PluginsEntity();
+        links.setUrl(url);
+        links.setTitle(title);
         if ( image != null && !image.isEmpty()) {
             Path file = CURRENT_FOLDER.resolve(staticPath)
                     .resolve(imagePath).resolve(image.getOriginalFilename());
@@ -69,35 +69,78 @@ public class PluginsServiceImpl implements PluginsService{
             	System.out.println(e.getMessage());
 
             }
+            links.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
+        } else {
+            links.setImage(null);
+        }
+        links.setIsHeader(false);
+        links.setIsPlugin(false);
+        links.setIsHide(false);
+        links.setUserId(userId);
+        // bước này để có được id
+        pluginsRepository.save(links);
+
+        //gán numLocation = với id vừa sinh ra
+        links.setNumLocation(links.getId());
+
+        //lưu vào db
+        return pluginsRepository.save(links);
+    }
+    @Override
+    public PluginsEntity createHeader(String title , Boolean isHeader ,  Boolean isPlugins,
+                              Boolean isHide , Long userId) throws IOException {
+        PluginsEntity header = new PluginsEntity();
+        header.setTitle(title);
+        header.setIsHeader(true);
+        header.setIsPlugin(false);
+        header.setIsHide(false);
+        header.setUserId(userId);
+        pluginsRepository.save(header);
+        header.setNumLocation(header.getId());
+
+        return pluginsRepository.save(header);
+    }
+
+    @Override
+    public PluginsEntity createPlugin(
+            String title,
+            String url,
+            MultipartFile image,
+            Boolean isHeader,
+            Boolean isPlugin,
+            Boolean isHide,
+            Long userId) throws IOException {
+        Path staticPath = Paths.get("static");
+        Path imagePath = Paths.get("images");
+        PluginsEntity plugins = new PluginsEntity();
+
+        plugins.setTitle(title);
+        plugins.setUrl(url);
+        if ( image != null && !image.isEmpty()) {
+            Path file = CURRENT_FOLDER.resolve(staticPath)
+                    .resolve(imagePath).resolve(image.getOriginalFilename());
+            try (OutputStream os = Files.newOutputStream(file)) {
+                os.write(image.getBytes());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+
+            }
             plugins.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         } else {
             plugins.setImage(null);
         }
-        plugins.setIsHeader(isHeader);
-        plugins.setIsPlugin(isPlugins);
-        plugins.setIsHide(isHide);
+        plugins.setIsHeader(false);
+        plugins.setIsPlugin(true);
+        plugins.setIsHide(false);
         plugins.setUserId(userId);
-        // bước này để có được id
         pluginsRepository.save(plugins);
-
-        //gán numLocation = với id vừa sinh ra
         plugins.setNumLocation(plugins.getId());
-
-        //lưu vào db
         return pluginsRepository.save(plugins);
     }
+
+
     @Override
-    public PluginsEntity saveHeader(String title , Boolean is_header ,  Boolean is_plugins,
-                              Boolean is_hide) {
-        PluginsEntity title_header = new PluginsEntity();
-       return pluginsRepository.save(title_header);
-    }
-    @Override
-    public List<PluginsEntity> getAllPluginsByUserId(long userId) {
-       return pluginsRepository.findAll();
-    }
-    @Override
-    public PluginsEntity updateContentPlugins( String title , String url, MultipartFile image , Long id) {
+    public PluginsEntity updateContentPlugin( String title , String url, MultipartFile image , Long id) {
         PluginsEntity pluginsUp = pluginsRepository.findById(id).get();
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
@@ -121,7 +164,7 @@ public class PluginsServiceImpl implements PluginsService{
     }
 
     @Override
-    public PluginsEntity updateLocationPlugins(List<PluginsEntity> newList, long userId) {
+    public PluginsEntity updateLocationPlugin(List<PluginsEntity> newList, long userId) {
         List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
         for ( int i = 0 ; i <  oldList.size() ; i++) {
             oldList.get(i).setNumLocation(newList.get(i).getNumLocation());

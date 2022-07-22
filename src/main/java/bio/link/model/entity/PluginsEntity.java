@@ -29,12 +29,12 @@ public class PluginsEntity {
     private String url;
     private String image;
 
-    @Column(name = "is_header")
-    private Boolean isHeader;
-    @Column(name = "is_plugin")
-    private Boolean isPlugin;
-    @Column(name = "is_hide")
-    private Boolean isHide;
+    @Column(name = "is_header" , columnDefinition = "boolean default false")
+    private Boolean isHeader = false;
+    @Column(name = "is_plugin" , columnDefinition = "boolean default false")
+    private Boolean isPlugin = false;
+    @Column(name = "is_hide" , columnDefinition = "boolean default false")
+    private Boolean isHide = false;
     @Column(name = "user_id")
     private Long userId;
     

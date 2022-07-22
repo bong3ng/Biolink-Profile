@@ -3,6 +3,7 @@ package bio.link.model.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Getter
@@ -11,8 +12,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PluginsDto implements Serializable {
-    private String title;
-    private String url;
-    private Boolean isPlugin;
-    private String image;
+
+    private boolean success = true;
+
+    private String message;
+    private List<PluginsDto> data;
 }
