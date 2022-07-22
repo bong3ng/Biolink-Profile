@@ -3,40 +3,30 @@ package bio.link.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import bio.link.model.entity.DesignEntity;
+import bio.link.service.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import bio.link.service.DesignService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("api/user/design")
+@RequestMapping("api/design")
 @CrossOrigin("*")
 public class DesignController {
 
     @Autowired
+    private ProfileService profileService;
+
+    @Autowired
     private DesignService designService;
-    
-    
-    @ApiOperation(value = "Get All danh sách Themes Design", response = List.class)
-    
-    
+
     @GetMapping("")
     public List<DesignEntity> get() {
         return designService.getAll();
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/find/id={id}")
     public DesignEntity getDesign(
             @PathVariable("id") Long id
     ) {
@@ -71,17 +61,20 @@ public class DesignController {
 
 
     @PostMapping("")
-    public DesignEntity create(@ApiParam(value = "Đối tượng Design cần tạo mới", required = true)
+    public DesignEntity create(
+            @RequestHeader("Authorization") String jwt,
             @RequestBody DesignEntity designEntity
     ) {
-        return designService.update(designEntity);
+        return designService.create(profileService.convertJwt(jwt), designEntity);
     }
 
-    @PutMapping("")
+    @PutMapping("/{id}")
     public DesignEntity update(
+            @PathVariable("id") Long id,
+            @RequestHeader("Authorization") String jwt,
             @RequestBody DesignEntity designEntity
     ) {
-        return designService.update(designEntity);
+        return designService.update(id, profileService.convertJwt(jwt), designEntity);
     }
 
     @DeleteMapping("/{id}")

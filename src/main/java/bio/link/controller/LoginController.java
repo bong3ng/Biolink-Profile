@@ -30,8 +30,12 @@ import bio.link.security.user.CustomUserService;
 
 
 @RestController
+
 @RequestMapping("/api")
-@CrossOrigin
+
+
+@CrossOrigin("*")
+
 public class LoginController {
 
     @Autowired

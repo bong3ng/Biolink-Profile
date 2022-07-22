@@ -3,6 +3,7 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
+import bio.link.model.entity.UserEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
@@ -14,7 +15,9 @@ public interface  ProfileService {
 
 //    ResponseData getUserProfileByProfileName(String profileName);
 
-	ResponseData getUserProfileByUsername(String username);
+    UserEntity getUserByUsername(String username);
+
+    ResponseData getUserProfileByUsername(String username);
 
 	Status create(
 			String name,

@@ -18,14 +18,14 @@ import javax.transaction.Transactional;
 public interface ClickSocialRepository extends JpaRepository<ClickSocialEntity , Long> {
 
 
-    @Query(value = "SELECT * FROM click_social WHERE date = :date AND social_id = :socialId LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM click_socials WHERE date = :date AND social_id = :socialId LIMIT 1", nativeQuery = true)
     ClickSocialEntity getClickCountByDate( @Param("date") LocalDate date , @Param("socialId") Long socialId );
 
-    @Query(value = "SELECT SUM(click_count) FROM click_social WHERE date >= :date AND social_id = :socialId", nativeQuery = true)
+    @Query(value = "SELECT SUM(click_count) FROM click_socials WHERE date >= :date AND social_id = :socialId", nativeQuery = true)
     Long getAllClickCountBetween(@Param("socialId") Long socialId , @Param("date") LocalDate date);
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE click_social SET click_count = :clickCount WHERE social_id = :socialId AND date = :date" , nativeQuery = true)
+    @Query(value = "UPDATE click_socials SET click_count = :clickCount WHERE social_id = :socialId AND date = :date" , nativeQuery = true)
     void updateSocialClickCount(@Param("date") LocalDate date , @Param("socialId") Long socialId , @Param("clickCount") Long clickCount);
 }

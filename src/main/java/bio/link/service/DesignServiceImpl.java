@@ -16,7 +16,29 @@ public class DesignServiceImpl implements DesignService {
     private DesignRepository designRepository;
 
     @Override
-    public DesignEntity update(DesignEntity designEntity) {
+    public DesignEntity create(Long userId, DesignEntity designEntity) {
+        designEntity.setUserId(userId);
+        return designRepository.save(designEntity);
+    }
+
+    @Override
+    public DesignEntity update(Long id, Long userId, DesignEntity design) {
+
+        DesignEntity designEntity = designRepository.findOneById(id);
+
+        designEntity.setBackground(design.getBackground());
+        designEntity.setBackgroundImg(designEntity.getBackgroundImg());
+        designEntity.setBoxShadow(design.getBoxShadow());
+        designEntity.setBtnBdColor(design.getBtnBdColor());
+        designEntity.setBtnBdStyle(design.getBtnBdStyle());
+        designEntity.setBtnBdWidth(design.getBtnBdWidth());
+        designEntity.setBtnBg(design.getBtnBg());
+        designEntity.setBtnRadius(design.getBtnRadius());
+        designEntity.setColorHeader(design.getColorHeader());
+        designEntity.setColorLink(design.getColorLink());
+        designEntity.setFontFamily(design.getFontFamily());
+        designEntity.setName(design.getName());
+        designEntity.setUserId(userId);
         return designRepository.save(designEntity);
     }
 

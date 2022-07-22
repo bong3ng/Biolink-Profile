@@ -38,7 +38,7 @@ public class UserEntity {
     
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
-     
+
     private boolean enabled;
     
     private boolean status;

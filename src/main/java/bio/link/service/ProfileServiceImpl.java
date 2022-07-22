@@ -21,10 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import bio.link.model.dto.DesignDto;
 import bio.link.model.dto.PluginsDto;
 import bio.link.model.dto.ProfileDto;
 import bio.link.model.dto.SocialDto;
 import bio.link.model.entity.ClickProfileEntity;
+import bio.link.model.entity.DesignEntity;
 import bio.link.model.entity.PluginsEntity;
 import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.SocialEntity;
@@ -32,14 +34,13 @@ import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.ClickProfileRepository;
+import bio.link.repository.DesignRepository;
 import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class ProfileServiceImpl implements ProfileService {
 	@Autowired
@@ -48,10 +49,11 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-//    @Autowired
-//    private UserServiceImpl userService;
-	@Autowired
-	private ClickProfileRepository clickProfileRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ClickProfileRepository clickProfileRepository;
 
 	@Autowired
 	private ClickSocialServiceImpl clickSocialService;
@@ -64,21 +66,28 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Autowired
 	private ModelMapper modelMapper;
-
 	@Autowired
-	private UserRepository userRepo;
+	private DesignRepository designRepository;
 
-	private static HashMap<Long, Long> countClickProfileMap = new HashMap<>();
+//    @Autowired
+//    private  DesignService designService;
+    private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
 
-	private static LocalDate previousDate;
-	private static LocalDate currentDate;
-
-	@Override
-	public ResponseData getUserProfileByUsername(String username) {
-		// Conflict
-//        UserEntity userEntity = userService.getUserByUsername(username);
-		UserEntity userEntity = userRepo.findByUsername(username);
-		Long userId = userEntity.getId();
+    private static LocalDate previousDate;
+    private static LocalDate currentDate;
+    @Override
+    public UserEntity getUserByUsername(String username) {
+        username = username.trim();
+        UserEntity userEntity = userRepository.findByUsername(username);
+        if(userEntity == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
+        return userEntity;
+    }
+    @Override
+    public ResponseData getUserProfileByUsername(String username) {
+        UserEntity userEntity = this.getUserByUsername(username);
+        Long userId = userEntity.getId();
 
 		ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
 		Long profileId = profileEntity.getId();
@@ -127,21 +136,30 @@ public class ProfileServiceImpl implements ProfileService {
 		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
 				.collect(Collectors.toList());
 
-		ProfileDto profileDto = new ProfileDto(username, profileEntity.getName(), profileEntity.getBio(),
-				profileEntity.getImage(), listSocialDto, listPluginsDto);
-		ArrayList<ProfileDto> list = new ArrayList<>();
-		list.add(profileDto);
+
+      
+        DesignEntity designEntity = designRepository.findOneById(profileEntity.getActiveDesign());
+        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
+
+        ProfileDto profileDto = new ProfileDto( username ,
+                                                profileEntity.getName(),
+                                                profileEntity.getBio(),
+                                                profileEntity.getImage(),
+                                                listSocialDto ,
+                                                listPluginsDto,
+                                                designDto);
+        ArrayList<ProfileDto> list = new ArrayList<>();
+        list.add(profileDto);
+
 
 		return ResponseData.builder().success(true).message("Thành công").data(list).build();
 	}
 
-	public ResponseData clickUrlOfUsername(String username, String urlTitle, String url, Boolean isPlugins) {
 
-		// Conflict
-//        UserEntity userEntity = userService.getUserByUsername(username);
+    public ResponseData clickUrlOfUsername(String username , String urlTitle ,  String url , Boolean isPlugins) {
 
-		UserEntity userEntity = userRepo.findByUsername(username);
-		Long userId = userEntity.getId();
+        UserEntity userEntity = this.getUserByUsername(username);
+        Long userId = userEntity.getId();
 
 		urlTitle = urlTitle.trim().toLowerCase();
 		url = url.trim();
@@ -167,66 +185,48 @@ public class ProfileServiceImpl implements ProfileService {
 		return profileRepository.getProfileByUserId(userId);
 	}
 
+
 	@Override
 	public Status create(String name, String bio, Long userId) throws IOException {
-//        Path staticPath = Paths.get("static");
-//        Path imagePath = Paths.get("images");
+
 
 		ProfileEntity profile = profileRepository.findByUserId(userId);
 
-		// profile.setId(userId);
+	
 		profile.setName(name);
 		profile.setBio(bio);
-		// if (image != null && !image.isEmpty()) {
-		// Path file = CURRENT_FOLDER.resolve(staticPath)
-		// .resolve(imagePath)
-		// .resolve(image.getOriginalFilename());
-		//
-		// try (OutputStream os = Files.newOutputStream(file)) {
-		// os.write(image.getBytes());
-		// } catch (Exception e) {
-		// System.out.println(e.getMessage());
-		// }
-		// profile.setImage(
-		// imagePath.resolve(image.getOriginalFilename())
-		// .toString());
-		// }
-		// else profile.setImage(null);
+		
 
-		// profile.setActiveDesign(1L);
-		// profile.setShowLogo(true);
-		// profile.setShowNSFW(true);
 
 		profileRepository.save(profile);
 		return new Status(1, "Cập nhật thông tin thành công");
 	}
-
-	@Override
-	public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
-		Path staticPath = Paths.get("static");
-		Path imagePath = Paths.get("images");
-
-		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
-		profile.setId(1L);
-		profile.setName(name);
-		profile.setBio(bio);
-		if (image != null && !image.isEmpty()) {
-			Path file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath).resolve(image.getOriginalFilename());
-
-			try (OutputStream os = Files.newOutputStream(file)) {
-				os.write(image.getBytes());
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			profile.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
-		} else
-			profile.setImage(null);
 //
-//        profile.setActiveDesign(profile.getActiveDesign());
-//        profile.setShowLogo(profile.getShowLogo());
-//        profile.setShowNSFW(profile.getShowNSFW());
-		return profileRepository.save(profile);
-	}
+		@Override
+	    public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
+	        Path staticPath = Paths.get("static");
+	        Path imagePath = Paths.get("images");
+
+	        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+	        profile.setName(name);
+	        profile.setBio(bio);
+	        if (image != null && !image.isEmpty()) {
+	            Path file = CURRENT_FOLDER.resolve(staticPath)
+	                    .resolve(imagePath)
+	                    .resolve(image.getOriginalFilename());
+
+	            try (OutputStream os = Files.newOutputStream(file)) {
+	                os.write(image.getBytes());
+	            } catch (Exception e) {
+	                System.out.println(e.getMessage());
+	            }
+	            profile.setImage(
+	                    imagePath.resolve(image.getOriginalFilename())
+	                            .toString());
+	        }
+	        else profile.setImage(null);
+	        return profileRepository.save(profile);
+	    }
 
 	@Override
 	public ProfileEntity updateDesign(Long userId, Long designId) {
@@ -250,22 +250,22 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public List<UserEntity> getUserByAdmin() {
-		return userRepo.findAll();
+		return userRepository.findAll();
 	}
 
 	@Override
 	public UserEntity updateUserByAdmin(UserEntity user) {
-		return userRepo.save(user);
+		return userRepository.save(user);
 
 	}
 
 	@Override
 	public Status deleteUserByAdmin(Long id) {
-		Optional<UserEntity> findUser = userRepo.findById(id);
+		Optional<UserEntity> findUser = userRepository.findById(id);
 		if (findUser.isPresent()) {
 			UserEntity userDelete = findUser.get();
 			userDelete.setStatus(false);
-			userRepo.save(userDelete);
+			userRepository.save(userDelete);
 			return new Status(1, "Đã xóa thành công user: " + userDelete.getUsername());
 		}
 		return new Status(0, "Xóa thất bại, không tìm thấy user");
