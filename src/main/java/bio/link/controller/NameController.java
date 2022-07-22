@@ -31,8 +31,6 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("")
     public ProfileEntity getProfile(
@@ -70,7 +68,7 @@ public class NameController {
         return profileService.updateDesign(profileService.convertJwt(jwt), designId);
     }
 
-    @PutMapping("/show-logo")
+    @PutMapping("/setting")
     public ProfileEntity updateSetting(
             @RequestHeader("Authorization") String jwt,
             @RequestParam Boolean showLogo,

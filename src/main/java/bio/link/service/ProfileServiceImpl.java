@@ -199,8 +199,8 @@ public class ProfileServiceImpl implements ProfileService {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
 
-        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
-//        profile.setId(userId);
+        ProfileEntity profile = new ProfileEntity();
+
         profile.setName(name);
         profile.setBio(bio);
         if (image != null && !image.isEmpty()) {
@@ -231,8 +231,7 @@ public class ProfileServiceImpl implements ProfileService {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
 
-        ProfileEntity profile = new ProfileEntity();
-        profile.setId(1L);
+        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
         profile.setName(name);
         profile.setBio(bio);
         if (image != null && !image.isEmpty()) {
@@ -250,7 +249,6 @@ public class ProfileServiceImpl implements ProfileService {
                             .toString());
         }
         else profile.setImage(null);
-//
 //        profile.setActiveDesign(profile.getActiveDesign());
 //        profile.setShowLogo(profile.getShowLogo());
 //        profile.setShowNSFW(profile.getShowNSFW());
