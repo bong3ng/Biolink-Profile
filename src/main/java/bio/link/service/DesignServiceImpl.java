@@ -11,9 +11,9 @@ import bio.link.repository.DesignRepository;
 
 @Service
 public class DesignServiceImpl implements DesignService {
-
-    @Autowired
-    private ProfileService profileService;
+//
+//    @Autowired
+//    private ProfileService profileService;
 
     @Autowired
     private DesignRepository designRepository;

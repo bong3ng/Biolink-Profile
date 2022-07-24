@@ -3,11 +3,9 @@ package bio.link.service;
 
 
 import static bio.link.controller.NameController.CURRENT_FOLDER;
-
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,6 +23,10 @@ import bio.link.model.entity.*;
 import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.specialized.BlockBlobClient;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,11 +39,10 @@ import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ProfileRepository;
-import bio.link.repository.UserRepository;
-import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import lombok.RequiredArgsConstructor;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -51,8 +52,12 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+//
+//    @Autowired
+//    private BlobContainerClient  blobContainerClient;
 
-
+    @Autowired
+    private final BlobServiceClient blobServiceClient;
     @Autowired
     private UserRepository userRepository;
 
@@ -194,28 +199,78 @@ public class ProfileServiceImpl implements ProfileService {
         return profileRepository.getProfileByUserId(userId);
     }
 
+//    @Override
+//    public ProfileEntity create(String name, String bio, MultipartFile image, Long userId) throws IOException {
+//        Path staticPath = Paths.get("static");
+//        Path imagePath = Paths.get("images");
+//
+//        ProfileEntity profile = new ProfileEntity();
+//
+//        profile.setName(name);
+//        profile.setBio(bio);
+//        if (image != null && !image.isEmpty()) {
+//            Path file = CURRENT_FOLDER.resolve(staticPath)
+//                    .resolve(imagePath)
+//                    .resolve(image.getOriginalFilename());
+//
+//            try (OutputStream os = Files.newOutputStream(file)) {
+//                os.write(image.getBytes());
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//            profile.setImage(
+//                    imagePath.resolve(image.getOriginalFilename())
+//                            .toString());
+//        }
+//        else profile.setImage(null);
+//
+//        profile.setActiveDesign(1L);
+//        profile.setShowLogo(true);
+//        profile.setShowNSFW(true);
+//        profile.setUserId(userId);
+//        return profileRepository.save(profile);
+//    }
+
+
+    @Override
+    public String uploadImage(MultipartFile file, String containerName) {
+        BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
+        String filename = file.getOriginalFilename();
+        BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
+
+        try {
+            if (blockBlobClient.exists()) {
+                blockBlobClient.delete();
+            }
+
+            blockBlobClient.upload(new BufferedInputStream(file.getInputStream()), file.getSize(), true);
+            String filePath = containerName + "/" + filename;
+            Files.deleteIfExists(Paths.get(filePath));
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage());
+        }
+        return filename;
+    }
+
     @Override
     public ProfileEntity create(String name, String bio, MultipartFile image, Long userId) throws IOException {
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
 
         ProfileEntity profile = new ProfileEntity();
-
         profile.setName(name);
         profile.setBio(bio);
-        if (image != null && !image.isEmpty()) {
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath)
-                    .resolve(image.getOriginalFilename());
 
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            profile.setImage(
-                    imagePath.resolve(image.getOriginalFilename())
-                            .toString());
+        if (image != null && !image.isEmpty()) {
+            profile.setImage(uploadImage(image, "files"));
+
+//            BlobContainerClient container = new BlobContainerClientBuilder()
+//                    .connectionString(constr)
+//                    .containerName("files")
+//                    .buildClient();
+//
+//            BlobClient blobClient = container.getBlobClient(image.getOriginalFilename());
+//            blobClient.upload(image.getInputStream(), image.getSize(), true);
+//
+//            profile.setImage(image.getOriginalFilename());
         }
         else profile.setImage(null);
 
@@ -224,34 +279,19 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setShowNSFW(true);
         profile.setUserId(userId);
         return profileRepository.save(profile);
+
     }
 
     @Override
     public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
 
         ProfileEntity profile = profileRepository.getProfileByUserId(userId);
         profile.setName(name);
         profile.setBio(bio);
         if (image != null && !image.isEmpty()) {
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath)
-                    .resolve(image.getOriginalFilename());
-
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            profile.setImage(
-                    imagePath.resolve(image.getOriginalFilename())
-                            .toString());
+            profile.setImage(uploadImage(image, "files"));
         }
         else profile.setImage(null);
-//        profile.setActiveDesign(profile.getActiveDesign());
-//        profile.setShowLogo(profile.getShowLogo());
-//        profile.setShowNSFW(profile.getShowNSFW());
         return profileRepository.save(profile);
     }
 

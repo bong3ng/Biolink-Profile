@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import bio.link.model.entity.UserEntity;
+import lombok.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
@@ -34,10 +35,13 @@ public interface  ProfileService {
 	ProfileEntity getProfileByUserId(Long userId);
 
 	ProfileEntity updateDesign(Long userId, Long designId);
+
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw);
 
 	Long convertJwt(String jwt);
-	
+
+	String uploadImage(MultipartFile file, String containerName);
+
 	List<UserEntity> getUserByAdmin();
 	
 	UserEntity updateUserByAdmin(UserEntity user);

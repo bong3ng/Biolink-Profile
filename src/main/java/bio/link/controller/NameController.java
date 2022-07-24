@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
-import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.ProfileService;
 
 @RestController
