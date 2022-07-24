@@ -36,6 +36,8 @@ public interface  ProfileService {
 	ProfileEntity updateDesign(Long userId, Long designId);
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw);
 
+	String uploadImage(MultipartFile file, String containerName);
+
 	Long convertJwt(String jwt);
 	
 	List<UserEntity> getUserByAdmin();
