@@ -102,7 +102,7 @@ public class LoginController {
     }
     
     @PostMapping("/processForgot")
-    public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
+    public Status confirmPass(@RequestParam("token") String token, @RequestBody String password) {
     	
     	return userService.updatePassword( password, token);
     }
