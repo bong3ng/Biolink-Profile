@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 import bio.link.model.response.ResponseData;
 import bio.link.repository.UserRepository;
@@ -28,12 +27,12 @@ public class ApiHandlerException {
         return new ResponseData(false, ex.getMessage() , null);
     }
     
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ResponseData notFound(Exception ex, WebRequest request) {
-//    	String message;
-//    	if(userRepository.find)
-    	return new ResponseData(false, ex.getMessage(), null);
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+//    public ResponseData notFound(Exception ex, WebRequest request) {
+////    	String message;
+////    	if(userRepository.find)
+//    	return new ResponseData(false, ex.getMessage(), null);
+//    }
 
 }
