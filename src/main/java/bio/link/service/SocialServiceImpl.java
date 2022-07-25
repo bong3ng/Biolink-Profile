@@ -26,24 +26,13 @@ public class SocialServiceImpl implements SocialService {
         return socialRepository.getSocialByUserIdAndName(userId , socialName);
     }
     @Override
-    public SocialEntity saveSocial(String url, Long userId) throws IOException {
+    public SocialEntity createSocial(String url, Long userId) throws IOException {
 
         SocialEntity social = new SocialEntity();
         social.setUrl(url);
         social.setUserId(userId);
-
-
         return socialRepository.save(social);
     }
-
-
-
-    @Override
-    public List<SocialEntity> getAllSocialByUserId(long userId) {
-        return (List<SocialEntity>)
-                socialRepository.findAll();
-    }
-
 
 
     @Override

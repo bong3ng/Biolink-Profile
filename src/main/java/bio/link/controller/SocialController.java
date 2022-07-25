@@ -16,7 +16,7 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.service.SocialService;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api/user")
 @CrossOrigin("*")
 
 public class SocialController {
@@ -28,18 +28,19 @@ public class SocialController {
     private JwtTokenProvider jwtTokenProvider;
 
 
-    @PostMapping("/social")
+    @PostMapping("/createSocial")
     @ResponseStatus(HttpStatus.CREATED)
-    private SocialEntity saveSocial(
+    private SocialEntity createSocial(
             @RequestParam String url,
             @RequestHeader("Authorization") String jwt ) throws IOException {
-        return socialService.saveSocial(url , jwtTokenProvider.getUserIdFromHeader(jwt));
+        return socialService.createSocial(url , jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
 
     @GetMapping("/social")
-    public List<SocialEntity> getAllSocial(long userId) {
-        return socialService.getAllSocialByUserId(userId);
+    public List<SocialEntity> getAllSocialByUserId(long userId) {
+
+        return socialService.getAllSocialsByUserId(userId);
     };
 
 
@@ -47,7 +48,6 @@ public class SocialController {
     @ResponseStatus(HttpStatus.CREATED)
     public SocialEntity updateSocial(
             @RequestParam String url ,
-            @RequestParam Long profile_id,
             @PathVariable("id") Long id) {
         return socialService.updateSocial(url , id);
     }

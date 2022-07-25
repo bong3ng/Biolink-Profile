@@ -2,6 +2,7 @@ package bio.link.service;
 
 import static bio.link.controller.NameController.CURRENT_FOLDER;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -16,6 +17,10 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.specialized.BlockBlobClient;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +45,7 @@ import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 
+@Log4j2
 @Service
 @Transactional
 public class ProfileServiceImpl implements ProfileService {
@@ -48,6 +54,9 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+
+	@Autowired
+	private BlobServiceClient blobServiceClient;
 
     @Autowired
     private UserRepository userRepository;
@@ -69,8 +78,6 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private DesignRepository designRepository;
 
-//    @Autowired
-//    private  DesignService designService;
     private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
 
     private static LocalDate previousDate;
@@ -189,44 +196,48 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public Status create(String name, String bio, Long userId) throws IOException {
 
-
 		ProfileEntity profile = profileRepository.findByUserId(userId);
 
-	
 		profile.setName(name);
 		profile.setBio(bio);
-		
-
 
 		profileRepository.save(profile);
 		return new Status(1, "Cập nhật thông tin thành công");
 	}
-//
-		@Override
-	    public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
-	        Path staticPath = Paths.get("static");
-	        Path imagePath = Paths.get("images");
 
-	        ProfileEntity profile = profileRepository.getProfileByUserId(userId);
-	        profile.setName(name);
-	        profile.setBio(bio);
-	        if (image != null && !image.isEmpty()) {
-	            Path file = CURRENT_FOLDER.resolve(staticPath)
-	                    .resolve(imagePath)
-	                    .resolve(image.getOriginalFilename());
+	@Override
+	public String uploadImage(MultipartFile file, String containerName) {
+		BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
+		String filename = file.getOriginalFilename();
+		BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
 
-	            try (OutputStream os = Files.newOutputStream(file)) {
-	                os.write(image.getBytes());
-	            } catch (Exception e) {
-	                System.out.println(e.getMessage());
-	            }
-	            profile.setImage(
-	                    imagePath.resolve(image.getOriginalFilename())
-	                            .toString());
-	        }
-	        else profile.setImage(null);
-	        return profileRepository.save(profile);
-	    }
+		try {
+			if (blockBlobClient.exists()) {
+				blockBlobClient.delete();
+			}
+
+			blockBlobClient.upload(new BufferedInputStream(file.getInputStream()), file.getSize(), true);
+			String filePath = containerName + "/" + filename;
+			Files.deleteIfExists(Paths.get(filePath));
+		} catch (IOException e) {
+			log.error(e.getLocalizedMessage());
+		}
+		return filename;
+	}
+
+	@Override
+	public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
+
+		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+		profile.setName(name);
+		profile.setBio(bio);
+
+		if (image != null && !image.isEmpty()) {
+			profile.setImage(uploadImage(image, "files"));
+		}
+		else profile.setImage(null);
+		return profileRepository.save(profile);
+	}
 
 	@Override
 	public ProfileEntity updateDesign(Long userId, Long designId) {
