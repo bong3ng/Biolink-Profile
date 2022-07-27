@@ -19,8 +19,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,8 +39,13 @@ public class PluginsServiceImpl implements PluginsService{
     private PluginsRepository pluginsRepository;
 
 
+    @Autowired
+    private Cloudinary cloudinary;
+
+
     @Override
-    public List<PluginsEntity> getAllPluginsByUserId(Long userId) {
+    public List<PluginsEntity> getAllPluginsByUserId(MultipartFile file, Long userId) {
+
         return pluginsRepository.getAllPluginsByUserId(userId);
     }
 
@@ -54,28 +62,27 @@ public class PluginsServiceImpl implements PluginsService{
             Boolean isHeader,
             Boolean isPlugins,
             Boolean isHide,
+            String pluginName,
             Long userId) throws IOException {
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
         PluginsEntity links = new PluginsEntity();
         links.setUrl(url);
         links.setTitle(title);
         if ( image != null && !image.isEmpty()) {
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath).resolve(image.getOriginalFilename());
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
+            try {
+                Map map = this.cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                links.setImage(map.get("url").toString());
             } catch (Exception e) {
-            	System.out.println(e.getMessage());
-
+                System.out.println(e);
             }
-            links.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
+//            links.setImage(image.getOriginalFilename().toString());
+
         } else {
             links.setImage(null);
         }
         links.setIsHeader(false);
         links.setIsPlugin(false);
         links.setIsHide(false);
+        links.setPluginName(null);
         links.setUserId(userId);
         // bước này để có được id
         pluginsRepository.save(links);
@@ -87,13 +94,19 @@ public class PluginsServiceImpl implements PluginsService{
         return pluginsRepository.save(links);
     }
     @Override
-    public PluginsEntity createHeader(String title , Boolean isHeader ,  Boolean isPlugins,
-                              Boolean isHide , Long userId) throws IOException {
+    public PluginsEntity createHeader(
+            String title ,
+            Boolean isHeader ,
+            Boolean isPlugins,
+            Boolean isHide ,
+            String pluginName,
+            Long userId) throws IOException {
         PluginsEntity header = new PluginsEntity();
         header.setTitle(title);
         header.setIsHeader(true);
         header.setIsPlugin(false);
         header.setIsHide(false);
+        header.setPluginName(null);
         header.setUserId(userId);
         pluginsRepository.save(header);
         header.setNumLocation(header.getId());
@@ -109,6 +122,7 @@ public class PluginsServiceImpl implements PluginsService{
             Boolean isHeader,
             Boolean isPlugin,
             Boolean isHide,
+            String pluginName,
             Long userId) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
@@ -117,21 +131,19 @@ public class PluginsServiceImpl implements PluginsService{
         plugins.setTitle(title);
         plugins.setUrl(url);
         if ( image != null && !image.isEmpty()) {
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath).resolve(image.getOriginalFilename());
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
+            try {
+                Map map = this.cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                plugins.setImage(map.get("url").toString());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-
+                System.out.println(e);
             }
-            plugins.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         } else {
             plugins.setImage(null);
         }
         plugins.setIsHeader(false);
         plugins.setIsPlugin(true);
         plugins.setIsHide(false);
+        plugins.setPluginName(pluginName);
         plugins.setUserId(userId);
         pluginsRepository.save(plugins);
         plugins.setNumLocation(plugins.getId());
@@ -142,8 +154,6 @@ public class PluginsServiceImpl implements PluginsService{
     @Override
     public PluginsEntity updateContentPlugin( String title , String url, MultipartFile image , Long id) {
         PluginsEntity pluginsUp = pluginsRepository.findById(id).get();
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
         if (Objects.nonNull(title) && !"".equalsIgnoreCase(title)) {
             pluginsUp.setTitle(title);
         }
@@ -151,14 +161,12 @@ public class PluginsServiceImpl implements PluginsService{
             pluginsUp.setUrl(url);
         }
         if ( image != null && !image.isEmpty()) {
-            Path file = CURRENT_FOLDER.resolve(staticPath)
-                    .resolve(imagePath).resolve(image.getOriginalFilename());
-            try (OutputStream os = Files.newOutputStream(file)) {
-                os.write(image.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            try {
+                Map map = this.cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                pluginsUp.setImage(map.get("url").toString());
+            } catch (Exception e) {
+                System.out.println(e);
             }
-            pluginsUp.setImage(imagePath.resolve(image.getOriginalFilename()).toString());
         }
         return pluginsRepository.save(pluginsUp);
     }

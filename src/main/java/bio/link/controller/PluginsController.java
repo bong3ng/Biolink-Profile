@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import bio.link.repository.PluginsRepository;
+import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,8 +39,16 @@ public class PluginsController {
     @Autowired
     private PluginsService pluginsService;
 
+
+    @Autowired
+    private PluginsRepository pluginsRepository;
+
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+
+    @Autowired
+    private Cloudinary cloudinary;
 
 
 
@@ -47,14 +57,15 @@ public class PluginsController {
     @ResponseStatus(HttpStatus.CREATED)
     public PluginsEntity createLink(@RequestParam String title,
                           @RequestParam String url,
-                          @RequestParam MultipartFile image,
+                          @RequestParam(required = false) MultipartFile image,
                           @RequestParam(required = false) Boolean isHeader ,
                           @RequestParam(required = false) Boolean isPlugin,
                           @RequestParam(required = false) Boolean isHide,
-                                @RequestHeader("Authorization") String jwt
+                          @RequestParam String pluginName,
+                          @RequestHeader("Authorization") String jwt
     ) throws IOException {
 
-            return pluginsService.createLink(title , url , image , isHeader , isPlugin , isHide, jwtTokenProvider.getUserIdFromHeader(jwt));
+            return pluginsService.createLink(title , url , image , isHeader , isPlugin , isHide, pluginName, jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
 
@@ -66,9 +77,10 @@ public class PluginsController {
             @RequestParam(required = false) Boolean isHeader,
             @RequestParam(required = false) Boolean isPlugin,
             @RequestParam(required = false) Boolean isHide,
+            @RequestParam String pluginName,
             @RequestHeader("Authorization") String jwt
     ) throws IOException {
-        return pluginsService.createHeader(title, isHeader , isPlugin , isHide , jwtTokenProvider.getUserIdFromHeader(jwt));
+        return pluginsService.createHeader(title, isHeader , isPlugin , isHide , pluginName, jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
 
@@ -82,9 +94,10 @@ public class PluginsController {
             @RequestParam(required = false) Boolean isHeader ,
             @RequestParam(required = false) Boolean isPlugin,
             @RequestParam(required = false) Boolean isHide,
+            @RequestParam String pluginName,
             @RequestHeader("Authorization") String jwt
     ) throws IOException {
-        return pluginsService.createPlugin(title , url , image , isHeader , isPlugin , isHide, jwtTokenProvider.getUserIdFromHeader(jwt));
+        return pluginsService.createPlugin(title , url , image , isHeader , isPlugin , isHide, pluginName, jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
 
@@ -94,7 +107,7 @@ public class PluginsController {
 
             @RequestHeader("Authorization") String jwt) {
 
-        return  pluginsService.getAllPluginsByUserId( jwtTokenProvider.getUserIdFromHeader(jwt));
+        return pluginsRepository.getAllPluginsByUserId(jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
 
@@ -113,6 +126,7 @@ public class PluginsController {
 
     //thay đổi vị trí links, header
     @PutMapping("/updateLocation")
+    @ResponseStatus(HttpStatus.CREATED)
     public PluginsEntity updateLocationPlugins(
             @RequestBody List<PluginsEntity> pluginsEntityList,
             @RequestHeader("Authorization") String jwt

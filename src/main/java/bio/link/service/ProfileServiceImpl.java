@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import bio.link.repository.*;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
@@ -38,10 +39,6 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
-import bio.link.repository.ClickProfileRepository;
-import bio.link.repository.DesignRepository;
-import bio.link.repository.ProfileRepository;
-import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 
@@ -77,6 +74,9 @@ public class ProfileServiceImpl implements ProfileService {
 	private ModelMapper modelMapper;
 	@Autowired
 	private DesignRepository designRepository;
+
+	@Autowired
+	private PluginsRepository pluginsRepository;
 
     private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
 
@@ -139,7 +139,7 @@ public class ProfileServiceImpl implements ProfileService {
 		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
 				.collect(Collectors.toList());
 
-		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
+		List<PluginsEntity> listPlugins = pluginsRepository.getAllPluginsByUserId(userId);
 		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
 				.collect(Collectors.toList());
 
