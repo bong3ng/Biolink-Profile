@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import bio.link.service.DesignService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/design")
@@ -24,6 +25,13 @@ public class DesignController {
     @GetMapping("")
     public List<DesignEntity> get() {
         return designService.getAll();
+    }
+
+    @GetMapping("/find/userId={userId}")
+    public List<DesignEntity> getAllByUserId(
+            @PathVariable("userId") Long userId
+    ) {
+        return designService.getAllByUserId(userId);
     }
 
     @GetMapping("/find/id={id}")
@@ -62,19 +70,21 @@ public class DesignController {
 
     @PostMapping("")
     public DesignEntity create(
-            @RequestHeader("Authorization") String jwt,
-            @RequestBody DesignEntity designEntity
+            @ModelAttribute DesignEntity designEntity,
+            @RequestParam MultipartFile image,
+            @RequestHeader("Authorization") String jwt
     ) {
-        return designService.create(profileService.convertJwt(jwt), designEntity);
+        return designService.create(designEntity, image, profileService.convertJwt(jwt));
     }
 
     @PutMapping("/{id}")
     public DesignEntity update(
-            @PathVariable("id") Long id,
+            @ModelAttribute DesignEntity designEntity,
+            @RequestParam MultipartFile image,
             @RequestHeader("Authorization") String jwt,
-            @RequestBody DesignEntity designEntity
+            @PathVariable("id") Long id
     ) {
-        return designService.update(id, profileService.convertJwt(jwt), designEntity);
+        return designService.update(designEntity, image, id, profileService.convertJwt(jwt));
     }
 
     @DeleteMapping("/{id}")

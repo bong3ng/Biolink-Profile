@@ -8,26 +8,52 @@ import org.springframework.stereotype.Service;
 
 import bio.link.model.entity.DesignEntity;
 import bio.link.repository.DesignRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class DesignServiceImpl implements DesignService {
 
     @Autowired
+    private ProfileService profileService;
+
+    @Autowired
     private DesignRepository designRepository;
 
     @Override
-    public DesignEntity create(Long userId, DesignEntity designEntity) {
+    public DesignEntity create(DesignEntity designEntity, MultipartFile image, Long userId) {
+
+        if (image != null) {
+            try {
+                String path = profileService.uploadImage(image, "files");
+                designEntity.setBackgroundImg(path);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+        else designEntity.setBackgroundImg(null);
         designEntity.setUserId(userId);
         return designRepository.save(designEntity);
     }
 
     @Override
-    public DesignEntity update(Long id, Long userId, DesignEntity design) {
+    public DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id) {
 
-        DesignEntity designEntity = designRepository.findOneById(id);
+        DesignEntity designEntity = designRepository.findDesignEntityById(id);
 
         designEntity.setBackground(design.getBackground());
-        designEntity.setBackgroundImg(designEntity.getBackgroundImg());
+
+        if (image != null) {
+            try {
+                String path = profileService.uploadImage(image, "files");
+                designEntity.setBackgroundImg(path);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+        else designEntity.setBackgroundImg(null);
+
         designEntity.setBoxShadow(design.getBoxShadow());
         designEntity.setBtnBdColor(design.getBtnBdColor());
         designEntity.setBtnBdStyle(design.getBtnBdStyle());
@@ -49,14 +75,20 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
+    public List<DesignEntity> getAllByUserId(Long userId) {
+        return (List<DesignEntity>)
+                designRepository.findAllByUserId(userId);
+    }
+
+    @Override
     public DesignEntity getDesignById(Long id) {
-        DesignEntity designEntity = designRepository.findOneById(id);
+        DesignEntity designEntity = designRepository.findDesignEntityById(id);
         return designEntity;
     }
 
     @Override
     public void delete(Long id) {
-        DesignEntity designEntity = designRepository.findOneById(id);
+        DesignEntity designEntity = designRepository.findDesignEntityById(id);
         designRepository.delete(designEntity);
     }
 }

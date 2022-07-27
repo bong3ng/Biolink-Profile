@@ -17,8 +17,12 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.BlobHttpHeaders;
+import com.azure.storage.blob.models.BlobProperties;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -145,7 +149,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 
       
-        DesignEntity designEntity = designRepository.findOneById(profileEntity.getActiveDesign());
+        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
         DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
 
         ProfileDto profileDto = new ProfileDto( username ,
@@ -209,6 +213,7 @@ public class ProfileServiceImpl implements ProfileService {
 	public String uploadImage(MultipartFile file, String containerName) {
 		BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
 		String filename = file.getOriginalFilename();
+		String filePath = "";
 		BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
 
 		try {
@@ -217,13 +222,22 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 
 			blockBlobClient.upload(new BufferedInputStream(file.getInputStream()), file.getSize(), true);
-			String filePath = containerName + "/" + filename;
+
+			assert filename != null;
+			if (filename.endsWith(".jpg")) {
+				blockBlobClient.setHttpHeaders(new BlobHttpHeaders().setContentType("image/jpeg"));
+			} else if (filename.endsWith(".png")) {
+				blockBlobClient.setHttpHeaders(new BlobHttpHeaders().setContentType("image/png"));
+			}
+
+			filePath = containerName + "/" + filename;
 			Files.deleteIfExists(Paths.get(filePath));
 		} catch (IOException e) {
 			log.error(e.getLocalizedMessage());
 		}
-		return filename;
+		return "https://anhtcogn.blob.core.windows.net/" + filePath;
 	}
+
 
 	@Override
 	public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
