@@ -124,8 +124,6 @@ public class PluginsServiceImpl implements PluginsService{
             Boolean isHide,
             String pluginName,
             Long userId) throws IOException {
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
         PluginsEntity plugins = new PluginsEntity();
 
         plugins.setTitle(title);

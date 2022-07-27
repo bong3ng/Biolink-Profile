@@ -61,7 +61,7 @@ public class PluginsController {
                           @RequestParam(required = false) Boolean isHeader ,
                           @RequestParam(required = false) Boolean isPlugin,
                           @RequestParam(required = false) Boolean isHide,
-                          @RequestParam String pluginName,
+                          @RequestParam(required = false) String pluginName,
                           @RequestHeader("Authorization") String jwt
     ) throws IOException {
 
@@ -77,7 +77,7 @@ public class PluginsController {
             @RequestParam(required = false) Boolean isHeader,
             @RequestParam(required = false) Boolean isPlugin,
             @RequestParam(required = false) Boolean isHide,
-            @RequestParam String pluginName,
+            @RequestParam(required = false) String pluginName,
             @RequestHeader("Authorization") String jwt
     ) throws IOException {
         return pluginsService.createHeader(title, isHeader , isPlugin , isHide , pluginName, jwtTokenProvider.getUserIdFromHeader(jwt));

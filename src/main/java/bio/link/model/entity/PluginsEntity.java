@@ -37,8 +37,6 @@ public class PluginsEntity {
     @Column(name = "num_location")
     private Long numLocation;
 
-
-
     @Column(name = "plugin_name")
     private String pluginName;
 }
