@@ -1,35 +1,28 @@
 package bio.link.service;
 
-import static bio.link.controller.NameController.CURRENT_FOLDER;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.specialized.BlockBlobClient;
-import lombok.extern.log4j.Log4j2;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.DesignDto;
-import bio.link.model.dto.PluginsDto;
 import bio.link.model.dto.ProfileDto;
-import bio.link.model.dto.SocialDto;
 import bio.link.model.entity.ClickProfileEntity;
 import bio.link.model.entity.DesignEntity;
 import bio.link.model.entity.PluginsEntity;
@@ -44,6 +37,7 @@ import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
@@ -136,12 +130,12 @@ public class ProfileServiceImpl implements ProfileService {
 //        }
 
 		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
-		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
-				.collect(Collectors.toList());
+//		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
+//				.collect(Collectors.toList());
 
 		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
-		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
-				.collect(Collectors.toList());
+//		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
+//				.collect(Collectors.toList());
 
 
       
@@ -152,8 +146,8 @@ public class ProfileServiceImpl implements ProfileService {
                                                 profileEntity.getName(),
                                                 profileEntity.getBio(),
                                                 profileEntity.getImage(),
-                                                listSocialDto ,
-                                                listPluginsDto,
+                                                listSocial ,
+                                                listPlugins,
                                                 designDto);
         ArrayList<ProfileDto> list = new ArrayList<>();
         list.add(profileDto);
