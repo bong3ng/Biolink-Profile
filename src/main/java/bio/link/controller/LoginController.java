@@ -42,9 +42,6 @@ public class LoginController {
     AuthenticationManager authenticationManager;
     
 
-    
-    
-
     @Autowired
     CustomUserService userService;
 
