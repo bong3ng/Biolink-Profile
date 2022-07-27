@@ -2,10 +2,11 @@ package bio.link.service;
 
 
 
-import bio.link.model.entity.DesignEntity;
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import bio.link.model.entity.DesignEntity;
 
 public interface DesignService {
 
@@ -17,5 +18,7 @@ public interface DesignService {
 
     DesignEntity getDesignById(Long id);
     void delete(Long id);
+
+
 
 }
