@@ -13,8 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 public class PluginsDto implements Serializable {
 
-    private boolean success = true;
+    private String title;
 
-    private String message;
-    private List<PluginsDto> data;
+    private String url;
+
+    private String image;
+
 }

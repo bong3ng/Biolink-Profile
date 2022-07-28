@@ -4,15 +4,12 @@ package bio.link.service;
 import bio.link.model.dto.*;
 import bio.link.model.entity.*;
 import bio.link.model.response.ResponseData;
-import bio.link.repository.ClickPluginsRepository;
-import bio.link.repository.ClickProfileRepository;
-import bio.link.repository.ClickSocialRepository;
+import bio.link.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bio.link.model.exception.NotFoundException;
-import bio.link.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -31,6 +28,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PluginsService pluginsService;
+
+    @Autowired
+    private PluginsRepository pluginsRepository;
     @Autowired
     private ClickSocialRepository clickSocialRepository;
 
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService{
             clickSocialDtoList.add(dto);
         }
 
-        List<PluginsEntity> pluginsEntityList = pluginsService.getAllPluginsByUserId(userId);
+        List<PluginsEntity> pluginsEntityList = pluginsRepository.getAllPluginsByUserId(userId);
         List<ClickPluginsDto> clickPluginsDtoList = new ArrayList<>();
         for(int i = 0 ; i< pluginsEntityList.size() ; i++) {
             ClickPluginsDto dto = ClickPluginsDto.builder()

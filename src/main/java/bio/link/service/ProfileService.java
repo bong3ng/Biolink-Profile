@@ -48,7 +48,7 @@ public interface  ProfileService {
 	
 	ProfileDto getUserProfileByJWT(String jwt);
 	
-	Status updateShow(Boolean showLogo, Boolean showNSFW, String jwt);
+
 	
 
 

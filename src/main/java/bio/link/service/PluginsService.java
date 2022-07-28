@@ -10,7 +10,7 @@ import bio.link.model.entity.PluginsEntity;
 public interface PluginsService {
 
 
-	List<PluginsEntity> getAllPluginsByUserId(Long userId);
+	List<PluginsEntity> getAllPluginsByUserId( Long userId);
 
 	PluginsEntity getPluginsByUserIdAndTitle(String pluginsTitle, Long userId);
 
@@ -21,6 +21,7 @@ public interface PluginsService {
 	        Boolean isHeader,
 	        Boolean isPlugin,
 	        Boolean isHide,
+			String pluginName,
 	        Long userId) throws IOException;
 
 
@@ -29,6 +30,7 @@ public interface PluginsService {
 			Boolean isHeader ,
 			Boolean isPlugin,
 			Boolean isHide ,
+			String pluginName,
 			Long userid) throws IOException;
 
 
@@ -39,6 +41,7 @@ public interface PluginsService {
 			Boolean isHeader,
 			Boolean isPlugin,
 			Boolean isHide,
+			String pluginName,
 			Long userId) throws IOException;
 
 

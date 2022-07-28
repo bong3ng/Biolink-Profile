@@ -13,7 +13,7 @@ import bio.link.model.entity.PluginsEntity;
 public interface PluginsRepository extends JpaRepository<PluginsEntity , Long> {
 
 
-    @Query(value = "SELECT * FROM plugins WHERE user_id = :userId",nativeQuery = true)
+    @Query(value = "SELECT * FROM plugins WHERE user_id = :userId ORDER BY num_location" ,nativeQuery = true)
     List<PluginsEntity> getAllPluginsByUserId(@Param("userId") Long userId);
     @Query(value = "SELECT * FROM plugins WHERE user_id = :userId AND title = :pluginsTitle LIMIT 1" , nativeQuery = true)
     PluginsEntity getPluginsByUserIdAndTitle(@Param("userId") Long userId, @Param("pluginsTitle") String pluginsTitle);
@@ -22,4 +22,6 @@ public interface PluginsRepository extends JpaRepository<PluginsEntity , Long> {
     //auth : khanhht13
     //date : 02/07/2022
     List<PluginsEntity> findByUserIdOrderByNumLocationAsc(Long userId);
+
+
 }
