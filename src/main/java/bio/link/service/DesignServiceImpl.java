@@ -23,56 +23,65 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public DesignEntity create(DesignEntity designEntity, MultipartFile image, Long userId) {
+        DesignEntity design = new DesignEntity();
 
-        if (image != null) {
-            try {
-                String path = profileService.uploadImage(image, "files");
-                designEntity.setBackgroundImg(path);
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
+        if (image != null && !image.isEmpty()) {
+            String path = profileService.uploadImage(image, "designs");
+            design.setBackgroundImg(path);
         }
-        else designEntity.setBackgroundImg(null);
-        designEntity.setUserId(userId);
-        designRepository.save(designEntity);
+        else design.setBackgroundImg(null);
+
+        design.setBackground(designEntity.getBackground());
+        design.setBoxShadow(designEntity.getBoxShadow());
+        design.setBtnBdColor(designEntity.getBtnBdColor());
+        design.setBtnBdStyle(designEntity.getBtnBdStyle());
+        design.setBtnBdWidth(designEntity.getBtnBdWidth());
+        design.setBtnBg(designEntity.getBtnBg());
+        design.setBtnRadius(designEntity.getBtnRadius());
+        design.setColorHeader(designEntity.getColorHeader());
+        design.setColorLink(designEntity.getColorLink());
+        design.setFontFamily(designEntity.getFontFamily());
+        design.setName(designEntity.getName());
+        design.setUserId(userId);
+        designRepository.save(design);
 
         ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
-        profileEntity.setActiveDesign(designEntity.getId());
-        return designRepository.save(designEntity);
+        profileEntity.setActiveDesign(design.getId());
+
+        return designRepository.save(design);
     }
 
-    @Override
-    public DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id) {
-
-        DesignEntity designEntity = designRepository.findDesignEntityById(id);
-
-        designEntity.setBackground(design.getBackground());
-
-        if (image != null) {
-            try {
-                String path = profileService.uploadImage(image, "files");
-                designEntity.setBackgroundImg(path);
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
-        }
-        else designEntity.setBackgroundImg(null);
-
-        designEntity.setBoxShadow(design.getBoxShadow());
-        designEntity.setBtnBdColor(design.getBtnBdColor());
-        designEntity.setBtnBdStyle(design.getBtnBdStyle());
-        designEntity.setBtnBdWidth(design.getBtnBdWidth());
-        designEntity.setBtnBg(design.getBtnBg());
-        designEntity.setBtnRadius(design.getBtnRadius());
-        designEntity.setColorHeader(design.getColorHeader());
-        designEntity.setColorLink(design.getColorLink());
-        designEntity.setFontFamily(design.getFontFamily());
-        designEntity.setName(design.getName());
-        designEntity.setUserId(userId);
-        return designRepository.save(designEntity);
-    }
+//    @Override
+//    public DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id) {
+//
+//        DesignEntity designEntity = designRepository.findDesignEntityById(id);
+//
+//        designEntity.setBackground(design.getBackground());
+//
+//        if (image != null) {
+//            try {
+//                String path = profileService.uploadImage(image, "files");
+//                designEntity.setBackgroundImg(path);
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            }
+//
+//        }
+//        else designEntity.setBackgroundImg(null);
+//
+//        designEntity.setBoxShadow(design.getBoxShadow());
+//        designEntity.setBtnBdColor(design.getBtnBdColor());
+//        designEntity.setBtnBdStyle(design.getBtnBdStyle());
+//        designEntity.setBtnBdWidth(design.getBtnBdWidth());
+//        designEntity.setBtnBg(design.getBtnBg());
+//        designEntity.setBtnRadius(design.getBtnRadius());
+//        designEntity.setColorHeader(design.getColorHeader());
+//        designEntity.setColorLink(design.getColorLink());
+//        designEntity.setFontFamily(design.getFontFamily());
+//        designEntity.setName(design.getName());
+//        designEntity.setUserId(userId);
+//        return designRepository.save(designEntity);
+//    }
 
     @Override
     public List<DesignEntity> getAll() {

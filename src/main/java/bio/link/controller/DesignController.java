@@ -55,22 +55,23 @@ public class DesignController {
 
     @PostMapping("")
     public DesignEntity create(
+            @RequestHeader("Authorization") String jwt,
             @ModelAttribute DesignEntity designEntity,
-            @RequestParam(required = false) MultipartFile image,
-            @RequestHeader("Authorization") String jwt
+            @RequestParam(required = false) MultipartFile image
+
     ) {
         return designService.create(designEntity, image, profileService.convertJwt(jwt));
     }
 
-    @PutMapping("/{id}")
-    public DesignEntity update(
-            @ModelAttribute DesignEntity designEntity,
-            @RequestParam(required = false) MultipartFile image,
-            @RequestHeader("Authorization") String jwt,
-            @PathVariable("id") Long id
-    ) {
-        return designService.update(designEntity, image, id, profileService.convertJwt(jwt));
-    }
+//    @PutMapping("/{id}")
+//    public DesignEntity update(
+//            @RequestHeader("Authorization") String jwt,
+//            @ModelAttribute DesignEntity designEntity,
+//            @RequestParam(required = false) MultipartFile image,
+//            @RequestParam("id") Long id
+//    ) {
+//        return designService.update(designEntity, image, id, profileService.convertJwt(jwt));
+//    }
 
     @DeleteMapping("/deleteById")
     public Status delete(
