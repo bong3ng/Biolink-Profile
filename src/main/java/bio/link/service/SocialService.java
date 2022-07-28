@@ -13,10 +13,9 @@ public interface SocialService {
 
     SocialEntity getSocialByUserIdAndName(Long userId, String socialName);
 
-    SocialEntity saveSocial(String url , Long profile_id) throws IOException;
+    SocialEntity createSocial(String url , Long userId) throws IOException;
 
 
-    List<SocialEntity> getAllSocialByUserId(long userId);
 
 
     SocialEntity updateSocial(String url , Long id);

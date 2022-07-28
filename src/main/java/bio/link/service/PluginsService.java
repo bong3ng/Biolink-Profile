@@ -10,29 +10,47 @@ import bio.link.model.entity.PluginsEntity;
 public interface PluginsService {
 
 
-	List<PluginsEntity> getAllPluginsByUserId(Long userId);
+	List<PluginsEntity> getAllPluginsByUserId( Long userId);
 
 	PluginsEntity getPluginsByUserIdAndTitle(String pluginsTitle, Long userId);
 
-	PluginsEntity savePlugins(
+	PluginsEntity createLink(
 	        String title,
 	        String url,
 	        MultipartFile image,
 	        Boolean isHeader,
-	        Boolean isPlugins,
+	        Boolean isPlugin,
 	        Boolean isHide,
+			String pluginName,
 	        Long userId) throws IOException;
-	PluginsEntity saveHeader(String title , Boolean isHeader ,  Boolean isPlugins,
-	                   Boolean isHide);
-	List<PluginsEntity> getAllPluginsByUserId(long userId);
+
+
+	PluginsEntity createHeader(
+			String title ,
+			Boolean isHeader ,
+			Boolean isPlugin,
+			Boolean isHide ,
+			String pluginName,
+			Long userid) throws IOException;
+
+
+	PluginsEntity createPlugin (
+			String title,
+			String url,
+			MultipartFile image,
+			Boolean isHeader,
+			Boolean isPlugin,
+			Boolean isHide,
+			String pluginName,
+			Long userId) throws IOException;
 
 
 	//update content của plugins.
-	PluginsEntity updateContentPlugins( String title, String url, MultipartFile image , Long id);
+	PluginsEntity updateContentPlugin( String title, String url, MultipartFile image , Long id);
 
 
 	//update location ( thay đổi vị trí links , header , plugins )
-	PluginsEntity updateLocationPlugins(List<PluginsEntity> list , long userId);
+	PluginsEntity updateLocationPlugin(List<PluginsEntity> list , long userId);
 
 
 	void deletePluginsById(Long id);

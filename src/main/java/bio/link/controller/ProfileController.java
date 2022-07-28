@@ -3,15 +3,24 @@ package bio.link.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.ProfileServiceImpl;
 
 @RestController
 @RequestMapping("")
 @CrossOrigin("*")
 public class ProfileController {
-
+	@Autowired
+	JwtTokenProvider jwtTokenProvider;
+	
     @Autowired
     private ProfileServiceImpl profileService;
 
@@ -19,14 +28,22 @@ public class ProfileController {
     public ResponseEntity handle(@PathVariable String username ,
                                @RequestParam("title") String title ,
                                @RequestParam("url") String url ,
-                               @RequestParam(name = "isPlugins" , required = false) Boolean isPlugins,
-                               @RequestHeader("Authorization") String jwt) {
+                               @RequestParam(name = "isPlugins" , required = false) Boolean isPlugins
+                               ) {
 
         return ResponseEntity.ok(profileService.clickUrlOfUsername(username , title , url , isPlugins));
     }
 
-    @GetMapping("/profile/{username}")
+    @GetMapping("/api/profile/{username}")
     public ResponseEntity getProfile(@PathVariable String username) {
         return ResponseEntity.ok(profileService.getUserProfileByUsername(username));
     }
+    
+    @GetMapping("/api/user/getProfile")
+    public ResponseEntity getProfileByJWT(@RequestHeader("Authorization") String jwt) {
+   
+    	return ResponseEntity.ok(profileService.getUserProfileByJWT(jwt));
+    }
+    
+   
 }

@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
+import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.Status;
@@ -27,6 +29,9 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	@Autowired
+	ProfileRepository profileRepo;
 
 	@Autowired
 	private JavaMailSender emailSender;
@@ -60,6 +65,7 @@ public class CustomUserService implements UserDetailsService {
 
 	// Đăng kí user
 	public Status signUpUser(UserEntity user) {
+		
 		Status message = new Status();
 		message.setSuccess(0);
 		UserEntity userFindByUName = userRepo.findByUsername(user.getUsername());
@@ -81,10 +87,13 @@ public class CustomUserService implements UserDetailsService {
 				// Tạo verificationCode
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
-				user.setEnabled(true);
+				user.setEnabled(false);
+				ProfileEntity profile = new ProfileEntity();
+				profile.setUserId(user.getId());
+				profileRepo.save(profile);
 
 				userRepo.save(user);
-				sendVerificationEmail(user, "http://localhost:8080/");
+				sendVerificationEmail(user, "http://localhost:3000/");
 
 				message.setMessage("Tạo tài khoản thành công.");
 				message.setSuccess(1);
@@ -126,7 +135,7 @@ public class CustomUserService implements UserDetailsService {
 			helper.setSubject(subject);
 
 			content = content.replace("[[name]]", user.getUsername());
-			String verifyURL = "http://localhost:3000" + "/verifyForgotpassword?code=" + user.getVerificationCode();
+			String verifyURL = "http://localhost:3000" + "/verifyForgotpassword?code=" + user.getResetPasswordToken();
 
 			content = content.replace("[[URL]]", verifyURL);
 
@@ -203,9 +212,10 @@ public class CustomUserService implements UserDetailsService {
 		
 		if(userForgotP != null) {
 		
-			String encodedPassword = passwordEncoder.encode(newPassword);
-			userForgotP.setPassword(encodedPassword);
-
+//			String encodedPassword = passwordEncoder.encode(newPassword);
+//			userForgotP.setPassword(encodedPassword);
+			
+			userForgotP.setPassword(passwordEncoder.encode(newPassword));
 			userForgotP.setResetPasswordToken(null);
 			userRepo.save(userForgotP);
 			return new Status(1,"Cập nhật mật khẩu thành công");
@@ -217,10 +227,22 @@ public class CustomUserService implements UserDetailsService {
 	public LoginRequest checkStatusAccount(LoginRequest login) {
 		String username = login.getUsername();
 		UserEntity user = userRepo.findByUsername(username);
-		if (!user.isStatus()) {
-			login.setPassword("1");
+		if(user != null) {
+			if (!user.isStatus() ) {
+				login.setPassword("1");
+			}
 		}
 		return login;
+	}
+	
+	public boolean checkFirstLogin(LoginRequest login) {
+		String username = login.getUsername();
+		UserEntity user = userRepo.findByUsername(username);
+		
+		ProfileEntity profile = profileRepo.findByUserId(user.getId());
+		if(profile == null) {
+			return true;
+		}return false;
 	}
 
 }

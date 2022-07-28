@@ -2,19 +2,23 @@ package bio.link.service;
 
 
 
-import bio.link.model.entity.DesignEntity;
-
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import bio.link.model.entity.DesignEntity;
 
 public interface DesignService {
 
-    DesignEntity create(Long userId, DesignEntity designEntity);
+    DesignEntity create(DesignEntity designEntity, MultipartFile image, Long userId);
 
-    DesignEntity update(Long userId, Long id, DesignEntity design);
-
+    DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id);
     List<DesignEntity> getAll();
+    List<DesignEntity> getAllByUserId(Long userId);
 
     DesignEntity getDesignById(Long id);
     void delete(Long id);
+
+ 
 
 }

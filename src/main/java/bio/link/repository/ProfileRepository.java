@@ -14,4 +14,6 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity , Long> {
     ProfileEntity getProfileByUserId(@Param("userId") Long userId) ;
 
     ProfileEntity findOneById(Long id);
+    
+    ProfileEntity findByUserId(Long userId);
 }

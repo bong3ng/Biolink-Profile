@@ -3,10 +3,9 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
-import bio.link.model.entity.UserEntity;
-import lombok.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
+import bio.link.model.dto.ProfileDto;
 import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.response.ResponseData;
@@ -20,10 +19,10 @@ public interface  ProfileService {
 
     ResponseData getUserProfileByUsername(String username);
 
-	ProfileEntity create(
+	Status create(
 			String name,
 			String bio,
-			MultipartFile image,
+
 			Long userId
 	) throws IOException;
 
@@ -35,17 +34,22 @@ public interface  ProfileService {
 	ProfileEntity getProfileByUserId(Long userId);
 
 	ProfileEntity updateDesign(Long userId, Long designId);
-
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw);
-
-	Long convertJwt(String jwt);
 
 	String uploadImage(MultipartFile file, String containerName);
 
+	Long convertJwt(String jwt);
+	
 	List<UserEntity> getUserByAdmin();
 	
 	UserEntity updateUserByAdmin(UserEntity user);
 	
 	Status deleteUserByAdmin(Long id);
+	
+	ProfileDto getUserProfileByJWT(String jwt);
+	
+
+	
+
 
 }
