@@ -19,6 +19,6 @@ public interface DesignService {
     DesignEntity getDesignById(Long id);
     void delete(Long id);
 
-
+ 
 
 }

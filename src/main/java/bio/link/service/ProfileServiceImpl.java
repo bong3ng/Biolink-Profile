@@ -12,12 +12,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlobHttpHeaders;
-import com.azure.storage.blob.models.BlobProperties;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 
 import org.modelmapper.ModelMapper;
@@ -25,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import bio.link.model.dto.DesignDto;
 import bio.link.model.dto.ProfileDto;
 import bio.link.model.entity.ClickProfileEntity;
 import bio.link.model.entity.DesignEntity;
@@ -144,15 +140,18 @@ public class ProfileServiceImpl implements ProfileService {
 
       
         DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
-        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
+//        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
 
         ProfileDto profileDto = new ProfileDto( username ,
                                                 profileEntity.getName(),
                                                 profileEntity.getBio(),
                                                 profileEntity.getImage(),
+                                                profileEntity.getShowLogo(),
+                                                profileEntity.getShowNSFW(),
+                                                profileEntity.getActiveDesign(),
                                                 listSocial ,
                                                 listPlugins,
-                                                designDto);
+                                                designEntity);
         ArrayList<ProfileDto> list = new ArrayList<>();
         list.add(profileDto);
 
@@ -290,5 +289,30 @@ public class ProfileServiceImpl implements ProfileService {
 		return new Status(0, "Xóa thất bại, không tìm thấy user");
 
 	}
+	@Override
+	
+	public ProfileDto getUserProfileByJWT(String jwt) {
+		Long userId = convertJwt(jwt);
+		ProfileEntity profileEntity = profileRepository.findByUserId(userId);
+		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
 
+		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
+
+      
+        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
+        ProfileDto profileDto = new ProfileDto( null ,
+                profileEntity.getName(),
+                profileEntity.getBio(),
+                profileEntity.getImage(),
+                profileEntity.getShowLogo(),
+                profileEntity.getShowNSFW(),
+                profileEntity.getActiveDesign(),
+                listSocial ,
+                listPlugins,
+                designEntity);
+        return profileDto;
+		
+	}
+	
+	
 }

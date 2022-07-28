@@ -3,9 +3,9 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
-import bio.link.model.entity.UserEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import bio.link.model.dto.ProfileDto;
 import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.response.ResponseData;
@@ -45,6 +45,10 @@ public interface  ProfileService {
 	UserEntity updateUserByAdmin(UserEntity user);
 	
 	Status deleteUserByAdmin(Long id);
+	
+	ProfileDto getUserProfileByJWT(String jwt);
+	
+	Status updateShow(Boolean showLogo, Boolean showNSFW, String jwt);
 	
 
 
