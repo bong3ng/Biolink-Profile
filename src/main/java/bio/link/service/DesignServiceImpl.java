@@ -3,6 +3,8 @@ package bio.link.service;
 
 import java.util.List;
 
+import bio.link.model.entity.ProfileEntity;
+import bio.link.security.payload.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,9 +14,9 @@ import bio.link.repository.DesignRepository;
 
 @Service
 public class DesignServiceImpl implements DesignService {
-//
-//    @Autowired
-//    private ProfileService profileService;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
     private DesignRepository designRepository;
@@ -33,6 +35,10 @@ public class DesignServiceImpl implements DesignService {
         }
         else designEntity.setBackgroundImg(null);
         designEntity.setUserId(userId);
+        designRepository.save(designEntity);
+
+        ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
+        profileEntity.setActiveDesign(designEntity.getId());
         return designRepository.save(designEntity);
     }
 
@@ -82,15 +88,22 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public DesignEntity getDesignById(Long id) {
-        DesignEntity designEntity = designRepository.findDesignEntityById(id);
-        return designEntity;
+        return designRepository.findDesignEntityById(id);
     }
 
     @Override
-    public void delete(Long id) {
-        DesignEntity designEntity = designRepository.findDesignEntityById(id);
-        designRepository.delete(designEntity);
+    public Status delete(Long id) {
+        //DesignEntity designEntity = designRepository.findDesignEntityById(id);
+        Long userId = designRepository.findDesignEntityById(id).getUserId();
+        ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
+
+        if (profileEntity.getActiveDesign() == id) {
+            return new  Status(0, "You can't delete this :<");
+        }
+
+        designRepository.deleteById(id);
+        profileEntity.setActiveDesign(1L);
+        return new Status(1, "Yayyyy, Delete success.");
     }
-    
    
 }

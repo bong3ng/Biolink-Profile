@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
-import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import bio.link.service.ProfileService;
 
@@ -55,7 +54,7 @@ public class NameController {
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
             @RequestParam String bio,
-            @RequestParam MultipartFile image
+            @RequestParam(required = false) MultipartFile image
     ) throws IOException {
         return profileService.update(name, bio, image, profileService.convertJwt(jwt));
     }
@@ -63,7 +62,7 @@ public class NameController {
     @PutMapping("/active")
     public ProfileEntity updateDesign(
             @RequestHeader("Authorization") String jwt,
-            @RequestParam Long designId
+            @RequestParam("designId") Long designId
     ) {
         return profileService.updateDesign(profileService.convertJwt(jwt), designId);
     }
@@ -71,8 +70,8 @@ public class NameController {
     @PutMapping("/setting")
     public ProfileEntity updateSetting(
             @RequestHeader("Authorization") String jwt,
-            @RequestParam Boolean showLogo,
-            @RequestParam Boolean showNsfw
+            @RequestParam("showLogo")Boolean showLogo,
+            @RequestParam("showNsfw") Boolean showNsfw
     ) {
         return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
     }
