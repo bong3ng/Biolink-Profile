@@ -248,7 +248,7 @@ public class ProfileServiceImpl implements ProfileService {
 		if (image != null && !image.isEmpty()) {
 			profile.setImage(uploadImage(image, "files"));
 		}
-		else profile.setImage(null);
+		else profile.setImage(profile.getImage());
 		return profileRepository.save(profile);
 	}
 
@@ -260,10 +260,10 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw) {
+	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW) {
 		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
 		profile.setShowLogo(showLogo);
-		profile.setShowNSFW(showNsfw);
+		profile.setShowNSFW(showNSFW);
 		return profileRepository.save(profile);
 	}
 

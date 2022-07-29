@@ -71,9 +71,9 @@ public class NameController {
     public ProfileEntity updateSetting(
             @RequestHeader("Authorization") String jwt,
             @RequestParam("showLogo")Boolean showLogo,
-            @RequestParam("showNsfw") Boolean showNsfw
+            @RequestParam("showNSFW") Boolean showNSFW
     ) {
-        return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
+        return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNSFW);
     }
     
     

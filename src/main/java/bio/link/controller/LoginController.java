@@ -71,7 +71,7 @@ public class LoginController {
         // Trả về jwt cho người dùng.
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         
-        return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest));
+        return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest), loginRequest.getUsername());
     }
 
     
