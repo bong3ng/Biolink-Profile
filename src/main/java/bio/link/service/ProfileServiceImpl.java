@@ -191,6 +191,11 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
+	public List<ProfileEntity> getAllProfileUser() {
+		return profileRepository.findAll();
+	}
+
+	@Override
 	public ProfileEntity getProfileByUserId(Long userId) {
 		return profileRepository.getProfileByUserId(userId);
 	}

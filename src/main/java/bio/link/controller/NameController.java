@@ -4,6 +4,7 @@ package bio.link.controller;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,10 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
+    @GetMapping("/get")
+    public List<ProfileEntity> getAllProfileUser() {
+        return profileService.getAllProfileUser();
+    }
 
     @GetMapping("")
     public ProfileEntity getProfile(
