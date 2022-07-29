@@ -15,6 +15,7 @@ import bio.link.model.entity.DesignEntity;
 
 public interface DesignService {
 
+    DesignEntity createDefault(DesignEntity designEntity, MultipartFile image);
     DesignEntity create(DesignEntity designEntity, MultipartFile image, Long userId);
 
 //    DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id);

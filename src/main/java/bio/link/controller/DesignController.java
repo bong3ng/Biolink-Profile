@@ -39,6 +39,13 @@ public class DesignController {
         return designService.getDesignById(profileService.convertJwt(jwt));
     }
 
+    @PostMapping("/default")
+    public DesignEntity createDefault(
+            @ModelAttribute DesignEntity designEntity,
+            @RequestParam(required = false) MultipartFile image
+    ) throws IOException {
+        return designService.createDefault(designEntity, image);
+    }
 
     @PostMapping("")
     public DesignEntity create(
