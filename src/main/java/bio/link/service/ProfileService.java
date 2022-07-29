@@ -34,7 +34,7 @@ public interface  ProfileService {
 	ProfileEntity getProfileByUserId(Long userId);
 
 	ProfileEntity updateDesign(Long userId, Long designId);
-	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw);
+	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW);
 
 	String uploadImage(MultipartFile file, String containerName);
 

@@ -260,10 +260,10 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw) {
+	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW) {
 		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
 		profile.setShowLogo(showLogo);
-		profile.setShowNSFW(showNsfw);
+		profile.setShowNSFW(showNSFW);
 		return profileRepository.save(profile);
 	}
 
