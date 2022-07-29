@@ -39,9 +39,10 @@ public interface  ProfileService {
 	String uploadImage(MultipartFile file, String containerName);
 
 	Long convertJwt(String jwt);
-	
+
+	List<ProfileEntity> getAllProfileUser();
 	List<UserEntity> getUserByAdmin();
-	
+
 	UserEntity updateUserByAdmin(UserEntity user);
 	
 	Status deleteUserByAdmin(Long id);
