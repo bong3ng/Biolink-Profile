@@ -25,12 +25,6 @@ public class DesignServiceImpl implements DesignService {
     public DesignEntity create(DesignEntity designEntity, MultipartFile image, Long userId) {
         DesignEntity design = new DesignEntity();
 
-        if (image != null && !image.isEmpty()) {
-            String path = profileService.uploadImage(image, "designs");
-            design.setBackgroundImg(path);
-        }
-        else design.setBackgroundImg(null);
-
         design.setBackground(designEntity.getBackground());
         design.setBoxShadow(designEntity.getBoxShadow());
         design.setBtnBdColor(designEntity.getBtnBdColor());
@@ -42,6 +36,13 @@ public class DesignServiceImpl implements DesignService {
         design.setColorLink(designEntity.getColorLink());
         design.setFontFamily(designEntity.getFontFamily());
         design.setName(designEntity.getName());
+
+        if (image != null && !image.isEmpty()) {
+            String path = profileService.uploadImage(image, "designs");
+            design.setBackgroundImg(path);
+        }
+        else design.setBackgroundImg(null);
+
         design.setUserId(userId);
         designRepository.save(design);
 
@@ -52,7 +53,7 @@ public class DesignServiceImpl implements DesignService {
     }
 
 //    @Override
-//    public DesignEntity update(DesignEntity design, MultipartFile image, Long userId, Long id) {
+//    public DesignEntity update(DesignEntity design, MultipartFile backgroundImg, Long userId, Long id) {
 //
 //        DesignEntity designEntity = designRepository.findDesignEntityById(id);
 //
@@ -83,11 +84,6 @@ public class DesignServiceImpl implements DesignService {
 //        return designRepository.save(designEntity);
 //    }
 
-    @Override
-    public List<DesignEntity> getAll() {
-        return (List<DesignEntity>)
-                designRepository.findAll();
-    }
 
     @Override
     public List<DesignEntity> getAllByUserId(Long userId) {
@@ -111,7 +107,7 @@ public class DesignServiceImpl implements DesignService {
         }
 
         designRepository.deleteById(id);
-        profileEntity.setActiveDesign(1L);
+//        profileEntity.setActiveDesign(1L);
         return new Status(1, "Yayyyy, Delete success.");
     }
    

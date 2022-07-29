@@ -1,21 +1,13 @@
 package bio.link.controller;
 
 
+import java.io.IOException;
 import java.util.List;
 
 import bio.link.security.payload.Status;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.DesignEntity;
@@ -32,11 +24,6 @@ public class DesignController {
 
     @Autowired
     private DesignService designService;
-
-    @GetMapping("")
-    public List<DesignEntity> get() {
-        return designService.getAll();
-    }
 
     @GetMapping("/findByUserId")
     public List<DesignEntity> getAllByUserId(
@@ -58,9 +45,9 @@ public class DesignController {
             @RequestHeader("Authorization") String jwt,
             @ModelAttribute DesignEntity designEntity,
             @RequestParam(required = false) MultipartFile image
-
-    ) {
-        return designService.create(designEntity, image, profileService.convertJwt(jwt));
+    ) throws IOException {
+        return designService.create(designEntity, image
+                , profileService.convertJwt(jwt));
     }
 
 //    @PutMapping("/{id}")

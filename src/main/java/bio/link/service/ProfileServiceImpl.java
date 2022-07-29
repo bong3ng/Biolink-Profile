@@ -248,7 +248,7 @@ public class ProfileServiceImpl implements ProfileService {
 		if (image != null && !image.isEmpty()) {
 			profile.setImage(uploadImage(image, "files"));
 		}
-		else profile.setImage(null);
+		else profile.setImage(profile.getImage());
 		return profileRepository.save(profile);
 	}
 
