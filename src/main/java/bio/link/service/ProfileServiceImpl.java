@@ -1,36 +1,28 @@
 package bio.link.service;
 
-import static bio.link.controller.NameController.CURRENT_FOLDER;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import bio.link.repository.*;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.models.BlobHttpHeaders;
 import com.azure.storage.blob.specialized.BlockBlobClient;
-import lombok.extern.log4j.Log4j2;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import bio.link.model.dto.DesignDto;
-import bio.link.model.dto.PluginsDto;
 import bio.link.model.dto.ProfileDto;
-import bio.link.model.dto.SocialDto;
 import bio.link.model.entity.ClickProfileEntity;
 import bio.link.model.entity.DesignEntity;
 import bio.link.model.entity.PluginsEntity;
@@ -39,8 +31,14 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
+import bio.link.repository.ClickProfileRepository;
+import bio.link.repository.DesignRepository;
+import bio.link.repository.PluginsRepository;
+import bio.link.repository.ProfileRepository;
+import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
@@ -136,25 +134,30 @@ public class ProfileServiceImpl implements ProfileService {
 //        }
 
 		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
-		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
-				.collect(Collectors.toList());
+//		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
+//				.collect(Collectors.toList());
 
-		List<PluginsEntity> listPlugins = pluginsRepository.getAllPluginsByUserId(userId);
-		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
-				.collect(Collectors.toList());
+
+		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
+//		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
+//				.collect(Collectors.toList());
+
 
 
       
-        DesignEntity designEntity = designRepository.findOneById(profileEntity.getActiveDesign());
-        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
+        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
+//        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
 
         ProfileDto profileDto = new ProfileDto( username ,
                                                 profileEntity.getName(),
                                                 profileEntity.getBio(),
                                                 profileEntity.getImage(),
-                                                listSocialDto ,
-                                                listPluginsDto,
-                                                designDto);
+                                                profileEntity.getShowLogo(),
+                                                profileEntity.getShowNSFW(),
+                                                profileEntity.getActiveDesign(),
+                                                listSocial ,
+                                                listPlugins,
+                                                designEntity);
         ArrayList<ProfileDto> list = new ArrayList<>();
         list.add(profileDto);
 
@@ -188,6 +191,11 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
+	public List<ProfileEntity> getAllProfileUser() {
+		return profileRepository.findAll();
+	}
+
+	@Override
 	public ProfileEntity getProfileByUserId(Long userId) {
 		return profileRepository.getProfileByUserId(userId);
 	}
@@ -209,6 +217,7 @@ public class ProfileServiceImpl implements ProfileService {
 	public String uploadImage(MultipartFile file, String containerName) {
 		BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
 		String filename = file.getOriginalFilename();
+		String filePath = "";
 		BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
 
 		try {
@@ -217,13 +226,22 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 
 			blockBlobClient.upload(new BufferedInputStream(file.getInputStream()), file.getSize(), true);
-			String filePath = containerName + "/" + filename;
+
+			assert filename != null;
+			if (filename.endsWith(".jpg")) {
+				blockBlobClient.setHttpHeaders(new BlobHttpHeaders().setContentType("image/jpeg"));
+			} else if (filename.endsWith(".png")) {
+				blockBlobClient.setHttpHeaders(new BlobHttpHeaders().setContentType("image/png"));
+			}
+
+			filePath = containerName + "/" + filename;
 			Files.deleteIfExists(Paths.get(filePath));
 		} catch (IOException e) {
 			log.error(e.getLocalizedMessage());
 		}
-		return filename;
+		return "https://anhtcogn.blob.core.windows.net/" + filePath;
 	}
+
 
 	@Override
 	public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
@@ -235,7 +253,7 @@ public class ProfileServiceImpl implements ProfileService {
 		if (image != null && !image.isEmpty()) {
 			profile.setImage(uploadImage(image, "files"));
 		}
-		else profile.setImage(null);
+		else profile.setImage(profile.getImage());
 		return profileRepository.save(profile);
 	}
 
@@ -247,10 +265,10 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNsfw) {
+	public ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW) {
 		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
 		profile.setShowLogo(showLogo);
-		profile.setShowNSFW(showNsfw);
+		profile.setShowNSFW(showNSFW);
 		return profileRepository.save(profile);
 	}
 
@@ -282,5 +300,30 @@ public class ProfileServiceImpl implements ProfileService {
 		return new Status(0, "Xóa thất bại, không tìm thấy user");
 
 	}
+	@Override
+	
+	public ProfileDto getUserProfileByJWT(String jwt) {
+		Long userId = convertJwt(jwt);
+		ProfileEntity profileEntity = profileRepository.findByUserId(userId);
+		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
 
+		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
+
+      
+        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
+        ProfileDto profileDto = new ProfileDto( null ,
+                profileEntity.getName(),
+                profileEntity.getBio(),
+                profileEntity.getImage(),
+                profileEntity.getShowLogo(),
+                profileEntity.getShowNSFW(),
+                profileEntity.getActiveDesign(),
+                listSocial ,
+                listPlugins,
+                designEntity);
+        return profileDto;
+		
+	}
+	
+	
 }

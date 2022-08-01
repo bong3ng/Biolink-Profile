@@ -1,13 +1,16 @@
 package bio.link.model.dto;
 
+import java.util.List;
+
+import javax.persistence.Id;
+
+import bio.link.model.entity.DesignEntity;
+import bio.link.model.entity.PluginsEntity;
+import bio.link.model.entity.SocialEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import java.util.List;
 
 
 @Getter
@@ -20,9 +23,12 @@ public class ProfileDto {
     private String name;
     private String bio;
     private String image;
+    private Boolean showLogo;
+    private Boolean showNSFW;
+    private Long activeDesign;
 
-    private List<SocialDto> listSocial;
-    private List<PluginsDto> listPlugins;
+    private List<SocialEntity> listSocial;
+    private List<PluginsEntity> listPlugins;
 
-    private DesignDto designDto;
+    private DesignEntity design;
 }

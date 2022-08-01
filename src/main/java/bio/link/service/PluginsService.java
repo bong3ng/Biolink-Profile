@@ -10,7 +10,7 @@ import bio.link.model.entity.PluginsEntity;
 public interface PluginsService {
 
 
-	List<PluginsEntity> getAllPluginsByUserId(MultipartFile file, Long userId);
+	List<PluginsEntity> getAllPluginsByUserId( Long userId);
 
 	PluginsEntity getPluginsByUserIdAndTitle(String pluginsTitle, Long userId);
 

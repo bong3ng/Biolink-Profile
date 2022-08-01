@@ -4,6 +4,7 @@ package bio.link.controller;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.ProfileEntity;
-import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import bio.link.service.ProfileService;
 
@@ -32,6 +32,10 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
+    @GetMapping("/get")
+    public List<ProfileEntity> getAllProfileUser() {
+        return profileService.getAllProfileUser();
+    }
 
     @GetMapping("")
     public ProfileEntity getProfile(
@@ -55,7 +59,7 @@ public class NameController {
             @RequestHeader("Authorization") String jwt,
             @RequestParam String name,
             @RequestParam String bio,
-            @RequestParam MultipartFile image
+            @RequestParam(required = false) MultipartFile image
     ) throws IOException {
         return profileService.update(name, bio, image, profileService.convertJwt(jwt));
     }
@@ -63,7 +67,7 @@ public class NameController {
     @PutMapping("/active")
     public ProfileEntity updateDesign(
             @RequestHeader("Authorization") String jwt,
-            @RequestParam Long designId
+            @RequestParam("designId") Long designId
     ) {
         return profileService.updateDesign(profileService.convertJwt(jwt), designId);
     }
@@ -71,10 +75,10 @@ public class NameController {
     @PutMapping("/setting")
     public ProfileEntity updateSetting(
             @RequestHeader("Authorization") String jwt,
-            @RequestParam Boolean showLogo,
-            @RequestParam Boolean showNsfw
+            @RequestParam("showLogo")Boolean showLogo,
+            @RequestParam("showNSFW") Boolean showNSFW
     ) {
-        return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNsfw);
+        return profileService.updateSetting(profileService.convertJwt(jwt), showLogo, showNSFW);
     }
     
     

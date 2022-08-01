@@ -42,9 +42,6 @@ public class LoginController {
     AuthenticationManager authenticationManager;
     
 
-    
-    
-
     @Autowired
     CustomUserService userService;
 
@@ -74,7 +71,7 @@ public class LoginController {
         // Trả về jwt cho người dùng.
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         
-        return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest));
+        return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest), loginRequest.getUsername());
     }
 
     
@@ -102,7 +99,7 @@ public class LoginController {
     }
     
     @PostMapping("/processForgot")
-    public Status confirmPass(@RequestParam("token") String token, @RequestParam("password") String password) {
+    public Status confirmPass(@RequestParam("token") String token, @RequestBody String password) {
     	
     	return userService.updatePassword( password, token);
     }

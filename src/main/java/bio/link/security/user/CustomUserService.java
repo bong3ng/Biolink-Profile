@@ -135,7 +135,7 @@ public class CustomUserService implements UserDetailsService {
 			helper.setSubject(subject);
 
 			content = content.replace("[[name]]", user.getUsername());
-			String verifyURL = "http://localhost:3000" + "/verifyForgotpassword?code=" + user.getVerificationCode();
+			String verifyURL = "http://localhost:3000" + "/verifyForgotpassword?code=" + user.getResetPasswordToken();
 
 			content = content.replace("[[URL]]", verifyURL);
 
@@ -212,9 +212,10 @@ public class CustomUserService implements UserDetailsService {
 		
 		if(userForgotP != null) {
 		
-			String encodedPassword = passwordEncoder.encode(newPassword);
-			userForgotP.setPassword(encodedPassword);
-
+//			String encodedPassword = passwordEncoder.encode(newPassword);
+//			userForgotP.setPassword(encodedPassword);
+			
+			userForgotP.setPassword(passwordEncoder.encode(newPassword));
 			userForgotP.setResetPasswordToken(null);
 			userRepo.save(userForgotP);
 			return new Status(1,"Cập nhật mật khẩu thành công");
@@ -226,8 +227,10 @@ public class CustomUserService implements UserDetailsService {
 	public LoginRequest checkStatusAccount(LoginRequest login) {
 		String username = login.getUsername();
 		UserEntity user = userRepo.findByUsername(username);
-		if (!user.isStatus()) {
-			login.setPassword("1");
+		if(user != null) {
+			if (!user.isStatus() ) {
+				login.setPassword("1");
+			}
 		}
 		return login;
 	}

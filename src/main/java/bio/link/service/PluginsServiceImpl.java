@@ -1,8 +1,6 @@
 package bio.link.service;
 
 
-import static bio.link.controller.NameController.CURRENT_FOLDER;
-
 //import java.io.IOException;
 //import java.io.OutputStream;
 //import java.nio.file.Files;
@@ -14,16 +12,13 @@ import static bio.link.controller.NameController.CURRENT_FOLDER;
 
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +39,7 @@ public class PluginsServiceImpl implements PluginsService{
 
 
     @Override
-    public List<PluginsEntity> getAllPluginsByUserId(MultipartFile file, Long userId) {
+    public List<PluginsEntity> getAllPluginsByUserId(Long userId) {
 
         return pluginsRepository.getAllPluginsByUserId(userId);
     }
