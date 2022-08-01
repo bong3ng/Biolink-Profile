@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import bio.link.repository.*;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobHttpHeaders;
@@ -31,11 +32,6 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
-import bio.link.repository.ClickProfileRepository;
-import bio.link.repository.DesignRepository;
-import bio.link.repository.PluginsRepository;
-import bio.link.repository.ProfileRepository;
-import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import lombok.extern.log4j.Log4j2;
@@ -46,7 +42,13 @@ import lombok.extern.log4j.Log4j2;
 public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private ProfileRepository profileRepository;
+	@Autowired
+	private ClickPluginsRepository clickPluginsRepository;
+	@Autowired
+	private ClickProfileRepository clickProfileRepository;
 
+	@Autowired
+	private ClickSocialRepository clickSocialRepository;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
@@ -56,15 +58,10 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ClickProfileRepository clickProfileRepository;
 
 	@Autowired
-	private ClickSocialServiceImpl clickSocialService;
-	@Autowired
 	private SocialServiceImpl socialService;
-	@Autowired
-	private ClickPluginsServiceImpl clickPluginsService;
+
 	@Autowired
 	private PluginsServiceImpl pluginsService;
 
@@ -95,32 +92,10 @@ public class ProfileServiceImpl implements ProfileService {
         Long userId = userEntity.getId();
 
 		ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
-		Long profileId = profileEntity.getId();
 
-		// khi sang ngày mới, reset HashMap
-		currentDate = LocalDate.now();
-		if (currentDate.minusDays(1).equals(previousDate)) {
-			countClickProfileMap.clear();
-		}
-		previousDate = currentDate;
-
-		Long clickCount = countClickProfileMap.get(profileId);
-		if (clickCount == null) {
-			ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(currentDate, profileId);
-			if (clickProfileEntity == null) {
-				countClickProfileMap.put(profileId, 1L);
-				clickProfileEntity = new ClickProfileEntity(null, 1L, currentDate, profileId);
-			} else {
-				clickCount = clickProfileEntity.getClickCount() + 1;
-				countClickProfileMap.put(profileId, clickCount);
-				clickProfileEntity.setClickCount(clickCount);
-			}
-			clickProfileRepository.save(clickProfileEntity);
-		} else {
-			clickCount += 1;
-			countClickProfileMap.put(profileId, clickCount);
-			clickProfileRepository.updateProfileClickCount(currentDate, profileId, clickCount);
-		}
+		ClickCountServiceImpl clickService = new ClickCountServiceImpl(profileEntity , clickProfileRepository);
+		Thread t = new Thread(clickService);
+		t.start();
 
 //
 //        ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(presentDate , profileId);
@@ -158,36 +133,34 @@ public class ProfileServiceImpl implements ProfileService {
                                                 listSocial ,
                                                 listPlugins,
                                                 designEntity);
-        ArrayList<ProfileDto> list = new ArrayList<>();
-        list.add(profileDto);
 
-
-		return ResponseData.builder().success(true).message("Thành công").data(list).build();
+		return ResponseData.builder().success(true).message("Thành công").data(List.of(profileDto)).build();
 	}
 
-
-    public ResponseData clickUrlOfUsername(String username , String urlTitle ,  String url , Boolean isPlugins) {
-
-        UserEntity userEntity = this.getUserByUsername(username);
-        Long userId = userEntity.getId();
-
-		urlTitle = urlTitle.trim().toLowerCase();
-		url = url.trim();
-
-		if (isPlugins == null) {
-			SocialEntity socialEntity = socialService.getSocialByUserIdAndName(userId, urlTitle);
-			if (socialEntity == null) {
-				throw new NotFoundException("Khong tim thay link ");
-			}
-			clickSocialService.countClickSocial(socialEntity);
-		} else {
-			PluginsEntity pluginsEntity = pluginsService.getPluginsByUserIdAndTitle(urlTitle, userId);
-			if (pluginsEntity == null) {
-				throw new NotFoundException("Không tìm thấy link ");
-			}
-			clickPluginsService.countClickPlugins(pluginsEntity);
+	@Override
+	public ResponseData clickSocialOfProfile(SocialEntity socialEntity) {
+		if(clickSocialRepository.findById(socialEntity.getId()) == null) {
+			throw new NotFoundException("Không tìm thấy link");
 		}
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(null).build();
+
+		ClickCountServiceImpl clickService = new ClickCountServiceImpl(socialEntity , clickSocialRepository);
+		Thread t = new Thread(clickService);
+		t.start();
+
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(List.of(socialEntity)).build();
+	}
+
+	@Override
+	public ResponseData clickPluginsOfProfile(PluginsEntity pluginsEntity) {
+		if(clickProfileRepository.findById(pluginsEntity.getId()) == null) {
+			throw new NotFoundException("Không tìm thấy link");
+		}
+
+		ClickCountServiceImpl clickService = new ClickCountServiceImpl(pluginsEntity , clickPluginsRepository);
+		Thread t = new Thread(clickService);
+		t.start();
+
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(List.of(pluginsEntity)).build();
 	}
 
 	@Override
