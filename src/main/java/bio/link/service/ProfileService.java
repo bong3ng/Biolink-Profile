@@ -3,6 +3,8 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
+import bio.link.model.entity.PluginsEntity;
+import bio.link.model.entity.SocialEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
@@ -39,6 +41,10 @@ public interface  ProfileService {
 	String uploadImage(MultipartFile file, String containerName);
 
 	Long convertJwt(String jwt);
+
+	ResponseData clickSocialOfProfile(SocialEntity socialEntity);
+
+	ResponseData clickPluginsOfProfile(PluginsEntity pluginsEntity);
 
 	List<ProfileEntity> getAllProfileUser();
 	List<UserEntity> getUserByAdmin();

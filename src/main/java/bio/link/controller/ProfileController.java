@@ -1,15 +1,11 @@
 package bio.link.controller;
 
 
+import bio.link.model.entity.PluginsEntity;
+import bio.link.model.entity.SocialEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.ProfileServiceImpl;
@@ -24,17 +20,17 @@ public class ProfileController {
     @Autowired
     private ProfileServiceImpl profileService;
 
-    @GetMapping("/api/{username}")
-    public ResponseEntity handle(@PathVariable String username ,
-                               @RequestParam("title") String title ,
-                               @RequestParam("url") String url ,
-                               @RequestParam(name = "isPlugins" , required = false) Boolean isPlugins
-                               ) {
-
-        return ResponseEntity.ok(profileService.clickUrlOfUsername(username , title , url , isPlugins));
+    @PutMapping("/{username}/social")
+    public ResponseEntity clickSocial(@RequestBody SocialEntity socialEntity) {
+        return ResponseEntity.ok(profileService.clickSocialOfProfile(socialEntity));
     }
 
-    @GetMapping("/api/profile/{username}")
+    @PutMapping("/{username}/plugins")
+    public ResponseEntity clickPlugins(@RequestBody PluginsEntity pluginsEntity) {
+        return ResponseEntity.ok(profileService.clickPluginsOfProfile(pluginsEntity));
+    }
+
+    @GetMapping("/profile/{username}")
     public ResponseEntity getProfile(@PathVariable String username) {
         return ResponseEntity.ok(profileService.getUserProfileByUsername(username));
     }
