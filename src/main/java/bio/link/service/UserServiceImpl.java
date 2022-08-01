@@ -102,7 +102,8 @@ public class UserServiceImpl implements UserService{
                                 .clickPluginsList(clickPluginsDtoList)
                                 .clickSocialList(clickSocialDtoList)
                                 .build();
-
-        return new ResponseData(true , "Thành công" , List.of(data));
+        ArrayList<StatsDto> list = new ArrayList<>();
+        list.add(data);
+        return new ResponseData(true , "Thành công" , list);
     }
 }

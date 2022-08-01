@@ -133,8 +133,9 @@ public class ProfileServiceImpl implements ProfileService {
                                                 listSocial ,
                                                 listPlugins,
                                                 designEntity);
-
-		return ResponseData.builder().success(true).message("Thành công").data(List.of(profileDto)).build();
+		ArrayList<ProfileDto> list = new ArrayList<>();
+		list.add(profileDto);
+		return ResponseData.builder().success(true).message("Thành công").data(list).build();
 	}
 
 	@Override
@@ -147,7 +148,9 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(List.of(socialEntity)).build();
+		ArrayList<SocialEntity> list = new ArrayList<>();
+		list.add(socialEntity);
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(list).build();
 	}
 
 	@Override
@@ -160,7 +163,9 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(List.of(pluginsEntity)).build();
+		ArrayList<PluginsEntity> list = new ArrayList<>();
+		list.add(pluginsEntity);
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(list).build();
 	}
 
 	@Override
