@@ -8,19 +8,11 @@ import bio.link.model.entity.SocialEntity;
 
 
 public interface SocialService {
-	List<SocialEntity> getAllSocialsByUserId(Long userId);
+
+    List<SocialEntity> getAllSocialsByUserId(Long userId);
 
 
-    SocialEntity getSocialByUserIdAndName(Long userId, String socialName);
+    void createSocialFirstLogin(Long userId) throws IOException;
 
-    SocialEntity createSocial(String url , Long userId) throws IOException;
-
-
-
-
-    SocialEntity updateSocial(String url , Long id);
-
-
-    void deleteSocialById(Long id);
-
+    void updateSocial(List<SocialEntity> socialEntityList, Long userId);
 }

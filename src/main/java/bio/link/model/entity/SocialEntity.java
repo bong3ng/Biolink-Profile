@@ -22,10 +22,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SocialEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String url;
+
+    @Column(name = "status" , columnDefinition = "boolean default false")
+    private Boolean status = false;
 
     @Column(name = "user_id")
     private Long userId;

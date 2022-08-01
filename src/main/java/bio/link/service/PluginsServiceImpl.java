@@ -161,9 +161,7 @@ public class PluginsServiceImpl implements PluginsService{
                 System.out.println(e);
             }
         }
-        if (Objects.nonNull(url) && !"".equalsIgnoreCase(url)) {
             pluginsUp.setIsHide(isHide);
-        }
         return pluginsRepository.save(pluginsUp);
     }
 
