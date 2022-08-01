@@ -46,7 +46,7 @@ public interface PluginsService {
 
 
 	//update content của plugins.
-	PluginsEntity updateContentPlugin( String title, String url, MultipartFile image , Long id);
+	PluginsEntity updateContentPlugin( String title, String url, MultipartFile image , Boolean isHide, Long id);
 
 
 	//update location ( thay đổi vị trí links , header , plugins )

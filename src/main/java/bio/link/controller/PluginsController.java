@@ -117,10 +117,11 @@ public class PluginsController {
             @RequestParam String title,
             @RequestParam String url,
             @RequestParam(value = "image", required=false) MultipartFile  image,
+            @RequestParam(required = false) Boolean isHide,
             @PathVariable("id") Long id
 
             ) {
-        return pluginsService.updateContentPlugin(title , url , image , id);
+        return pluginsService.updateContentPlugin(title , url , image , isHide , id);
     }
 
 
