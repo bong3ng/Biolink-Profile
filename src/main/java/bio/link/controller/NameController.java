@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import bio.link.service.SocialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,6 +33,9 @@ public class NameController {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private SocialService socialService;
+
     @GetMapping("/get")
     public List<ProfileEntity> getAllProfileUser() {
         return profileService.getAllProfileUser();
@@ -51,6 +55,7 @@ public class NameController {
             @RequestParam String name,
             @RequestParam String bio
     ) throws IOException {
+        socialService.createSocialFirstLogin(profileService.convertJwt(jwt));
         return profileService.create(name, bio, profileService.convertJwt(jwt));
     }
 

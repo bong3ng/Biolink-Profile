@@ -28,13 +28,13 @@ public class SocialController {
     private JwtTokenProvider jwtTokenProvider;
 
 
-    @PostMapping("/createSocial")
-    @ResponseStatus(HttpStatus.CREATED)
-    private SocialEntity createSocial(
-            @RequestParam String url,
-            @RequestHeader("Authorization") String jwt ) throws IOException {
-        return socialService.createSocial(url , jwtTokenProvider.getUserIdFromHeader(jwt));
-    }
+//    @PostMapping("/createSocial")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    private SocialEntity createSocial(
+//            @RequestParam String url,
+//            @RequestHeader("Authorization") String jwt ) throws IOException {
+//        return socialService.createSocial(url , jwtTokenProvider.getUserIdFromHeader(jwt));
+//    }
 
 
     @GetMapping("/social")
@@ -44,20 +44,21 @@ public class SocialController {
     };
 
 
-    @PutMapping ("/social/{id}")
+    @PutMapping ("/updateSocial")
     @ResponseStatus(HttpStatus.CREATED)
-    public SocialEntity updateSocial(
-            @RequestParam String url ,
-            @PathVariable("id") Long id) {
-        return socialService.updateSocial(url , id);
-    }
-
-
-    @RequestMapping(value= "/social/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public void deleteSocial(
-            @PathVariable("id") Long id
+    public void updateSocial(
+            @RequestBody List<SocialEntity> socialEntityList,
+            @RequestHeader("Authorization") String jwt
     ) {
-        socialService.deleteSocialById(id);
+         socialService.updateSocial(socialEntityList , jwtTokenProvider.getUserIdFromHeader(jwt));
     }
+
+
+//    @RequestMapping(value= "/social/{id}", method = RequestMethod.DELETE)
+//    @ResponseBody
+//    public void deleteSocial(
+//            @PathVariable("id") Long id
+//    ) {
+//        socialService.deleteSocialById(id);
+//    }
 }
