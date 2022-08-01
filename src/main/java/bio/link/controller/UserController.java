@@ -1,6 +1,7 @@
 package bio.link.controller;
 
 
+import bio.link.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,10 +19,13 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/{username}/stats/{days}")
-    public ResponseEntity getStats(@PathVariable String username,
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @GetMapping("/stats/{days}")
+    public ResponseEntity getStats(@RequestHeader("Authorization") String jwt,
                                    @PathVariable Integer days) {
-        return ResponseEntity.ok(userService.getStatsByUsername(username , days));
+        Long userId = jwtTokenProvider.getUserIdFromHeader(jwt);
+        return ResponseEntity.ok(userService.getStatsByUsername(userId , days));
     }
 
     @GetMapping("/link")
