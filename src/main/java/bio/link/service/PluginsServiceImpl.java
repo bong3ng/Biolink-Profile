@@ -150,7 +150,7 @@ public class PluginsServiceImpl implements PluginsService{
 
 
     @Override
-    public PluginsEntity updateContentPlugin( String title , String url, MultipartFile image , Long id) {
+    public PluginsEntity updateContentPlugin( String title , String url, MultipartFile image , Boolean isHide, Long id) {
         PluginsEntity pluginsUp = pluginsRepository.findById(id).get();
         if (Objects.nonNull(title) && !"".equalsIgnoreCase(title)) {
             pluginsUp.setTitle(title);
@@ -166,6 +166,9 @@ public class PluginsServiceImpl implements PluginsService{
                 System.out.println(e);
             }
         }
+        if (Objects.nonNull(url) && !"".equalsIgnoreCase(url)) {
+            pluginsUp.setIsHide(isHide);
+        }
         return pluginsRepository.save(pluginsUp);
     }
 
@@ -173,10 +176,10 @@ public class PluginsServiceImpl implements PluginsService{
     public PluginsEntity updateLocationPlugin(List<PluginsEntity> newList, long userId) {
         List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
         for ( int i = 0 ; i <  oldList.toArray().length ; i++) {
-            oldList.get(i).setNumLocation(newList.get(i).getNumLocation());
+            newList.get(i).setNumLocation(newList.get(i).getNumLocation());
         }
         for (int i = 0 ;  i < oldList.toArray().length ; i++) {
-            pluginsRepository.save(oldList.get(i));
+            pluginsRepository.save(newList.get(i));
         }
         return null;
     }
