@@ -52,10 +52,8 @@ public class UserServiceImpl implements UserService{
         return userEntity;
     }
 
-    public ResponseData getStatsByUsername(String username , Integer days) {
+    public ResponseData getStatsByUsername(Long userId , Integer days) {
         currentDate = LocalDate.now();
-        UserEntity userEntity = this.getUserByUsername(username);
-        Long userId = userEntity.getId();
         ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
         Long profileId = profileEntity.getId();
         LocalDate statsDate = null;
@@ -98,15 +96,13 @@ public class UserServiceImpl implements UserService{
                                                     .build();
             clickPluginsDtoList.add(dto);
         }
-
-        List<StatsDto> list = new ArrayList<>();
+        
         StatsDto data = StatsDto.builder()
                                 .clickProfileList(clickProfileDtoList)
                                 .clickPluginsList(clickPluginsDtoList)
                                 .clickSocialList(clickSocialDtoList)
                                 .build();
-        list.add(data);
 
-        return new ResponseData(true , "Thành công" , list);
+        return new ResponseData(true , "Thành công" , List.of(data));
     }
 }
