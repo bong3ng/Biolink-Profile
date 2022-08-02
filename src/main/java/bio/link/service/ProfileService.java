@@ -3,12 +3,12 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
-import bio.link.model.entity.PluginsEntity;
-import bio.link.model.entity.SocialEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
+import bio.link.model.entity.PluginsEntity;
 import bio.link.model.entity.ProfileEntity;
+import bio.link.model.entity.SocialEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.response.ResponseData;
 import bio.link.security.payload.Status;
@@ -21,7 +21,7 @@ public interface  ProfileService {
 
     ResponseData getUserProfileByUsername(String username);
 
-	Status create(
+	Status createFirstLogin(
 			String name,
 			String bio,
 

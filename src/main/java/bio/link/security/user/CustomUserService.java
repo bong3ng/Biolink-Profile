@@ -81,6 +81,7 @@ public class CustomUserService implements UserDetailsService {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRole("ROLE_USER");
 			user.setStatus(true);
+			
 
 //    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
 			try {

@@ -185,12 +185,14 @@ public class ProfileServiceImpl implements ProfileService {
 
 
 	@Override
-	public Status create(String name, String bio, Long userId) throws IOException {
-
-		ProfileEntity profile = profileRepository.findByUserId(userId);
-
+	public Status createFirstLogin(String name, String bio, Long userId) throws IOException {
+		
+		ProfileEntity profile = new ProfileEntity();
+		
+		profile.setUserId(userId);
 		profile.setName(name);
 		profile.setBio(bio);
+		profile.setActiveDesign(1l);
 
 		profileRepository.save(profile);
 		return new Status(true, "Cập nhật thông tin thành công");

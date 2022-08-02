@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import bio.link.service.SocialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import bio.link.model.entity.ProfileEntity;
 import bio.link.security.payload.Status;
 import bio.link.service.ProfileService;
+import bio.link.service.SocialService;
 
 @RestController
 @RequestMapping("api/user/profile")
@@ -52,11 +52,11 @@ public class NameController {
     @ResponseStatus(HttpStatus.CREATED)
     public Status create(
             @RequestHeader("Authorization") String jwt,
-            @RequestParam String name,
-            @RequestParam String bio
+            @RequestParam("name") String name,
+            @RequestParam("bio") String bio
     ) throws IOException {
         socialService.createSocialFirstLogin(profileService.convertJwt(jwt));
-        return profileService.create(name, bio, profileService.convertJwt(jwt));
+        return profileService.createFirstLogin(name, bio, profileService.convertJwt(jwt));
     }
 
     @PutMapping("")
