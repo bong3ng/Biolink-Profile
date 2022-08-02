@@ -13,4 +13,5 @@ public class ClickPluginsDto {
     private String title;
     private String url;
     private Long clickCount;
+    private Boolean isHeader;
 }
