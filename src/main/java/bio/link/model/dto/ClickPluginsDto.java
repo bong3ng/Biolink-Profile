@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class ClickPluginsDto {
+    private Long id;
     private String title;
     private String url;
     private Long clickCount;

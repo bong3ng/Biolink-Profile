@@ -90,7 +90,8 @@ public class UserServiceImpl implements UserService{
                 totalClickSocial += click;
             }
 
-            ClickSocialDto dto = ClickSocialDto.builder().name(socialEntityList.get(i).getName())
+            ClickSocialDto dto = ClickSocialDto.builder().id(socialEntityList.get(i).getId())
+                                                    .name(socialEntityList.get(i).getName())
                                                     .url(socialEntityList.get(i).getUrl())
                                                     .clickCount(click)
                                                     .build();
@@ -107,9 +108,11 @@ public class UserServiceImpl implements UserService{
             }
 
             ClickPluginsDto dto = ClickPluginsDto.builder()
+                                                    .id(pluginsEntityList.get(i).getId())
                                                     .title(pluginsEntityList.get(i).getTitle())
                                                     .url(pluginsEntityList.get(i).getUrl())
                                                     .clickCount( click)
+                                                    .isHeader(pluginsEntityList.get(i).getIsHeader())
                                                     .build();
             clickPluginsDtoList.add(dto);
         }
