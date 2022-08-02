@@ -67,7 +67,7 @@ public class CustomUserService implements UserDetailsService {
 	public Status signUpUser(UserEntity user) {
 		
 		Status message = new Status();
-		message.setSuccess(0);
+		message.setSuccess(false);
 		UserEntity userFindByUName = userRepo.findByUsername(user.getUsername());
 		UserEntity userFindByEmail = userRepo.findByEmail(user.getEmail());
 
@@ -96,7 +96,7 @@ public class CustomUserService implements UserDetailsService {
 				sendVerificationEmail(user, "http://localhost:3000/");
 
 				message.setMessage("Tạo tài khoản thành công.");
-				message.setSuccess(1);
+				message.setSuccess(true);
 			} catch (UnsupportedEncodingException e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -142,9 +142,9 @@ public class CustomUserService implements UserDetailsService {
 			helper.setText(content, true);
 
 			emailSender.send(message);
-			return new Status(1, "Email hợp lệ, chúng tôi đã gửi email xác thực lại mật khẩu cho bạn, vui lòng kiểm tra hộp thư.");
+			return new Status(true, "Email hợp lệ, chúng tôi đã gửi email xác thực lại mật khẩu cho bạn, vui lòng kiểm tra hộp thư.");
 		} else {
-			return new Status(0, "Không tìm thấy email");
+			return new Status(false, "Không tìm thấy email");
 		}
 
 	}
@@ -218,8 +218,8 @@ public class CustomUserService implements UserDetailsService {
 			userForgotP.setPassword(passwordEncoder.encode(newPassword));
 			userForgotP.setResetPasswordToken(null);
 			userRepo.save(userForgotP);
-			return new Status(1,"Cập nhật mật khẩu thành công");
-		}return new Status(0, "Đường dẫn không hợp lệ");
+			return new Status(true,"Cập nhật mật khẩu thành công");
+		}return new Status(false, "Đường dẫn không hợp lệ");
 			
 		
 	}

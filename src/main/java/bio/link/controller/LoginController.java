@@ -86,8 +86,8 @@ public class LoginController {
     public Status verifyNewAccount(@RequestParam("code") String code) {
     	boolean flag = userService.verify(code);
     	if (flag) {
-    		return new Status(1,"Xác thực email thành công.");
-    	}return new Status(0,"Sai liên kết");
+    		return new Status(true,"Xác thực email thành công.");
+    	}return new Status(false,"Sai liên kết");
     }
 
     

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import bio.link.repository.*;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobHttpHeaders;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
-import bio.link.model.entity.ClickProfileEntity;
 import bio.link.model.entity.DesignEntity;
 import bio.link.model.entity.PluginsEntity;
 import bio.link.model.entity.ProfileEntity;
@@ -32,6 +30,13 @@ import bio.link.model.entity.SocialEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
+import bio.link.repository.ClickPluginsRepository;
+import bio.link.repository.ClickProfileRepository;
+import bio.link.repository.ClickSocialRepository;
+import bio.link.repository.DesignRepository;
+import bio.link.repository.PluginsRepository;
+import bio.link.repository.ProfileRepository;
+import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import lombok.extern.log4j.Log4j2;
@@ -188,7 +193,7 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setBio(bio);
 
 		profileRepository.save(profile);
-		return new Status(1, "Cập nhật thông tin thành công");
+		return new Status(true, "Cập nhật thông tin thành công");
 	}
 
 	@Override
@@ -273,9 +278,9 @@ public class ProfileServiceImpl implements ProfileService {
 			UserEntity userDelete = findUser.get();
 			userDelete.setStatus(false);
 			userRepository.save(userDelete);
-			return new Status(1, "Đã xóa thành công user: " + userDelete.getUsername());
+			return new Status(true, "Đã xóa thành công user: " + userDelete.getUsername());
 		}
-		return new Status(0, "Xóa thất bại, không tìm thấy user");
+		return new Status(false, "Xóa thất bại, không tìm thấy user");
 
 	}
 	@Override
