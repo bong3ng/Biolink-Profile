@@ -169,7 +169,7 @@ public class PluginsServiceImpl implements PluginsService{
     public PluginsEntity updateLocationPlugin(List<PluginsEntity> newList, long userId) {
         List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
         for ( int i = 0 ; i <  oldList.toArray().length ; i++) {
-            newList.get(i).setNumLocation(newList.get(i).getNumLocation());
+            newList.get(i).setNumLocation(oldList.get(i).getNumLocation());
         }
         for (int i = 0 ;  i < oldList.toArray().length ; i++) {
             pluginsRepository.save(newList.get(i));

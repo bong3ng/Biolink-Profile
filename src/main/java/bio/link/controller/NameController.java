@@ -55,7 +55,7 @@ public class NameController {
             @RequestParam String name,
             @RequestParam String bio
     ) throws IOException {
-        socialService.createSocialFirstLogin(profileService.convertJwt(jwt));
+
         return profileService.create(name, bio, profileService.convertJwt(jwt));
     }
 
