@@ -57,6 +57,8 @@ public class NameController {
     ) throws IOException {
         socialService.createSocialFirstLogin(profileService.convertJwt(jwt));
         return profileService.createFirstLogin(name, bio, profileService.convertJwt(jwt));
+
+
     }
 
     @PutMapping("")

@@ -36,62 +36,50 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public void createSocialFirstLogin(Long userId) throws IOException {
-        SocialEntity socialInsta = new SocialEntity(
-                null,
-                "instagram",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialInsta = new SocialEntity();
+        socialInsta.setName("instagram");
+        socialInsta.setStatus(false);
+        socialInsta.setUserId(userId);
         socialRepository.save(socialInsta);
-        SocialEntity socialTwitter = new SocialEntity(
-                null,
-                "twitter",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialTwitter = new SocialEntity();
+        socialTwitter.setName("twitter");
+        socialTwitter.setStatus(false);
+        socialTwitter.setUserId(userId);
         socialRepository.save(socialTwitter);
-        SocialEntity socialTiktok = new SocialEntity(
-                null,
-                "tiktok",
-                null,
-                false,
-                userId
-        );
-        socialRepository.save(socialTiktok);
-        SocialEntity socialFacebook = new SocialEntity(
-                null,
-                "facebook",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialTiktok = new SocialEntity();
+        socialTiktok.setName("tiktok");
+        socialTiktok.setStatus(false);
+        socialTiktok.setUserId(userId);
+        socialRepository.save(socialInsta);
+
+        SocialEntity socialFacebook = new SocialEntity();
+        socialFacebook.setName("facebook");
+        socialFacebook.setStatus(false);
+        socialFacebook.setUserId(userId);
         socialRepository.save(socialFacebook);
-        SocialEntity socialMail = new SocialEntity(
-                null,
-                "mail",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialMail = new SocialEntity();
+        socialMail.setName("mail");
+        socialMail.setStatus(false);
+        socialMail.setUserId(userId);
         socialRepository.save(socialMail);
-        SocialEntity socialYoutube = new SocialEntity(
-                null,
-                "youtube",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialYoutube = new SocialEntity();
+        socialYoutube.setName("youtube");
+        socialYoutube.setStatus(false);
+        socialYoutube.setUserId(userId);
         socialRepository.save(socialYoutube);
-        SocialEntity socialGithub = new SocialEntity(
-                null,
-                "github",
-                null,
-                false,
-                userId
-        );
+
+        SocialEntity socialGithub = new SocialEntity();
+        socialGithub.setName("github");
+        socialGithub.setStatus(false);
+        socialGithub.setUserId(userId);
         socialRepository.save(socialGithub);
+
+
     }
 
     @Override

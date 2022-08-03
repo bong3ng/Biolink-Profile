@@ -1,5 +1,5 @@
 package bio.link.controller;
-
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.mail.MessagingException;
@@ -24,38 +24,29 @@ import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
 import bio.link.security.user.CustomUserDetails;
 import bio.link.security.user.CustomUserService;
-
-
-
-
-
+import bio.link.service.ProfileService;
+import bio.link.service.SocialService;
 @RestController
-
 @RequestMapping("/api")
-
-
 @CrossOrigin("*")
-
 public class LoginController {
-
+    @Autowired
+    SocialService socialService;
+    @Autowired
+    ProfileService profileService;
     @Autowired
     AuthenticationManager authenticationManager;
-    
 
     @Autowired
     CustomUserService userService;
 
-    
     @Autowired
     JwtTokenProvider jwtProvider;
-
-
     @Autowired
     private JwtTokenProvider tokenProvider;
-
     @PostMapping("/login")
-    public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
-    	loginRequest = userService.checkStatusAccount(loginRequest);
+    public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) throws IOException {
+        loginRequest = userService.checkStatusAccount(loginRequest);
         // Xác thực từ username và password.
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -63,48 +54,44 @@ public class LoginController {
                         loginRequest.getPassword()
                 )
         );
-
         // Nếu không xảy ra exception tức là thông tin hợp lệ
         // Set thông tin authentication vào Security Context
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         // Trả về jwt cho người dùng.
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         
         return new LoginResponse(jwt,userService.checkFirstLogin(loginRequest), loginRequest.getUsername());
     }
 
-    
     @PostMapping("/signup")
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
-    	return userService.signUpUser(user);
-    }
-    
- 
-    
-    @GetMapping("/verify")
-    public Status verifyNewAccount(@RequestParam("code") String code) {
-    	boolean flag = userService.verify(code);
-    	if (flag) {
-    		return new Status(true,"Xác thực email thành công.");
-    	}return new Status(false,"Sai liên kết");
+        return userService.signUpUser(user);
     }
 
-    
+
+
+    @GetMapping("/verify")
+    public Status verifyNewAccount(@RequestParam("code") String code) {
+        boolean flag = userService.verify(code);
+        if (flag) {
+            return new Status(true,"Xác thực email thành công.");
+        }return new Status(false,"Sai liên kết");
+
+    }
+
     @PostMapping("/forgotPassword")
     public Status forgotPass(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
-    
-        
+
+
         return userService.sendVerificationForgotPassword(email);
     }
-    
+
     @PostMapping("/processForgot")
     public Status confirmPass(@RequestParam("token") String token, @RequestBody String password) {
-    	
-    	return userService.updatePassword( password, token);
+
+        return userService.updatePassword( password, token);
     }
-    
-    
-    
+
+
 
 }

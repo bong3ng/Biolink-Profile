@@ -89,9 +89,7 @@ public class CustomUserService implements UserDetailsService {
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
 				user.setEnabled(false);
-				ProfileEntity profile = new ProfileEntity();
-				profile.setUserId(user.getId());
-				profileRepo.save(profile);
+				
 
 				userRepo.save(user);
 				sendVerificationEmail(user, "http://localhost:3000/");
@@ -243,7 +241,12 @@ public class CustomUserService implements UserDetailsService {
 		ProfileEntity profile = profileRepo.findByUserId(user.getId());
 		if(profile == null) {
 			return true;
-		}return false;
+		}else {
+			if(profile.getName() == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
