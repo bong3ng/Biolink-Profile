@@ -170,11 +170,6 @@ public class PluginsServiceImpl implements PluginsService{
         List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
         for ( int i = 0 ; i <  oldList.toArray().length ; i++) {
             newList.get(i).setNumLocation(oldList.get(i).getNumLocation());
-<<<<<<< HEAD
-        }
-        for (int i = 0 ;  i < oldList.toArray().length ; i++) {
-=======
->>>>>>> 57c9fe94bd98ed7f8c184ebae786217745e75af8
             pluginsRepository.save(newList.get(i));
         }
         

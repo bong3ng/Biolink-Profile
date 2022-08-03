@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -30,4 +33,9 @@ public class RateEntity {
 
     @Column(name = "point_rate")
     private Integer pointRate;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+
 }
