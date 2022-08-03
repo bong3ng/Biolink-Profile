@@ -4,15 +4,14 @@ package bio.link.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import bio.link.model.entity.ProfileEntity;
-import bio.link.security.payload.Status;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.entity.DesignEntity;
+import bio.link.model.entity.ProfileEntity;
 import bio.link.repository.DesignRepository;
+import bio.link.security.payload.Status;
 
 @Service
 public class DesignServiceImpl implements DesignService {
@@ -135,12 +134,12 @@ public class DesignServiceImpl implements DesignService {
         ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
 
         if (profileEntity.getActiveDesign() == id) {
-            return new  Status(0, "You can't delete this :<");
+            return new  Status(false, "You can't delete this :<");
         }
 
         designRepository.deleteById(id);
 //        profileEntity.setActiveDesign(1L);
-        return new Status(1, "Yayyyy, Delete success.");
+        return new Status(true, "Yayyyy, Delete success.");
     }
    
 }

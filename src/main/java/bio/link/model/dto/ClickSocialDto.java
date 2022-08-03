@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class ClickSocialDto {
+    private Long id;
     private String name;
     private String url;
     private Long clickCount;

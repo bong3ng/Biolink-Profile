@@ -64,7 +64,7 @@ public class AdminServiceImpl implements AdminService{
 			profileRepository.save(profile);
 		}
 		
-		return new Status(1,"Cap nhat thanh cong");
+		return new Status(true,"Cap nhat thanh cong");
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class AdminServiceImpl implements AdminService{
 			user.setStatus(false);
 			userRepository.save(user);
 		}
-		return new Status(1,"Cap nhat thanh cong");
+		return new Status(true,"Cap nhat thanh cong");
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class AdminServiceImpl implements AdminService{
 			user.setStatus(true);
 			userRepository.save(user);
 		}
-		return new Status(1,"Cap nhat thanh cong");
+		return new Status(true,"Cap nhat thanh cong");
 	}
 	
 }

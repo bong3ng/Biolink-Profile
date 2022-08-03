@@ -73,6 +73,7 @@ public class LoginController {
         if (flag) {
             return new Status(true,"Xác thực email thành công.");
         }return new Status(false,"Sai liên kết");
+
     }
 
     @PostMapping("/forgotPassword")

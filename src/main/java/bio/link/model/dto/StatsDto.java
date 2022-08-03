@@ -13,8 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class StatsDto {
+    private Long totalClickProfile;
     private List<ClickProfileDto> clickProfileList;
+
+    private Long totalClickSocial;
     private List<ClickSocialDto> clickSocialList;
+
+    private Long totalClickPlugins;
     private List<ClickPluginsDto> clickPluginsList;
 
 }
