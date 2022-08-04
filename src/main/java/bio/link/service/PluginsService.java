@@ -50,7 +50,7 @@ public interface PluginsService {
 
 
 	//update location ( thay đổi vị trí links , header , plugins )
-	PluginsEntity updateLocationPlugin(List<PluginsEntity> list , long userId);
+	List<PluginsEntity> updateLocationPlugin(List<PluginsEntity> list , Long userId);
 
 
 	void deletePluginsById(Long id);
