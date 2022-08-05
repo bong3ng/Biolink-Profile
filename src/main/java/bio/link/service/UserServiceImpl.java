@@ -14,6 +14,7 @@ import bio.link.model.exception.NotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,8 +76,8 @@ public class UserServiceImpl implements UserService{
 
         List<ClickProfileEntity> clickProfileEntityList = clickProfileRepository.getAllClickBetween(profileId , statsDate );
         Long totalClickProfile = 0L;
-        int n = clickProfileEntityList.size();
-        for(int i = 0 ; i < n ; i++) {
+        int size = clickProfileEntityList.size();
+        for(int i = 0 ; i < size ; i++) {
             totalClickProfile += clickProfileEntityList.get(i).getClickCount();
         }
         List<ClickProfileDto> clickProfileDtoList = clickProfileEntityList.stream().map(c -> modelMapper.map(c, ClickProfileDto.class)).collect(Collectors.toList());
@@ -84,15 +85,17 @@ public class UserServiceImpl implements UserService{
         List<SocialEntity> socialEntityList = socialService.getAllSocialsByUserId(userId);
         List<ClickSocialDto> clickSocialDtoList = new ArrayList<>();
         Long totalClickSocial = 0L;
-        for(int i = 0 ; i< socialEntityList.size() ; i++) {
-            Long click = clickSocialRepository.getAllClickCountBetween(socialEntityList.get(i).getId(),statsDate);
+        size = socialEntityList.size();
+        for(int i = 0 ; i < size ; i++) {
+            SocialEntity socialEntity = socialEntityList.get(i);
+            Long click = clickSocialRepository.getAllClickCountBetween(socialEntity.getId() , statsDate);
             if(click != null) {
                 totalClickSocial += click;
             }
 
-            ClickSocialDto dto = ClickSocialDto.builder().id(socialEntityList.get(i).getId())
-                                                    .name(socialEntityList.get(i).getName())
-                                                    .url(socialEntityList.get(i).getUrl())
+            ClickSocialDto dto = ClickSocialDto.builder().id(socialEntity.getId())
+                                                    .name(socialEntity.getName())
+                                                    .url(socialEntity.getUrl())
                                                     .clickCount(click)
                                                     .build();
             clickSocialDtoList.add(dto);
@@ -101,18 +104,20 @@ public class UserServiceImpl implements UserService{
         List<PluginsEntity> pluginsEntityList = pluginsRepository.getAllPluginsByUserId(userId);
         List<ClickPluginsDto> clickPluginsDtoList = new ArrayList<>();
         Long totalClickPlugins = 0L;
-        for(int i = 0 ; i< pluginsEntityList.size() ; i++) {
-            Long click = clickPluginsRepository.getAllClickCountBetween(pluginsEntityList.get(i).getId(), statsDate);
+        size = pluginsEntityList.size();
+        for(int i = 0 ; i < size ; i++) {
+            PluginsEntity pluginsEntity = pluginsEntityList.get(i);
+            Long click = clickPluginsRepository.getAllClickCountBetween(pluginsEntity.getId() , statsDate);
             if(click != null) {
                 totalClickPlugins += click;
             }
 
             ClickPluginsDto dto = ClickPluginsDto.builder()
-                                                    .id(pluginsEntityList.get(i).getId())
-                                                    .title(pluginsEntityList.get(i).getTitle())
-                                                    .url(pluginsEntityList.get(i).getUrl())
-                                                    .clickCount( click)
-                                                    .isHeader(pluginsEntityList.get(i).getIsHeader())
+                                                    .id(pluginsEntity.getId())
+                                                    .title(pluginsEntity.getTitle())
+                                                    .url(pluginsEntity.getUrl())
+                                                    .clickCount(click)
+                                                    .isHeader(pluginsEntity.getIsHeader())
                                                     .build();
             clickPluginsDtoList.add(dto);
         }
@@ -125,8 +130,6 @@ public class UserServiceImpl implements UserService{
                                 .totalClickSocial(totalClickSocial)
                                 .clickSocialList(clickSocialDtoList)
                                 .build();
-        ArrayList<StatsDto> list = new ArrayList<>();
-        list.add(data);
-        return new ResponseData(true , "Thành công" , list);
+        return ResponseData.builder().success(true).message("Thành công").data(Arrays.asList(data)).build();
     }
 }

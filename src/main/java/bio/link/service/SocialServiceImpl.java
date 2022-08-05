@@ -84,7 +84,8 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public void updateSocial(List<SocialEntity> socialEntityList, Long userId) {
-        for (int i = 0; i <socialEntityList.size() ; i ++) {
+        int size = socialEntityList.size();
+        for (int i = 0; i < size ; i ++) {
             socialRepository.save(socialEntityList.get(i));
         }
     }
