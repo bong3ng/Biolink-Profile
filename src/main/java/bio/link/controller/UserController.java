@@ -29,8 +29,4 @@ public class UserController {
         return ResponseEntity.ok(userService.getStatsByUsername(userId , days));
     }
 
-    @GetMapping("/link")
-    public ResponseEntity getLinks() {
-        return ResponseEntity.ok("Trang links");
-    }
 }
