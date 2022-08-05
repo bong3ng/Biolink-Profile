@@ -180,9 +180,14 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public ProfileEntity getProfileByUserId(Long userId) {
+
 		return profileRepository.getProfileByUserId(userId);
 	}
 
+	@Override
+	public String getImageByProfileId(Long profileId) {
+		return profileRepository.getImageByUserId(profileId);
+	}
 
 	@Override
 	public Status createFirstLogin(String name, String bio, Long userId) throws IOException {

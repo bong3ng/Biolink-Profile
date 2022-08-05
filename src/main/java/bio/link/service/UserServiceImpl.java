@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import bio.link.model.exception.NotFoundException;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
 
+    @Override
     public UserEntity getUserByUsername(String username) {
         username = username.trim();
         UserEntity userEntity = userRepository.findByUsername(username);
@@ -128,5 +128,10 @@ public class UserServiceImpl implements UserService{
         ArrayList<StatsDto> list = new ArrayList<>();
         list.add(data);
         return new ResponseData(true , "Thành công" , list);
+    }
+
+    @Override
+    public List<UserEntity> getUsernameByUserId(Long id) {
+        return userRepository.getUsernameByUserId(id);
     }
 }

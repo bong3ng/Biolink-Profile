@@ -22,11 +22,18 @@ public class RateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    // cái này là người được rate
     @Column(name = "profile_id")
     private Long profileId;
 
+
     @Column(name = "user_id")
     private Long userId;
+
+    //cái này là người rate
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "content_comment")
     private String comment;
@@ -36,6 +43,7 @@ public class RateEntity {
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
+
 
 
 }

@@ -53,7 +53,7 @@ public class SocialServiceImpl implements SocialService {
         socialTiktok.setName("tiktok");
         socialTiktok.setStatus(false);
         socialTiktok.setUserId(userId);
-        socialRepository.save(socialInsta);
+        socialRepository.save(socialTiktok);
 
         SocialEntity socialFacebook = new SocialEntity();
         socialFacebook.setName("facebook");

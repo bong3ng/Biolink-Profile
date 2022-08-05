@@ -19,6 +19,7 @@ public interface  ProfileService {
 
     UserEntity getUserByUsername(String username);
 
+
     ResponseData getUserProfileByUsername(String username);
 
 	Status createFirstLogin(
@@ -34,6 +35,8 @@ public interface  ProfileService {
 	) throws IOException;
 
 	ProfileEntity getProfileByUserId(Long userId);
+
+	String getImageByProfileId(Long profileId);
 
 	ProfileEntity updateDesign(Long userId, Long designId);
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW);

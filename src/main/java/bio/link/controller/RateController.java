@@ -1,34 +1,37 @@
 package bio.link.controller;
 
 
+import bio.link.model.dto.RateDto;
 import bio.link.model.entity.RateEntity;
 import bio.link.repository.RateRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.RateService;
+import bio.link.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/user")
+@CrossOrigin("*")
 public class RateController {
 
     @Autowired
     private RateService rateService;
 
     @Autowired
-    private RateRepository rateRepository;
+    private UserService userService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/rate")
-    public List<RateEntity> getAllRateByProfileId(
+    public List<RateDto> getAllRateByProfileId(
             @RequestHeader("Authorization") String jwt
     ) {
-        return rateRepository.getAllRateByProfileId(jwtTokenProvider.getUserIdFromHeader(jwt));
+        return rateService.getRateByProfileId(jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
     @PostMapping("/saveRate")
@@ -39,7 +42,8 @@ public class RateController {
             @RequestParam String username,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        return rateService.createRate(comment , pointRate , jwtTokenProvider.getUserIdFromHeader(jwt),username);
+
+        return rateService.saveRate(comment , pointRate ,  jwtTokenProvider.getUserIdFromHeader(jwt),username);
     }
 
 }

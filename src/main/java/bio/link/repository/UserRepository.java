@@ -2,12 +2,18 @@ package bio.link.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import bio.link.model.entity.UserEntity;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+	@Query(value = "SELECT username FROM user WHERE userId = :userId" , nativeQuery = true)
+	List<UserEntity> getUsernameByUserId(@Param("userId") Long userId);
 
 	UserEntity findByUsername(String username);
 

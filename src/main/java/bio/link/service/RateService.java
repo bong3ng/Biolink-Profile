@@ -1,5 +1,6 @@
 package bio.link.service;
 
+import bio.link.model.dto.RateDto;
 import bio.link.model.entity.RateEntity;
 
 import java.time.LocalDate;
@@ -9,9 +10,11 @@ import java.util.List;
 
 public interface RateService {
 
-    List<RateEntity> getAllRateBuyProfileId(Long profileId);
+    List<RateEntity> getAllRateByProfileId(Long profileId);
 
-    RateEntity createRate(
+    List<RateDto> getRateByProfileId(Long profileId);
+
+    RateEntity saveRate(
         String comment,
         Integer pointRate,
         Long userId,
