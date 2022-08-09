@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 
+import bio.link.model.dto.LoginResponseDto;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.oauth2.CustomOAuth2User;
 import bio.link.security.oauth2.Provide;
@@ -69,6 +70,8 @@ public class CustomUserService implements UserDetailsService {
 		return new CustomUserDetails(user);
 	}
 
+
+
 	// Đăng kí user
 	public Status signUpUser(UserEntity user) {
 		
@@ -85,28 +88,22 @@ public class CustomUserService implements UserDetailsService {
 			LocalDate nowTime = LocalDate.now();
 			user.setCreatedAt(nowTime);
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			user.setRole("ROLE_USER");
-			user.setStatus(true);
-			
 
-//    		sendSimpleMessage(user.getEmail(),"Đăng kí thành công","Chào mừng bạn đến với trang web của chúng tôi, chúc bạn vui vẻ hạnh phúc :)).");
 			try {
 				// Tạo verificationCode
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
 				user.setEnabled(false);
-				
-
 				userRepo.save(user);
 				sendVerificationEmail(user, "http://localhost:3000/");
 
 				message.setMessage("Tạo tài khoản thành công.");
 				message.setSuccess(true);
 			} catch (UnsupportedEncodingException e) {
-				System.out.println(e.getMessage());
+
 				e.printStackTrace();
 			} catch (MessagingException e) {
-				System.out.println(e.getMessage());
+
 				e.printStackTrace();
 			}
 		}
@@ -250,16 +247,20 @@ public class CustomUserService implements UserDetailsService {
 		String email = oAuth2User.getEmail();
 		UserEntity userExist = userRepo.findByEmail(email);
 		if(userExist == null){
-
 			UserEntity user = new UserEntity();
-			ProfileEntity profile = new ProfileEntity();
+
+
+			LocalDate nowTime = LocalDate.now();
+			user.setCreatedAt(nowTime);
 			user.setEmail(oAuth2User.getEmail());
 			user.setEnabled(true);
-			profile.setName(oAuth2User.getName());
 			user.setProvide(oAuth2User.getOauth2ClientName());
-			user.setRole("ROLE_USER");
-			user.setStatus(true);
 			userRepo.save(user);
+
+
+			ProfileEntity profile = new ProfileEntity();
+			profile.setName(oAuth2User.getName());
+
 			idTemp = user.getId();
 			profile.setUserId(user.getId());
 			profileRepo.save(profile);
@@ -280,11 +281,26 @@ public class CustomUserService implements UserDetailsService {
 	}
 
 
-	public LoginResponse loginFromSocial(){
+	public LoginResponseDto loginFromSocial(){
 		SecurityContextHolder.getContext().setAuthentication((Authentication) authen);
 
 		String jwt = tokenProvider.generateTokenByIdUser(idTemp);
 		boolean check = checkFirstLoginFromSocial(idTemp);
-		return new LoginResponse(jwt, check, null);
+		LoginResponse login = new LoginResponse(jwt, check, null);
+		return new LoginResponseDto(true,"Đăng nhập thành công", login);
+	}
+
+	public String checkLoginAccount(String username){
+		UserEntity user = userRepo.findByUsername(username);
+		if(user == null){
+			return "Tài khoản đăng nhập không hợp lệ, vui lòng kiểm tra lại";
+		}else{
+			if(!user.isStatus()){
+				return "Tài khoản của bạn đang bị khóa, vui lòng liên hệ với Admin để được hỗ trợ";
+			}if(!user.isEnabled()){
+				return "Tài khoản của bạn chưa xác thực, vui lòng kiểm tra email";
+			}return "Mật khẩu chưa chính xác, vui lòng kiểm tra lại";
+
+		}
 	}
 }

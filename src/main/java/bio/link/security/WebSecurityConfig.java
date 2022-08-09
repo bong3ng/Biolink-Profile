@@ -83,16 +83,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Login()
 
-                .userInfoEndpoint()
-
-                .userService(oauth2UserService)
-                .and()
-//                .defaultSuccessUrl("/success")
-                .successHandler(oauthLoginSuccessHandler);
-//                ;
+                    .userInfoEndpoint()
+                        .userService(oauth2UserService)
+                    .and()
+                    .successHandler(oauthLoginSuccessHandler);
 
 
-        // Thêm một lớp Filter kiểm tra jwt
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
     @Autowired

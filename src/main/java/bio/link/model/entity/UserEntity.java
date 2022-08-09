@@ -28,7 +28,7 @@ public class UserEntity {
     private String username;
     private String password;
     private String email;
-    private String role;
+    private String role = "ROLE_USER";
     @Column(name = "created_at")
     private LocalDate createdAt;
     @Column(name = "modified_at")
@@ -41,7 +41,7 @@ public class UserEntity {
 
     private boolean enabled;
     
-    private boolean status;
+    private boolean status = true;
 
     private String provide;
 
