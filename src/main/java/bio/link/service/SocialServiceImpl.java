@@ -53,7 +53,9 @@ public class SocialServiceImpl implements SocialService {
         socialTiktok.setName("tiktok");
         socialTiktok.setStatus(false);
         socialTiktok.setUserId(userId);
-        socialRepository.save(socialInsta);
+
+        socialRepository.save(socialTiktok);
+
 
         SocialEntity socialFacebook = new SocialEntity();
         socialFacebook.setName("facebook");
@@ -84,7 +86,10 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public void updateSocial(List<SocialEntity> socialEntityList, Long userId) {
-        for (int i = 0; i <socialEntityList.size() ; i ++) {
+
+        int size = socialEntityList.size();
+        for (int i = 0; i < size ; i ++) {
+
             socialRepository.save(socialEntityList.get(i));
         }
     }

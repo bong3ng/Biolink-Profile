@@ -128,7 +128,9 @@ public class PluginsController {
     //thay đổi vị trí links, header
     @PutMapping("/updateLocation")
     @ResponseStatus(HttpStatus.CREATED)
-    public PluginsEntity updateLocationPlugins(
+
+    public List<PluginsEntity> updateLocationPlugins(
+
             @RequestBody List<PluginsEntity> pluginsEntityList,
             @RequestHeader("Authorization") String jwt
     ) {

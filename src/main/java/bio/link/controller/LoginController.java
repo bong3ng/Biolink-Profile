@@ -4,7 +4,9 @@ import java.io.UnsupportedEncodingException;
 
 import javax.mail.MessagingException;
 
+
 import bio.link.model.dto.LoginResponseDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,10 +48,11 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider tokenProvider;
     @PostMapping("/login")
+
     public LoginResponseDto authenticateUser(@RequestBody LoginRequest loginRequest) throws IOException {
         loginRequest = userService.checkStatusAccount(loginRequest);
         String message;
-        Boolean success ;
+        Boolean success;
         LoginResponse login = new LoginResponse();
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -58,18 +61,18 @@ public class LoginController {
                             loginRequest.getPassword()
                     )
             );
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
 
-                login = LoginResponse.builder()
-                .accessToken(jwt)
-                .firstLogin(userService.checkFirstLogin(loginRequest))
-                .username(loginRequest.getUsername()).build();
-        success = true;
-        message = "Đăng nhập thành công";
-        }catch (Exception e){
+            login = LoginResponse.builder()
+                    .accessToken(jwt)
+                    .firstLogin(userService.checkFirstLogin(loginRequest))
+                    .username(loginRequest.getUsername()).build();
+            success = true;
+            message = "Đăng nhập thành công";
+        } catch (Exception e) {
             message = userService.checkLoginAccount(loginRequest.getUsername());
-           login = null;
+            login = null;
             success = false;
         }
         LoginResponseDto loginDto = LoginResponseDto.builder().loginResponse(login).message(message).success(success).build();
@@ -80,6 +83,7 @@ public class LoginController {
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
 
         return userService.signUpUser(user);
+
     }
 
 
@@ -105,9 +109,11 @@ public class LoginController {
 
         return userService.updatePassword( password, token);
     }
+
     @PostMapping("/login/social")
     public LoginResponseDto loginFromSocial(){
 
         return userService.loginFromSocial();
     }
+
 }

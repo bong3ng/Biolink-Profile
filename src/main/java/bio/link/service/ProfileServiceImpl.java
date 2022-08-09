@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 
 import javax.transaction.Transactional;
 
@@ -78,10 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private PluginsRepository pluginsRepository;
 
-    private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
 
-    private static LocalDate previousDate;
-    private static LocalDate currentDate;
     @Override
     public UserEntity getUserByUsername(String username) {
         username = username.trim();
@@ -102,16 +98,6 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-//
-//        ClickProfileEntity clickProfileEntity = clickProfileRepository.getClickCountByDate(presentDate , profileId);
-//        if(clickProfileEntity == null) {
-//            ClickProfileEntity newClick = new ClickProfileEntity(null , 1 , presentDate , profileId);
-//            clickProfileRepository.save(newClick);
-//        }
-//        else {
-//            clickProfileEntity.setClickCount(clickProfileEntity.getClickCount() + 1);
-//            clickProfileRepository.save(clickProfileEntity);
-//        }
 
 		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
 //		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
@@ -121,8 +107,6 @@ public class ProfileServiceImpl implements ProfileService {
 		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
 //		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
 //				.collect(Collectors.toList());
-
-
 
       
         DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
@@ -138,9 +122,10 @@ public class ProfileServiceImpl implements ProfileService {
                                                 listSocial ,
                                                 listPlugins,
                                                 designEntity);
-		ArrayList<ProfileDto> list = new ArrayList<>();
-		list.add(profileDto);
-		return ResponseData.builder().success(true).message("Thành công").data(list).build();
+
+
+		return ResponseData.builder().success(true).message("Thành công").data(Arrays.asList(profileDto)).build();
+
 	}
 
 	@Override
@@ -153,9 +138,9 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-		ArrayList<SocialEntity> list = new ArrayList<>();
-		list.add(socialEntity);
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(list).build();
+
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(Arrays.asList(socialEntity)).build();
+
 	}
 
 	@Override
@@ -168,9 +153,9 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-		ArrayList<PluginsEntity> list = new ArrayList<>();
-		list.add(pluginsEntity);
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(list).build();
+
+		return ResponseData.builder().success(true).message("CLICK Thành công").data(Arrays.asList(pluginsEntity)).build();
+
 	}
 
 	@Override
@@ -180,7 +165,14 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public ProfileEntity getProfileByUserId(Long userId) {
+
+
 		return profileRepository.getProfileByUserId(userId);
+	}
+
+	@Override
+	public String getImageByProfileId(Long profileId) {
+		return profileRepository.getImageByUserId(profileId);
 	}
 
 

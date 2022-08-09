@@ -2,11 +2,14 @@ package bio.link.security.user;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+
 import java.util.Optional;
+
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+
 
 import bio.link.model.dto.LoginResponseDto;
 import bio.link.security.jwt.JwtTokenProvider;
@@ -14,12 +17,15 @@ import bio.link.security.oauth2.CustomOAuth2User;
 import bio.link.security.oauth2.Provide;
 import bio.link.security.payload.LoginResponse;
 import lombok.Data;
+
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +38,9 @@ import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.Status;
+
 @Data
+
 
 @Service
 public class CustomUserService implements UserDetailsService {
@@ -46,11 +54,13 @@ public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private JavaMailSender emailSender;
 
+
 	@Autowired
 	JwtTokenProvider tokenProvider;
 
 	private Object authen;
 	private Long idTemp;
+
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
@@ -69,7 +79,6 @@ public class CustomUserService implements UserDetailsService {
 
 		return new CustomUserDetails(user);
 	}
-
 
 
 	// Đăng kí user
@@ -94,6 +103,7 @@ public class CustomUserService implements UserDetailsService {
 				String randomCode = RandomString.make(64);
 				user.setVerificationCode(randomCode);
 				user.setEnabled(false);
+
 				userRepo.save(user);
 				sendVerificationEmail(user, "http://localhost:3000/");
 
@@ -101,8 +111,10 @@ public class CustomUserService implements UserDetailsService {
 				message.setSuccess(true);
 			} catch (UnsupportedEncodingException e) {
 
+
 				e.printStackTrace();
 			} catch (MessagingException e) {
+
 
 				e.printStackTrace();
 			}
@@ -197,8 +209,6 @@ public class CustomUserService implements UserDetailsService {
 
 
 
-
-
 	public Status updatePassword( String newPassword, String resetPasswordToken) {
 		UserEntity userForgotP = userRepo.findByResetPasswordToken(resetPasswordToken);
 		
@@ -241,7 +251,6 @@ public class CustomUserService implements UserDetailsService {
 		}
 		return false;
 	}
-
 
 	public void createAccountFromSocial(CustomOAuth2User oAuth2User){
 		String email = oAuth2User.getEmail();
@@ -303,4 +312,5 @@ public class CustomUserService implements UserDetailsService {
 
 		}
 	}
+
 }

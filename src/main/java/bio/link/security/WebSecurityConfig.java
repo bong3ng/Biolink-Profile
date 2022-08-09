@@ -1,7 +1,9 @@
 package bio.link.security;
 
+
 import bio.link.security.oauth2.CustomOAuth2UserService;
 import bio.link.security.oauth2.OAuthLoginSuccessHandler;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -21,14 +24,14 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
+
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import bio.link.security.jwt.JwtAuthenticationFilter;
 import bio.link.security.user.CustomUserService;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+
 
 
 @Configuration
@@ -64,10 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userService) // Cung cáp userservice cho spring security
             .passwordEncoder(passwordEncoder()); // cung cấp password encoder
     }
-//@Override
-//protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//    auth.authenticationProvider(authenticationProvider());
-//}
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -79,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/api/user").hasAnyRole("USER", "ADMIN")
                     .antMatchers("/api/admin").hasRole("ADMIN")// Cho phép tất cả mọi người truy cập vào 2 địa chỉ này
+
                     .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
@@ -97,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuthLoginSuccessHandler oauthLoginSuccessHandler;
+
 
 
 

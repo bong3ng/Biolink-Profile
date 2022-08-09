@@ -13,6 +13,10 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity , Long> {
    // @Query(value = "SELECT * FROM profiles WHERE user_id = :userId",nativeQuery = true)
     ProfileEntity getProfileByUserId(Long userId) ;
 
+
+    String getImageByUserId(Long userId);
+
+
     ProfileEntity findOneById(Long id);
     
     ProfileEntity findByUserId(Long userId);

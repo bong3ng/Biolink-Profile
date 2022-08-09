@@ -166,15 +166,15 @@ public class PluginsServiceImpl implements PluginsService{
     }
 
     @Override
-    public PluginsEntity updateLocationPlugin(List<PluginsEntity> newList, long userId) {
-        List<PluginsEntity> oldList  = pluginsRepository.getAllPluginsByUserId(userId);
-        for ( int i = 0 ; i <  oldList.toArray().length ; i++) {
-            newList.get(i).setNumLocation(oldList.get(i).getNumLocation());
 
-            pluginsRepository.save(newList.get(i));
+    public List<PluginsEntity> updateLocationPlugin(List<PluginsEntity> newList, Long userId) {
+        int size = newList.size();
+        for ( int i = 0 ; i < size; i++) {
+            newList.get(i).setNumLocation(Long.valueOf(i));
         }
-        
-        return null;
+        pluginsRepository.saveAll(newList);
+        return pluginsRepository.getAllPluginsByUserId(userId);
+
     }
 
     @Override

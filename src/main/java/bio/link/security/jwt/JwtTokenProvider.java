@@ -2,7 +2,8 @@ package bio.link.security.jwt;
 
 import java.util.Date;
 
-import bio.link.security.oauth2.CustomOAuth2User;
+
+
 import org.springframework.stereotype.Component;
 
 import bio.link.security.user.CustomUserDetails;
@@ -66,6 +67,7 @@ public class JwtTokenProvider {
     	return this.getUserIdFromJWT(jwt);
     }
 
+
     public String generateTokenByIdUser(Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
@@ -76,5 +78,6 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
+
 
 }
