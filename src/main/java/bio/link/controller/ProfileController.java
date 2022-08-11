@@ -30,23 +30,23 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
-//    @PutMapping("/{username}/social")
-//    public ResponseEntity clickSocial(@RequestHeader(required = false , value = "Authorization" ) String jwt,
-//                                      @RequestBody SocialEntity socialEntity) {
-//        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == socialEntity.getUserId()){
-//                return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào social của mình")));
-//            }
-//        return ResponseEntity.ok(profileService.clickSocialOfProfile(socialEntity));
-//    }
-//
-//    @PutMapping("/{username}/plugins")
-//    public ResponseEntity clickPlugins(@RequestHeader(required = false , value = "Authorization" ) String jwt,
-//                                       @RequestBody PluginsEntity pluginsEntity) {
-//        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == pluginsEntity.getUserId()) {
-//            return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào plugin của mình")));
-//        }
-//        return ResponseEntity.ok(profileService.clickPluginsOfProfile(pluginsEntity));
-//    }
+    @PutMapping("/{username}/social")
+    public ResponseEntity clickSocial(@RequestHeader(required = false , value = "Authorization" ) String jwt,
+                                      @RequestBody SocialEntity socialEntity) {
+        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == socialEntity.getUserId()){
+                return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào social của mình")));
+            }
+        return ResponseEntity.ok(profileService.clickSocialOfProfile(socialEntity));
+    }
+
+    @PutMapping("/{username}/plugins")
+    public ResponseEntity clickPlugins(@RequestHeader(required = false , value = "Authorization" ) String jwt,
+                                       @RequestBody PluginsEntity pluginsEntity) {
+        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == pluginsEntity.getUserId()) {
+            return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào plugin của mình")));
+        }
+        return ResponseEntity.ok(profileService.clickPluginsOfProfile(pluginsEntity));
+    }
 
     @GetMapping("/profile/{username}")
     public ResponseEntity getProfile(@PathVariable String username,
