@@ -6,6 +6,7 @@ import bio.link.repository.ClickPluginsRepository;
 import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ClickSocialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -14,6 +15,9 @@ public class ClickCountServiceImpl implements ClickCountService, Runnable {
     private SocialEntity socialEntity;
     private PluginsEntity pluginsEntity;
     private ProfileEntity profileEntity;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public void run() {
@@ -37,7 +41,7 @@ public class ClickCountServiceImpl implements ClickCountService, Runnable {
 
     @Autowired
     private ClickProfileRepository clickProfileRepository;
-    private static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
+    public static HashMap<Long , Long> countClickProfileMap = new HashMap<>();
     private static LocalDate currentDateProfile;
     private static LocalDate previousDateProfile;
     @Override
@@ -70,6 +74,12 @@ public class ClickCountServiceImpl implements ClickCountService, Runnable {
             countClickProfileMap.put(profileId , clickCount);
             clickProfileRepository.updateProfileClickCount(currentDateProfile , profileId,clickCount);
         }
+
+
+//        if(clickCount % 10 == 0) {
+//            String noti = "Hôm nay có " + clickCount + " người đã xem hồ sơ của bạn!";
+//            simpMessagingTemplate.convertAndSend(, noti);
+//        }
     }
 
 

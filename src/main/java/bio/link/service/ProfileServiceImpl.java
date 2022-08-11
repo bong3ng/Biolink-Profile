@@ -88,27 +88,25 @@ public class ProfileServiceImpl implements ProfileService {
         return userEntity;
     }
     @Override
-    public ResponseData getUserProfileByUsername(String username) {
+    public ResponseData getUserProfileByUsername(String username , Boolean checkGuest) {
         UserEntity userEntity = this.getUserByUsername(username);
         Long userId = userEntity.getId();
-
 		ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
 
-		ClickCountServiceImpl clickService = new ClickCountServiceImpl(profileEntity , clickProfileRepository);
-		Thread t = new Thread(clickService);
-		t.start();
-
+		if(checkGuest) {
+			ClickCountServiceImpl clickService = new ClickCountServiceImpl(profileEntity , clickProfileRepository);
+			Thread t = new Thread(clickService);
+			t.start();
+		}
 
 		List<SocialEntity> listSocial = socialService.getAllSocialsByUserId(userId);
 //		List<SocialDto> listSocialDto = listSocial.stream().map(s -> modelMapper.map(s, SocialDto.class))
 //				.collect(Collectors.toList());
 
-
 		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
 //		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
 //				.collect(Collectors.toList());
 
-      
         DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
 //        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
 
@@ -138,9 +136,11 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(Arrays.asList(socialEntity)).build();
-
+		return ResponseData.builder()
+							.success(true)
+							.message("CLICK Thành công")
+							.data(Arrays.asList(socialEntity.getUrl()))
+							.build();
 	}
 
 	@Override
@@ -153,9 +153,11 @@ public class ProfileServiceImpl implements ProfileService {
 		Thread t = new Thread(clickService);
 		t.start();
 
-
-		return ResponseData.builder().success(true).message("CLICK Thành công").data(Arrays.asList(pluginsEntity)).build();
-
+		return ResponseData.builder()
+							.success(true)
+							.message("CLICK Thành công")
+							.data(Arrays.asList(pluginsEntity.getUrl()))
+							.build();
 	}
 
 	@Override
@@ -165,8 +167,6 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public ProfileEntity getProfileByUserId(Long userId) {
-
-
 		return profileRepository.getProfileByUserId(userId);
 	}
 
@@ -262,7 +262,6 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public UserEntity updateUserByAdmin(UserEntity user) {
 		return userRepository.save(user);
-
 	}
 
 	@Override
@@ -275,10 +274,8 @@ public class ProfileServiceImpl implements ProfileService {
 			return new Status(true, "Đã xóa thành công user: " + userDelete.getUsername());
 		}
 		return new Status(false, "Xóa thất bại, không tìm thấy user");
-
 	}
 	@Override
-	
 	public ProfileDto getUserProfileByJWT(String jwt) {
 		Long userId = convertJwt(jwt);
 		ProfileEntity profileEntity = profileRepository.findByUserId(userId);
@@ -286,7 +283,6 @@ public class ProfileServiceImpl implements ProfileService {
 
 		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
 
-      
         DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
         ProfileDto profileDto = new ProfileDto( null ,
                 profileEntity.getName(),
@@ -299,8 +295,6 @@ public class ProfileServiceImpl implements ProfileService {
                 listPlugins,
                 designEntity);
         return profileDto;
-		
 	}
-	
 	
 }

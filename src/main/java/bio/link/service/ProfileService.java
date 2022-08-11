@@ -20,7 +20,7 @@ public interface  ProfileService {
     UserEntity getUserByUsername(String username);
 
 
-    ResponseData getUserProfileByUsername(String username);
+    ResponseData getUserProfileByUsername(String username , Boolean checkGuest);
 
 	Status createFirstLogin(
 			String name,
