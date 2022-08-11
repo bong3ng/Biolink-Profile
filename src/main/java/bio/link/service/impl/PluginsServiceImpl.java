@@ -1,4 +1,4 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 //import java.io.IOException;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import bio.link.service.PluginsService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -27,7 +28,7 @@ import bio.link.model.entity.PluginsEntity;
 import bio.link.repository.PluginsRepository;
 
 @Service
-public class PluginsServiceImpl implements PluginsService{
+public class PluginsServiceImpl implements PluginsService {
 
 
     @Autowired

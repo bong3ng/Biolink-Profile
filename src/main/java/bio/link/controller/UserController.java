@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bio.link.security.jwt.JwtTokenProvider;
-import bio.link.service.UserServiceImpl;
+import bio.link.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("api/user")

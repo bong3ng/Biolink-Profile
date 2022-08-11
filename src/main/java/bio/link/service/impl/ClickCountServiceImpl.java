@@ -1,12 +1,13 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 import bio.link.model.entity.*;
 import bio.link.repository.ClickPluginsRepository;
 import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ClickSocialRepository;
+import bio.link.service.ClickCountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,8 +17,7 @@ public class ClickCountServiceImpl implements ClickCountService, Runnable {
     private PluginsEntity pluginsEntity;
     private ProfileEntity profileEntity;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+
 
     @Override
     public void run() {

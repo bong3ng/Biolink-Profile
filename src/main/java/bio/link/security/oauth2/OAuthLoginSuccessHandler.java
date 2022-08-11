@@ -1,9 +1,9 @@
 package bio.link.security.oauth2;
 
-import bio.link.model.entity.UserEntity;
-import bio.link.repository.UserRepository;
+
 import bio.link.security.user.CustomUserService;
-import bio.link.service.UserService;
+import bio.link.service.LoginService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +22,8 @@ public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuc
     @Autowired
     CustomUserService userService;
 
+    @Autowired
+    LoginService loginService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -29,10 +31,10 @@ public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuc
         CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 
-        Object authen = SecurityContextHolder.getContext().getAuthentication();
-        userService.createAccountFromSocial(oauth2User);
+        Authentication authen = SecurityContextHolder.getContext().getAuthentication();
+        loginService.createAccountFromSocial(oauth2User, authen);
 
-        userService.setAuthen(authen);
+
         response.sendRedirect("/success");
         super.onAuthenticationSuccess(request, response, authentication);
     }
