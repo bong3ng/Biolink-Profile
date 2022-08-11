@@ -1,4 +1,4 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 
@@ -9,6 +9,9 @@ import bio.link.model.entity.UserEntity;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.RateRepository;
 import bio.link.repository.UserRepository;
+import bio.link.service.ProfileService;
+import bio.link.service.RateService;
+import bio.link.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

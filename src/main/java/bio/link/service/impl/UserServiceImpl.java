@@ -1,10 +1,14 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 import bio.link.model.dto.*;
 import bio.link.model.entity.*;
 import bio.link.model.response.ResponseData;
 import bio.link.repository.*;
+import bio.link.service.PluginsService;
+import bio.link.service.ProfileService;
+import bio.link.service.SocialService;
+import bio.link.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -153,4 +157,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.getUsernameByUserId(id);
 
     }
+
+
 }

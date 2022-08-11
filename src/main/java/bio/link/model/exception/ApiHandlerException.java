@@ -13,13 +13,7 @@ import bio.link.repository.UserRepository;
 public class ApiHandlerException {
 	@Autowired
 	UserRepository userRepository;
-//	@ExceptionHandler(Exception.class)
-//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-//    public Status handleAllException(Exception ex, WebRequest request) {
-//        // quá trình kiểm soat lỗi diễn ra ở đây
-//        return new Status(0, "Sai thông tin đăng nhập");
-//    }
-//	
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseData notFoundException(NotFoundException ex) {
@@ -27,12 +21,11 @@ public class ApiHandlerException {
         return new ResponseData(false, ex.getMessage() , null);
     }
     
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-//    public ResponseData notFound(Exception ex, WebRequest request) {
-////    	String message;
-////    	if(userRepository.find)
-//    	return new ResponseData(false, ex.getMessage(), null);
-//    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseData notFound(Exception ex) {
+
+    	return new ResponseData(false, "Đã xảy ra lỗi phía backend", null);
+    }
 
 }

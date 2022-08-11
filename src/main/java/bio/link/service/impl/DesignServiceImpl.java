@@ -1,9 +1,11 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import bio.link.service.DesignService;
+import bio.link.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import bio.link.security.jwt.JwtTokenProvider;
-import bio.link.service.ProfileServiceImpl;
+import bio.link.service.impl.ProfileServiceImpl;
 
 @RestController
 @RequestMapping("")

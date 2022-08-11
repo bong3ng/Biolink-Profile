@@ -1,10 +1,11 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 
 import bio.link.model.entity.*;
 import bio.link.repository.ClickPluginsRepository;
 import bio.link.repository.ClickProfileRepository;
 import bio.link.repository.ClickSocialRepository;
+import bio.link.service.ClickCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;

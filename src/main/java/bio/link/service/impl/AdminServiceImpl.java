@@ -1,9 +1,10 @@
-package bio.link.service;
+package bio.link.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import bio.link.service.AdminService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import bio.link.repository.UserRepository;
 import bio.link.security.payload.Status;
 
 @Service
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 	@Autowired
 	UserRepository userRepository;
 	
@@ -43,7 +44,7 @@ public class AdminServiceImpl implements AdminService{
 		}
 		
 		
-		return new DataDto(true,"Thanh Cong", list);
+		return new DataDto(true,"Thành công", list);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class AdminServiceImpl implements AdminService{
 			profileRepository.save(profile);
 		}
 		
-		return new Status(true,"Cap nhat thanh cong");
+		return new Status(true,"Cập nhật thành công");
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class AdminServiceImpl implements AdminService{
 			user.setStatus(false);
 			userRepository.save(user);
 		}
-		return new Status(true,"Cap nhat thanh cong");
+		return new Status(true,"Cập nhật thành công");
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class AdminServiceImpl implements AdminService{
 			user.setStatus(true);
 			userRepository.save(user);
 		}
-		return new Status(true,"Cap nhat thanh cong");
+		return new Status(true,"Cập nhật thành công");
 	}
 	
 }
