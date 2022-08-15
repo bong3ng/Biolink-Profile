@@ -12,7 +12,7 @@ public interface UserService {
 
     ResponseData getStatsByUsername(Long userId, Integer days);
 
-    List<UserEntity> getUsernameByUserId(Long id);
+    UserEntity getUsernameByUserId(Long id);
 
 
 

@@ -33,4 +33,13 @@ public interface ClickProfileRepository extends JpaRepository<ClickProfileEntity
     void updateProfileClickCount(@Param("date") LocalDate date ,
                                  @Param("profileId") Long profileId ,
                                  @Param("clickCount") Long clickCount);
+
+    @Query(value = "SELECT users.username " +
+                   "FROM users " +
+                   "JOIN profiles " +
+                   "ON profiles.user_id = users.id " +
+                   "JOIN click_profiles " +
+                   "ON click_profiles.profile_id = profiles.id " +
+                   "WHERE profiles.id = :profileId LIMIT 1" , nativeQuery = true)
+    String getUsernameByProfileId(@Param("profileId") Long profileId);
 }

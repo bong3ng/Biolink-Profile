@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 	@Query(value = "SELECT username FROM user WHERE userId = :userId" , nativeQuery = true)
-	List<UserEntity> getUsernameByUserId(@Param("userId") Long userId);
+	UserEntity getUsernameByUserId(@Param("userId") Long userId);
 
 
 	UserEntity findByUsername(String username);
