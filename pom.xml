@@ -134,13 +134,12 @@
 			<artifactId>cloudinary-core</artifactId>
 			<version>1.29.0</version>
 		</dependency>
-<<<<<<< HEAD
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
-=======
->>>>>>> 55ff12c978d25445d26d5fda36e8ba011ddbfa9f
+
 
 	</dependencies>
 

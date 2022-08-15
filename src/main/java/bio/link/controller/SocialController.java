@@ -28,19 +28,13 @@ public class SocialController {
     private JwtTokenProvider jwtTokenProvider;
 
 
-//    @PostMapping("/createSocial")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    private SocialEntity createSocial(
-//            @RequestParam String url,
-//            @RequestHeader("Authorization") String jwt ) throws IOException {
-//        return socialService.createSocial(url , jwtTokenProvider.getUserIdFromHeader(jwt));
-//    }
-
 
     @GetMapping("/social")
-    public List<SocialEntity> getAllSocialByUserId(long userId) {
+    public List<SocialEntity> getAllSocialByUserId(
+            @RequestHeader("Authorization") String jwt
+    ) {
 
-        return socialService.getAllSocialsByUserId(userId);
+        return socialService.getAllSocialsByUserId(jwtTokenProvider.getUserIdFromHeader(jwt));
     };
 
 
@@ -53,12 +47,4 @@ public class SocialController {
          socialService.updateSocial(socialEntityList , jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
-
-//    @RequestMapping(value= "/social/{id}", method = RequestMethod.DELETE)
-//    @ResponseBody
-//    public void deleteSocial(
-//            @PathVariable("id") Long id
-//    ) {
-//        socialService.deleteSocialById(id);
-//    }
 }

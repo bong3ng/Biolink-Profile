@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import bio.link.model.entity.ProfileEntity;
+
 @Repository
 public interface ProfileRepository extends JpaRepository<ProfileEntity , Long> {
 
    // @Query(value = "SELECT * FROM profiles WHERE user_id = :userId",nativeQuery = true)
     ProfileEntity getProfileByUserId(Long userId) ;
-
 
     String getImageByUserId(Long userId);
 

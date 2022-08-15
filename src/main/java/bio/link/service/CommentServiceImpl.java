@@ -2,12 +2,11 @@ package bio.link.service;
 
 
 
-import bio.link.model.dto.RateDto;
+import bio.link.model.dto.CommentDto;
 import bio.link.model.entity.ProfileEntity;
-import bio.link.model.entity.RateEntity;
+import bio.link.model.entity.CommentEntity;
 import bio.link.model.entity.UserEntity;
-import bio.link.model.response.ResponseData;
-import bio.link.repository.RateRepository;
+import bio.link.repository.CommentRepository;
 import bio.link.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,10 @@ import java.util.Optional;
 
 
 @Service
-public class RateServiceImpl implements RateService {
+public class CommentServiceImpl implements CommentService {
 
     @Autowired
-    private RateRepository rateRepository;
+    private CommentRepository rateRepository;
 
 
     @Autowired
@@ -38,16 +37,16 @@ public class RateServiceImpl implements RateService {
 
 
     @Override
-    public List<RateEntity> getAllRateByProfileId(Long profileId) {
+    public List<CommentEntity> getAllRateByProfileId(Long profileId) {
 
         return rateRepository.getAllRateByProfileId(profileId);
     }
 
     @Override
 
-    public List<RateDto> getRateByProfileId(Long profileId) {
-        List<RateEntity> rateEntityList = rateRepository.getAllRateByProfileId(profileId);
-        List<RateDto> rateDtoList = new ArrayList<>();
+    public List<CommentDto> getRateByProfileId(Long profileId) {
+        List<CommentEntity> rateEntityList = rateRepository.getAllRateByProfileId(profileId);
+        List<CommentDto> rateDtoList = new ArrayList<>();
 
         for (int i = 0; i < rateEntityList.size(); i++) {
             String username = rateEntityList.get(i).getUsername();
@@ -55,8 +54,7 @@ public class RateServiceImpl implements RateService {
             ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
             String image = profileEntity.getImage();
 
-            RateDto rateDto = RateDto.builder().comment(rateEntityList.get(i).getComment())
-                    .pointRate(rateEntityList.get(i).getPointRate())
+            CommentDto rateDto = CommentDto.builder().comment(rateEntityList.get(i).getComment())
                     .username(rateEntityList.get(i).getUsername())
                     .createDate(rateEntityList.get(i).getCreateDate())
                     .imageUser(image)
@@ -67,16 +65,14 @@ public class RateServiceImpl implements RateService {
     }
 
     @Override
-    public RateEntity saveRate( String comment,
-                                  Integer pointRate,
+    public CommentEntity saveRate(String comment,
                                   Long userId,
                                   String username) throws Exception {
-        RateEntity newRate = new RateEntity();
+        CommentEntity newRate = new CommentEntity();
 
         Optional<UserEntity> userEntity = userRepository.findById(userId);
 
         newRate.setComment(comment);
-        newRate.setPointRate(pointRate);
         newRate.setProfileId(profileService.getUserByUsername(username).getId());
         newRate.setCreateDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         newRate.setUserId(userId);

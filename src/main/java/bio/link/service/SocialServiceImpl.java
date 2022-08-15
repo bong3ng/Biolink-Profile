@@ -4,6 +4,8 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
+import bio.link.model.entity.ProfileEntity;
+import bio.link.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +16,22 @@ import bio.link.repository.SocialRepository;
 public class SocialServiceImpl implements SocialService {
 
     private SocialEntity socialEntity;
+
+    @Autowired
+    private ProfileRepository profileRepository;
     @Autowired
     private SocialRepository socialRepository;
     @Override
     public List<SocialEntity> getAllSocialsByUserId(Long userId) {
         return socialRepository.getAllSocialsByUserId(userId);
     }
-//    @Override
-//    public SocialEntity getSocialByUserIdAndName(Long userId , String socialName) {
-//        return socialRepository.getSocialByUserIdAndName(userId , socialName);
-//    }
-//    @Override
-//    public SocialEntity createSocial(String url, Long userId) throws IOException {
-//
-//        SocialEntity social = new SocialEntity();
-//        social.setUrl(url);
-//        social.setUserId(userId);
-//        return socialRepository.save(social);
-//    }
+
+
 
 
     @Override
     public void createSocialFirstLogin(Long userId) throws IOException {
+
 
         SocialEntity socialInsta = new SocialEntity();
         socialInsta.setName("instagram");
@@ -53,7 +49,6 @@ public class SocialServiceImpl implements SocialService {
         socialTiktok.setName("tiktok");
         socialTiktok.setStatus(false);
         socialTiktok.setUserId(userId);
-
         socialRepository.save(socialTiktok);
 
 
@@ -63,17 +58,20 @@ public class SocialServiceImpl implements SocialService {
         socialFacebook.setUserId(userId);
         socialRepository.save(socialFacebook);
 
+
         SocialEntity socialMail = new SocialEntity();
         socialMail.setName("mail");
         socialMail.setStatus(false);
         socialMail.setUserId(userId);
         socialRepository.save(socialMail);
 
+
         SocialEntity socialYoutube = new SocialEntity();
         socialYoutube.setName("youtube");
         socialYoutube.setStatus(false);
         socialYoutube.setUserId(userId);
         socialRepository.save(socialYoutube);
+
 
         SocialEntity socialGithub = new SocialEntity();
         socialGithub.setName("github");

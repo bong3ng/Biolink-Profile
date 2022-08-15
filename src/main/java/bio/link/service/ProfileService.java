@@ -3,6 +3,7 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
+import bio.link.model.dto.AllProfileDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
@@ -52,6 +53,7 @@ public interface  ProfileService {
 	ResponseData clickPluginsOfProfile(PluginsEntity pluginsEntity);
 
 	List<ProfileEntity> getAllProfileUser();
+
 	List<UserEntity> getUserByAdmin();
 
 	UserEntity updateUserByAdmin(UserEntity user);
@@ -62,6 +64,6 @@ public interface  ProfileService {
 	
 
 	
-
+	List<AllProfileDto> getAllProfile(String jwt);
 
 }

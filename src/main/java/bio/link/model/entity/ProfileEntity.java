@@ -41,4 +41,7 @@ public class ProfileEntity {
 
     @Column(name = "user_id")
     private Long userId;
+
+
+
 }

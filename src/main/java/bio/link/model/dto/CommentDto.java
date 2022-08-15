@@ -10,10 +10,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RateDto {
+public class CommentDto {
     private String comment;
-
-    private Integer pointRate;
 
     private String username;
 
