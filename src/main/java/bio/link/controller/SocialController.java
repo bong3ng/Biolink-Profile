@@ -38,9 +38,9 @@ public class SocialController {
 
 
     @GetMapping("/social")
-    public List<SocialEntity> getAllSocialByUserId(long userId) {
+    public List<SocialEntity> getAllSocialByUserId( @RequestHeader("Authorization") String jwt) {
 
-        return socialService.getAllSocialsByUserId(userId);
+        return socialService.getAllSocialsByUserId(jwtTokenProvider.getUserIdFromHeader(jwt));
     };
 
 

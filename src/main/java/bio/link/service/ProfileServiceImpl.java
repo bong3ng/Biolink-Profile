@@ -18,6 +18,7 @@ import com.azure.storage.blob.specialized.BlockBlobClient;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,7 +78,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private PluginsRepository pluginsRepository;
 
-
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
     @Override
     public UserEntity getUserByUsername(String username) {
         username = username.trim();
@@ -94,7 +96,7 @@ public class ProfileServiceImpl implements ProfileService {
 		ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
 
 		if(checkGuest) {
-			ClickCountServiceImpl clickService = new ClickCountServiceImpl(profileEntity , clickProfileRepository);
+			ClickCountServiceImpl clickService = new ClickCountServiceImpl(profileEntity , clickProfileRepository , simpMessagingTemplate);
 			Thread t = new Thread(clickService);
 			t.start();
 		}
