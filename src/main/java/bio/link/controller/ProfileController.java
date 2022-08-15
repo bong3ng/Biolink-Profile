@@ -16,6 +16,8 @@ import bio.link.security.jwt.JwtTokenProvider;
 
 import bio.link.service.impl.ProfileServiceImpl;
 
+import java.util.Arrays;
+
 
 @RestController
 @RequestMapping("")
