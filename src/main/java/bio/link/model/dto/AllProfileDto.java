@@ -1,36 +1,28 @@
 package bio.link.model.dto;
 
-import java.util.List;
-
-import javax.persistence.Id;
-
 import bio.link.model.entity.DesignEntity;
 import bio.link.model.entity.PluginsEntity;
 import bio.link.model.entity.SocialEntity;
 import lombok.*;
 
+import javax.persistence.Id;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileDto {
+public class AllProfileDto {
     @Id
     private String username;
     private String name;
     private String bio;
     private String image;
-    private Boolean showLogo;
-    private Boolean showNSFW;
-    private Long activeDesign;
 
-//    private Long totalLike;
-//
-//    private Long totalDislike;
+    private Long totalLike;
 
     private List<SocialEntity> listSocial;
-    private List<PluginsEntity> listPlugins;
 
-    private DesignEntity design;
+    private boolean userLike = false;
 }

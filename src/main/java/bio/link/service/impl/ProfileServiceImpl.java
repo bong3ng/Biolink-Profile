@@ -6,11 +6,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 import javax.transaction.Transactional;
 
 import bio.link.service.ProfileService;
+
+import bio.link.model.dto.AllProfileDto;
+import bio.link.model.entity.*;
+import bio.link.repository.*;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobHttpHeaders;
@@ -23,20 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
-import bio.link.model.entity.DesignEntity;
-import bio.link.model.entity.PluginsEntity;
-import bio.link.model.entity.ProfileEntity;
-import bio.link.model.entity.SocialEntity;
-import bio.link.model.entity.UserEntity;
 import bio.link.model.exception.NotFoundException;
 import bio.link.model.response.ResponseData;
-import bio.link.repository.ClickPluginsRepository;
-import bio.link.repository.ClickProfileRepository;
-import bio.link.repository.ClickSocialRepository;
-import bio.link.repository.DesignRepository;
-import bio.link.repository.PluginsRepository;
-import bio.link.repository.ProfileRepository;
-import bio.link.repository.UserRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.security.payload.Status;
 import lombok.extern.log4j.Log4j2;
@@ -57,6 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+	@Autowired
+	private LikesRepository likesRepository;
 	@Autowired
 	private BlobServiceClient blobServiceClient;
 
@@ -298,5 +293,48 @@ public class ProfileServiceImpl implements ProfileService {
                 designEntity);
         return profileDto;
 	}
-	
-}
+
+
+
+
+
+	public List<AllProfileDto> getAllProfile(String jwt) {
+		List<LikesEntity> likesEntities = likesRepository.findAll();
+		List<ProfileEntity> entities = profileRepository.findAll();
+		Long userId = convertJwt(jwt);
+
+		List<AllProfileDto> allProfileDtos = new ArrayList<>();
+		for (ProfileEntity e : entities) {
+			final AtomicInteger likes = new AtomicInteger(0);
+			AllProfileDto profileDto = new AllProfileDto();
+			profileDto.setName(e.getName());
+			profileDto.setBio(e.getBio());
+			profileDto.setListSocial(socialService.getAllSocialsByUserId(e.getUserId()));
+			profileDto.setImage(e.getImage());
+			likesEntities.stream().forEach(l -> {
+						if (e.getId().equals(l.getProfileId())) {
+							if (l.getStatusLike() != null) {
+								if (l.getStatusLike().equals(true)) {
+									if (userId != null && userId.equals(l.getUserId())) {
+										profileDto.setUserLike(true);
+									}
+									likes.incrementAndGet();
+								} else if (l.getStatusLike().equals(false)) {
+									likes.incrementAndGet();
+								}
+							}
+						}
+					}
+			);
+			profileDto.setTotalLike(likes.longValue());
+			allProfileDtos.add(profileDto);
+		}
+		Collections.sort(allProfileDtos, new Comparator<AllProfileDto>() {
+			@Override
+			public int compare(AllProfileDto o1, AllProfileDto o2) {
+				return o1.getTotalLike() < o2.getTotalLike() ? 1 : -1;
+			}
+		});
+		return allProfileDtos;
+	}}
+

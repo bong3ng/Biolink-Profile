@@ -1,11 +1,16 @@
 package bio.link.controller;
 
 
+import bio.link.model.dto.AllProfileDto;
 import bio.link.model.entity.PluginsEntity;
+import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.SocialEntity;
+
 import bio.link.model.response.ResponseData;
 
 import bio.link.service.UserService;
+
+import bio.link.repository.LikesRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +22,12 @@ import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.impl.ProfileServiceImpl;
 
 import java.util.Arrays;
+
+
+import bio.link.service.ProfileService;
+import reactor.util.annotation.Nullable;
+
+import java.util.List;
 
 
 @RestController
@@ -64,6 +75,12 @@ public class ProfileController {
     public ResponseEntity getProfileByJWT(@RequestHeader("Authorization") String jwt) {
    
     	return ResponseEntity.ok(profileService.getUserProfileByJWT(jwt));
+    }
+
+    @GetMapping("/getAllProfile")
+    public List<AllProfileDto> getAllProfile(@RequestHeader(required = false, value = "Authorization") String jwt) {
+
+        return profileService.getAllProfile(jwt);
     }
     
    
