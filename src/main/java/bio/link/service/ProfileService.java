@@ -3,6 +3,7 @@ package bio.link.service;
 import java.io.IOException;
 import java.util.List;
 
+import bio.link.model.dto.AllProfileDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import bio.link.model.dto.ProfileDto;
@@ -20,7 +21,7 @@ public interface  ProfileService {
     UserEntity getUserByUsername(String username);
 
 
-    ResponseData getUserProfileByUsername(String username);
+    ResponseData getUserProfileByUsername(String username , Boolean checkGuest);
 
 	Status createFirstLogin(
 			String name,
@@ -44,7 +45,6 @@ public interface  ProfileService {
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW);
 
 	String uploadImage(MultipartFile file, String containerName);
-
 	Long convertJwt(String jwt);
 
 	ResponseData clickSocialOfProfile(SocialEntity socialEntity);
@@ -52,6 +52,7 @@ public interface  ProfileService {
 	ResponseData clickPluginsOfProfile(PluginsEntity pluginsEntity);
 
 	List<ProfileEntity> getAllProfileUser();
+
 	List<UserEntity> getUserByAdmin();
 
 	UserEntity updateUserByAdmin(UserEntity user);
@@ -62,6 +63,6 @@ public interface  ProfileService {
 	
 
 	
-
+	List<AllProfileDto> getAllProfile(String jwt);
 
 }

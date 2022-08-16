@@ -62,6 +62,9 @@ public class JwtTokenProvider {
 
     // Get userId từ RequestHeader "Authorization"
     public Long getUserIdFromHeader(String jwt) {
+        if (jwt == null){
+            return null;
+        }
     	String[] new_jwt = jwt.split("\\s");
     	jwt = new_jwt[1];
     	return this.getUserIdFromJWT(jwt);

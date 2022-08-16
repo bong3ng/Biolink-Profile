@@ -12,6 +12,7 @@ public interface SocialService {
     List<SocialEntity> getAllSocialsByUserId(Long userId);
 
 
+
     void createSocialFirstLogin(Long userId) throws IOException;
 
     void updateSocial(List<SocialEntity> socialEntityList, Long userId);
