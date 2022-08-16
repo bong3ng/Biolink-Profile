@@ -43,29 +43,29 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
-    @PutMapping("/{username}/social")
-    public ResponseEntity clickSocial(@RequestHeader(required = false , value = "Authorization" ) String jwt,
+    @PutMapping("/api/{username}/social")
+    public ResponseEntity clickSocial(@RequestHeader("Authorization") String jwt,
                                       @RequestBody SocialEntity socialEntity) {
-        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == socialEntity.getUserId()){
-                return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào social của mình")));
-            }
+        if( !jwt.equals("Bearer null") && jwtTokenProvider.getUserIdFromHeader(jwt) == socialEntity.getUserId()) {
+            return ResponseEntity.ok("Bạn đang click vào social của mình");
+        }
         return ResponseEntity.ok(profileService.clickSocialOfProfile(socialEntity));
     }
 
-    @PutMapping("/{username}/plugins")
-    public ResponseEntity clickPlugins(@RequestHeader(required = false , value = "Authorization" ) String jwt,
+    @PutMapping("/api/{username}/plugins")
+    public ResponseEntity clickPlugins(@RequestHeader("Authorization") String jwt,
                                        @RequestBody PluginsEntity pluginsEntity) {
-        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == pluginsEntity.getUserId()) {
-            return ResponseEntity.ok(new ResponseData(true,"CLICK thành công ", Arrays.asList("Bạn đang click vào plugin của mình")));
+        if( !jwt.equals("Bearer null") && jwtTokenProvider.getUserIdFromHeader(jwt) == pluginsEntity.getUserId()) {
+            return ResponseEntity.ok("Bạn đang click vào plugin của mình");
         }
         return ResponseEntity.ok(profileService.clickPluginsOfProfile(pluginsEntity));
     }
 
-    @GetMapping("/profile/{username}")
+    @GetMapping("/api/profile/{username}")
     public ResponseEntity getProfile(@PathVariable String username,
-                                     @RequestHeader(value = "Authorization" , required = false) String jwt) {
+                                     @RequestHeader("Authorization") String jwt) {
         Boolean checkGuest = true;
-        if(jwt != null && jwtTokenProvider.getUserIdFromHeader(jwt) == userService.getUserByUsername(username).getId()) {
+        if( !jwt.equals("Bearer null") && jwtTokenProvider.getUserIdFromHeader(jwt) == userService.getUserByUsername(username).getId() ) {
             checkGuest = false;
         }
         return ResponseEntity.ok(profileService.getUserProfileByUsername(username , checkGuest));

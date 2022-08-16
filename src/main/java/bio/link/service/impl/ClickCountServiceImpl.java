@@ -77,13 +77,11 @@ public class ClickCountServiceImpl implements ClickCountService, Runnable {
         else {
             clickCount += 1;
             countClickProfileMap.put(profileId , clickCount);
-            clickProfileRepository.updateProfileClickCount(currentDateProfile , profileId,clickCount);
+            clickProfileRepository.updateProfileClickCount(currentDateProfile , profileId , clickCount);
         }
-        System.out.println(clickCount);
-
-            String username = clickProfileRepository.getUsernameByProfileId(profileId);
-            String noti = "Hôm nay có " + clickCount + " lượt xem hồ sơ của bạn";
-            simpMessagingTemplate.convertAndSend("/queue/notification/" + username , noti);
+        String username = clickProfileRepository.getUsernameByProfileId(profileId);
+        String noti = "Hôm nay có " + clickCount + " lượt xem hồ sơ của bạn";
+        simpMessagingTemplate.convertAndSend("/queue/notification/" + username , noti);
     }
 
 
