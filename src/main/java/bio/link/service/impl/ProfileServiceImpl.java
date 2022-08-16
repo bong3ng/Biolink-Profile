@@ -307,6 +307,8 @@ public class ProfileServiceImpl implements ProfileService {
 		for (ProfileEntity e : entities) {
 			final AtomicInteger likes = new AtomicInteger(0);
 			AllProfileDto profileDto = new AllProfileDto();
+			String username = userRepository.getUsernameByUserId(e.getUserId());
+			profileDto.setUsername(username);
 			profileDto.setName(e.getName());
 			profileDto.setBio(e.getBio());
 			profileDto.setListSocial(socialService.getAllSocialsByUserId(e.getUserId()));

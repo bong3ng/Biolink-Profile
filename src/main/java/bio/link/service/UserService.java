@@ -12,7 +12,7 @@ public interface UserService {
 
     ResponseData getStatsByUsername(Long userId, Integer days);
 
-    UserEntity getUsernameByUserId(Long id);
+    String getUsernameByUserId(Long userId);
 
 
 

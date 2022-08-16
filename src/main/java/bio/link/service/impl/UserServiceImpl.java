@@ -136,8 +136,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity getUsernameByUserId(Long id) {
-        return userRepository.getUsernameByUserId(id);
+    public String getUsernameByUserId(Long userId) {
+        return userRepository.getUsernameByUserId(userId);
     }
 
 
