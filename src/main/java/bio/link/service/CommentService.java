@@ -12,7 +12,7 @@ public interface CommentService {
 
 
 //
-    List<CommentDto> getAllCommentByProfileId(Long profileId);
+    List<CommentDto> getAllCommentByUsername(String username);
 //
     CommentEntity saveComment(
         String comment,

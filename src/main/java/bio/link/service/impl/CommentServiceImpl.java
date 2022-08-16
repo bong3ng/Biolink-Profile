@@ -41,12 +41,13 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public List<CommentDto> getAllCommentByProfileId(Long profileId) {
+    public List<CommentDto> getAllCommentByUsername(String username) {
+        Long profileId = profileService.getUserByUsername(username).getId();
         List<CommentEntity> commentEntities = commentRepository.getAllRCommentByProfileId(profileId);
         List<CommentDto> rateDtoList = new ArrayList<>();
 
         for (int i = 0; i < commentEntities.size(); i++) {
-            String username = commentEntities.get(i).getUsername();
+            String usernamee = commentEntities.get(i).getUsername();
             Long userId = commentEntities.get(i).getUserId();
             ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
             String image = profileEntity.getImage();

@@ -36,9 +36,9 @@ public class CommentController {
 
     @GetMapping("/getAllComment")
     public List<CommentDto> getAllCommentByProfileId(
-            @RequestParam Long profileId
+            @RequestParam String username
     ) {
-        return commentService.getAllCommentByProfileId(profileId);
+        return commentService.getAllCommentByUsername(username);
     }
 
     @PostMapping("/saveComment")
