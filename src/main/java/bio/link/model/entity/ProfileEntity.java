@@ -28,16 +28,16 @@ public class ProfileEntity {
     private String bio;
 
     @Lob
-    private String image;
+    private String image = "https://anhtcogn.blob.core.windows.net/files/279542515_174478684934472_4408753396932336988_n.jpg";
 
     @Column(name = "design_id")
     private Long activeDesign;
 
     @Column(name = "show_logo")
-    private Boolean showLogo;
+    private Boolean showLogo = false;
 
     @Column(name = "show_nsfw")
-    private Boolean showNSFW;
+    private Boolean showNSFW = false;
 
     @Column(name = "user_id")
     private Long userId;

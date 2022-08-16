@@ -42,8 +42,7 @@ public class AdminServiceImpl implements AdminService {
 			list.add(adminDto);
 			
 		}
-		
-		
+
 		return new DataDto(true,"Thành công", list);
 	}
 
