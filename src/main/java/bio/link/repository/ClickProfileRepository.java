@@ -27,6 +27,10 @@ public interface ClickProfileRepository extends JpaRepository<ClickProfileEntity
     List<ClickProfileEntity> getAllClickBetween(@Param("profileId") Long profileId,
                                                 @Param("date") LocalDate date);
 
+    @Query(value = "SELECT SUM(click_count) FROM click_profiles WHERE date >= :date AND profile_id = :profileId",nativeQuery = true)
+    Long getClickCountBetween(@Param("profileId") Long profileId ,
+                              @Param("date") LocalDate date);
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE click_profiles SET click_count = :clickCount WHERE profile_id = :profileId AND date = :date" , nativeQuery = true)

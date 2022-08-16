@@ -77,18 +77,19 @@ public class UserServiceImpl implements UserService {
                 break;
         }
 
-        List<ClickProfileEntity> clickProfileEntityList = clickProfileRepository.getAllClickBetween(profileId , statsDate );
-        Long totalClickProfile = 0L;
-        int size = clickProfileEntityList.size();
-        for(int i = 0 ; i < size ; i++) {
-            totalClickProfile += clickProfileEntityList.get(i).getClickCount();
-        }
-        List<ClickProfileDto> clickProfileDtoList = clickProfileEntityList.stream().map(c -> modelMapper.map(c, ClickProfileDto.class)).collect(Collectors.toList());
+        Long totalClickProfile = clickProfileRepository.getClickCountBetween(profileId , statsDate);
+
+//        List<ClickProfileEntity> clickProfileEntityList = clickProfileRepository.getAllClickBetween(profileId , statsDate );
+//        int size = clickProfileEntityList.size();
+//        for(int i = 0 ; i < size ; i++) {
+//            totalClickProfile += clickProfileEntityList.get(i).getClickCount();
+//        }
+//        List<ClickProfileDto> clickProfileDtoList = clickProfileEntityList.stream().map(c -> modelMapper.map(c, ClickProfileDto.class)).collect(Collectors.toList());
 
         List<SocialEntity> socialEntityList = socialService.getAllSocialsByUserId(userId);
         List<ClickSocialDto> clickSocialDtoList = new ArrayList<>();
         Long totalClickSocial = 0L;
-        size = socialEntityList.size();
+        int size = socialEntityList.size();
         for(int i = 0 ; i < size ; i++) {
             SocialEntity socialEntity = socialEntityList.get(i);
             Long click = clickSocialRepository.getAllClickCountBetween(socialEntity.getId() , statsDate);
@@ -125,7 +126,6 @@ public class UserServiceImpl implements UserService {
         
         StatsDto data = StatsDto.builder()
                                 .totalClickProfile(totalClickProfile)
-                                .clickProfileList(clickProfileDtoList)
                                 .totalClickPlugins(totalClickPlugins)
                                 .clickPluginsList(clickPluginsDtoList)
                                 .totalClickSocial(totalClickSocial)
