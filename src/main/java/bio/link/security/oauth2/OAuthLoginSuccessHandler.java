@@ -19,8 +19,6 @@ import java.io.IOException;
 @Component
 public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Autowired
-    CustomUserService userService;
 
     @Autowired
     LoginService loginService;
@@ -35,7 +33,7 @@ public class OAuthLoginSuccessHandler extends SavedRequestAwareAuthenticationSuc
         loginService.createAccountFromSocial(oauth2User, authen);
 
 
-        response.sendRedirect("/success");
+//        response.sendRedirect("/success");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 

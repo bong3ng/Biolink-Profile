@@ -32,4 +32,5 @@ public interface LoginService {
 
     void createAccountFromSocial(CustomOAuth2User oAuth2User, Authentication authentication);
 
+
 }
