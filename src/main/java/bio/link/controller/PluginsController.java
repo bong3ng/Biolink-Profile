@@ -90,7 +90,7 @@ public class PluginsController {
     public PluginsEntity createPlugin(
             @RequestParam String title,
             @RequestParam String url,
-            @RequestParam MultipartFile image,
+            @RequestParam(required = false) MultipartFile image,
             @RequestParam(required = false) Boolean isHeader ,
             @RequestParam(required = false) Boolean isPlugin,
             @RequestParam(required = false) Boolean isHide,

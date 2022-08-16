@@ -2,12 +2,11 @@ package bio.link.controller;
 
 
 
-import bio.link.model.dto.RateDto;
+import bio.link.model.dto.CommentDto;
 
-import bio.link.model.entity.RateEntity;
-import bio.link.repository.RateRepository;
+import bio.link.model.entity.CommentEntity;
 import bio.link.security.jwt.JwtTokenProvider;
-import bio.link.service.RateService;
+import bio.link.service.CommentService;
 
 import bio.link.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,10 @@ import java.util.List;
 @RequestMapping("/api/user")
 @CrossOrigin("*")
 
-public class RateController {
+public class CommentController {
 
     @Autowired
-    private RateService rateService;
+    private CommentService commentService;
 
     @Autowired
 
@@ -35,24 +34,23 @@ public class RateController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/rate")
+    @GetMapping("/getAllComment")
 
-    public List<RateDto> getAllRateByProfileId(
+    public List<CommentDto> getAllRateByProfileId(
             @RequestHeader("Authorization") String jwt
     ) {
-        return rateService.getRateByProfileId(jwtTokenProvider.getUserIdFromHeader(jwt));
+        return commentService.getCommentByProfileId(jwtTokenProvider.getUserIdFromHeader(jwt));
     }
 
-    @PostMapping("/saveRate")
+    @PostMapping("/saveComment")
     @ResponseStatus(HttpStatus.CREATED)
-    public RateEntity saveRate(
+    public CommentEntity saveRate(
             @RequestParam(required = false) String comment,
-            @RequestParam Integer pointRate,
             @RequestParam String username,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
 
-        return rateService.saveRate(comment , pointRate ,  jwtTokenProvider.getUserIdFromHeader(jwt),username);
+        return commentService.saveComment(comment  ,  jwtTokenProvider.getUserIdFromHeader(jwt),username);
     }
 
 

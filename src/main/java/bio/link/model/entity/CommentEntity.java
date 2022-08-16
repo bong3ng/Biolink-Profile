@@ -8,17 +8,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "rate")
-public class RateEntity {
+@Table(name = "comment")
+public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +39,6 @@ public class RateEntity {
     @Column(name = "content_comment")
     private String comment;
 
-    @Column(name = "point_rate")
-    private Integer pointRate;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
