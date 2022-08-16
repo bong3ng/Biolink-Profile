@@ -77,7 +77,7 @@ public class ProfileController {
     	return ResponseEntity.ok(profileService.getUserProfileByJWT(jwt));
     }
 
-    @GetMapping("/getAllProfile")
+    @GetMapping("/api/getAllProfile")
     public List<AllProfileDto> getAllProfile(@RequestHeader(required = false, value = "Authorization") String jwt) {
 
         return profileService.getAllProfile(jwt);
