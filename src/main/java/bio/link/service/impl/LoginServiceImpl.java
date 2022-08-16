@@ -10,12 +10,16 @@ import bio.link.security.oauth2.CustomOAuth2User;
 import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
+import bio.link.security.user.CustomUserDetails;
 import bio.link.service.LoginService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +47,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
+
+
+
 
     private static Authentication authen;
     private static Long idTemp;
@@ -74,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
                 userRepo.save(user);
                 sendVerificationEmail(user, MY_URL_WEBSITE);
 
-                message.setMessage("Tạo tài khoản thành công.");
+                message.setMessage("Chúng tôi đã gửi email xác thực tới địa chỉ mail của bạn, vui lòng kiểm tra hộp thư để kích hoạt tài khoản");
                 message.setSuccess(true);
             } catch (UnsupportedEncodingException e) {
 
@@ -292,4 +300,5 @@ public class LoginServiceImpl implements LoginService {
         }
 
     }
+
 }

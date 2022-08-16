@@ -38,21 +38,6 @@ import bio.link.repository.UserRepository;
 public class CustomUserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
-	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-	@Autowired
-	ProfileRepository profileRepo;
-
-	@Autowired
-	private JavaMailSender emailSender;
-
-
-	@Autowired
-	JwtTokenProvider tokenProvider;
-
-	private Object authen;
-	private Long idTemp;
-
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {

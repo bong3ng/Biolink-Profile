@@ -67,6 +67,7 @@ public class LoginController {
         }
         LoginResponseDto loginDto = LoginResponseDto.builder().loginResponse(login).message(message).success(success).build();
         return loginDto;
+
     }
 
     @PostMapping("/signup")
