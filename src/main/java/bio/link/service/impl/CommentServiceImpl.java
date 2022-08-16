@@ -39,16 +39,10 @@ public class CommentServiceImpl implements CommentService {
     private UserService userService;
 
 
-    @Override
-    public List<CommentEntity> getAllCommentByProfileId(Long profileId) {
-
-        return commentRepository.getAllRateByProfileId(profileId);
-    }
 
     @Override
-
-    public List<CommentDto> getCommentByProfileId(Long profileId) {
-        List<CommentEntity> commentEntities = commentRepository.getAllRateByProfileId(profileId);
+    public List<CommentDto> getAllCommentByProfileId(Long profileId) {
+        List<CommentEntity> commentEntities = commentRepository.getAllRCommentByProfileId(profileId);
         List<CommentDto> rateDtoList = new ArrayList<>();
 
         for (int i = 0; i < commentEntities.size(); i++) {

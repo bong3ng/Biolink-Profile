@@ -10,15 +10,12 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<CommentEntity,  Long> {
 
-    @Query(value = "SELECT * FROM rate WHERE profile_id = :profileId" , nativeQuery = true)
-    List<CommentEntity> getAllRateByProfileId(
+    @Query(value = "SELECT * FROM comment WHERE profile_id = :profileId" , nativeQuery = true)
+    List<CommentEntity> getAllRCommentByProfileId(
             @Param("profileId") Long profileId
     );
 
 
-    @Query(value = "SELECT * FROM rate WHERE profile_id = :profileId" , nativeQuery = true)
-    List<CommentEntity> getRateByProfileId(
-            @Param("profileId") Long profileId
-    );
+
 
 }

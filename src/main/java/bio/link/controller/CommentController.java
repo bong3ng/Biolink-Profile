@@ -35,16 +35,15 @@ public class CommentController {
     private JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/getAllComment")
-
-    public List<CommentDto> getAllRateByProfileId(
-            @RequestHeader("Authorization") String jwt
+    public List<CommentDto> getAllCommentByProfileId(
+            @RequestParam Long profileId
     ) {
-        return commentService.getCommentByProfileId(jwtTokenProvider.getUserIdFromHeader(jwt));
+        return commentService.getAllCommentByProfileId(profileId);
     }
 
     @PostMapping("/saveComment")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentEntity saveRate(
+    public CommentEntity saveComment(
             @RequestParam(required = false) String comment,
             @RequestParam String username,
             @RequestHeader("Authorization") String jwt
