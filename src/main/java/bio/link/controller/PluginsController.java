@@ -115,7 +115,7 @@ public class PluginsController {
     @ResponseStatus(HttpStatus.CREATED)
     public PluginsEntity updateContentPlugins(
             @RequestParam String title,
-            @RequestParam String url,
+            @RequestParam(required = false) String url,
             @RequestParam(value = "image", required=false) MultipartFile  image,
             @RequestParam(required = false) Boolean isHide,
             @PathVariable("id") Long id
