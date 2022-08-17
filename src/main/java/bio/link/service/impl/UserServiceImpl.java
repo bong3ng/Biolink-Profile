@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 
@@ -45,6 +44,14 @@ public class UserServiceImpl implements UserService {
     private ClickProfileRepository clickProfileRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    public Boolean checkUserRole(Long userId) {
+        if(userRepository.getUserRoleById(userId).equals("ROLE_ADMIN")) {
+            return true;
+        }
+        return false;
+    }
     @Override
     public UserEntity getUserByUsername(String username) {
         username = username.trim();

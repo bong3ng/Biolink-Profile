@@ -32,5 +32,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     
     UserEntity findByResetPasswordToken(String token);
 
+	@Query(value = "SELECT role FROM users WHERE id = :userId LIMIT 1" , nativeQuery = true)
+	String getUserRoleById(@Param("userId") Long userId);
 
 }

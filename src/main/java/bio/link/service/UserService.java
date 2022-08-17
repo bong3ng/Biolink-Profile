@@ -8,6 +8,8 @@ import java.awt.print.PrinterJob;
 import java.util.List;
 
 public interface UserService {
+    Boolean checkUserRole(Long userId);
+
     UserEntity getUserByUsername(String username);
 
     ResponseData getStatsByUsername(Long userId, Integer days);

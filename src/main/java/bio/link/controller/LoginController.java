@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import bio.link.model.dto.LoginResponseDto;
 
 import bio.link.service.LoginService;
+import bio.link.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,11 +35,13 @@ public class LoginController {
     LoginService loginService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     JwtTokenProvider jwtProvider;
     @Autowired
     private JwtTokenProvider tokenProvider;
     @PostMapping("/login")
-
     public LoginResponseDto authenticateUser(@RequestBody LoginRequest loginRequest) throws IOException {
         loginRequest = loginService.checkStatusAccount(loginRequest);
         String message;
@@ -72,9 +75,7 @@ public class LoginController {
 
     @PostMapping("/signup")
     public Status signUp(@RequestBody UserEntity user) throws UnsupportedEncodingException, MessagingException {
-
         return loginService.signUpUser(user);
-
     }
 
 
@@ -112,4 +113,8 @@ public class LoginController {
         return loginService.createFirstLoginFromSocial(username, password, jwt);
     }
 
+    @GetMapping("/user/checkUserRole")
+    public Boolean handle(@RequestHeader("Authorization") String jwt) {
+        return userService.checkUserRole(jwtProvider.getUserIdFromHeader(jwt));
+    }
 }
