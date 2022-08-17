@@ -131,16 +131,19 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public Status delete(Long id) {
-        //DesignEntity designEntity = designRepository.findDesignEntityById(id);
-        Long userId = designRepository.findDesignEntityById(id).getUserId();
+        DesignEntity designEntity = designRepository.findDesignEntityById(id);
+        Long userId = designEntity.getUserId();
         ProfileEntity profileEntity = profileService.getProfileByUserId(userId);
-
         if (profileEntity.getActiveDesign() == id) {
             return new  Status(false, "You can't delete this :<");
         }
-
-        designRepository.deleteById(id);
-//        profileEntity.setActiveDesign(1L);
+        else {
+            String deleteFile = designEntity.getBackgroundImg();
+            if (deleteFile != null) {
+                profileService.deleteImage(deleteFile, "designs");
+            }
+            designRepository.deleteById(id);
+        }
         return new Status(true, "Yayyyy, Delete success.");
     }
    
