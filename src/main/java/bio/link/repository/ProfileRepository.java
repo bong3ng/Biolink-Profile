@@ -20,4 +20,9 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity , Long> {
     ProfileEntity findOneById(Long id);
     
     ProfileEntity findByUserId(Long userId);
+
+//    @Query(value = "SELECT id FROM profiles WHERE user_id = :userId" , nativeQuery = true)
+//    Long getProfileIdByUserId (
+//            @Param("userId") Long userId
+//    );
 }

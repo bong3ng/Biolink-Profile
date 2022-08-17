@@ -7,6 +7,7 @@ import bio.link.model.entity.UserEntity;
 import bio.link.repository.LikesRepository;
 import bio.link.security.jwt.JwtTokenProvider;
 import bio.link.service.LikesService;
+import bio.link.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class LikesController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private ProfileService profileService;
 
     @Autowired
     private LikesService likeService;
@@ -49,10 +53,11 @@ public class LikesController {
     @PostMapping("/saveLike")
     @ResponseStatus(HttpStatus.CREATED)
     public LikesEntity saveLike(
-            @RequestParam(required = false) Boolean statusLike,
+            @RequestParam(required = false, defaultValue = "false") String statusLike,
             @RequestParam String username,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
+        profileService.getAllProfile(jwt);
         return likeService.saveLike(statusLike , jwtTokenProvider.getUserIdFromHeader(jwt) , username);
     }
 

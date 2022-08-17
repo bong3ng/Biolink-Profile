@@ -25,11 +25,11 @@ public class LikesEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username_cmt")
-    private String usernameCmt;
+    @Column(name = "username_like")
+    private String usernameLike;
 
     @Column(name = "status_like" , columnDefinition = "boolean default false")
-    private Boolean statusLike = false;
+    private String statusLike = "false";
 
 
 
