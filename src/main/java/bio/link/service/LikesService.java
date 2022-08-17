@@ -17,7 +17,7 @@ public interface LikesService {
 
 
     LikesEntity saveLike(
-            Boolean statusLike,
+            String statusLike,
             Long userId,
             String usernameCmt
     ) throws Exception;

@@ -55,8 +55,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private BlobServiceClient blobServiceClient;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 
 	@Autowired
@@ -75,19 +75,19 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
-    @Override
-    public UserEntity getUserByUsername(String username) {
-        username = username.trim();
-        UserEntity userEntity = userRepository.findByUsername(username);
-        if(userEntity == null) {
-            throw new NotFoundException("Không tìm thấy người dùng");
-        }
-        return userEntity;
-    }
-    @Override
-    public ResponseData getUserProfileByUsername(String username , Boolean checkGuest) {
-        UserEntity userEntity = this.getUserByUsername(username);
-        Long userId = userEntity.getId();
+	@Override
+	public UserEntity getUserByUsername(String username) {
+		username = username.trim();
+		UserEntity userEntity = userRepository.findByUsername(username);
+		if(userEntity == null) {
+			throw new NotFoundException("Không tìm thấy người dùng");
+		}
+		return userEntity;
+	}
+	@Override
+	public ResponseData getUserProfileByUsername(String username , Boolean checkGuest) {
+		UserEntity userEntity = this.getUserByUsername(username);
+		Long userId = userEntity.getId();
 		ProfileEntity profileEntity = profileRepository.getProfileByUserId(userId);
 
 		if(checkGuest) {
@@ -104,19 +104,19 @@ public class ProfileServiceImpl implements ProfileService {
 //		List<PluginsDto> listPluginsDto = listPlugins.stream().map(p -> modelMapper.map(p, PluginsDto.class))
 //				.collect(Collectors.toList());
 
-        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
+		DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
 //        DesignDto designDto = modelMapper.map(designEntity, DesignDto.class);
 
-        ProfileDto profileDto = new ProfileDto( username ,
-                                                profileEntity.getName(),
-                                                profileEntity.getBio(),
-                                                profileEntity.getImage(),
-                                                profileEntity.getShowLogo(),
-                                                profileEntity.getShowNSFW(),
-                                                profileEntity.getActiveDesign(),
-                                                listSocial ,
-                                                listPlugins,
-                                                designEntity);
+		ProfileDto profileDto = new ProfileDto( username ,
+				profileEntity.getName(),
+				profileEntity.getBio(),
+				profileEntity.getImage(),
+				profileEntity.getShowLogo(),
+				profileEntity.getShowNSFW(),
+				profileEntity.getActiveDesign(),
+				listSocial ,
+				listPlugins,
+				designEntity);
 
 
 		return ResponseData.builder().success(true).message("Thành công").data(Arrays.asList(profileDto)).build();
@@ -134,10 +134,10 @@ public class ProfileServiceImpl implements ProfileService {
 		t.start();
 
 		return ResponseData.builder()
-							.success(true)
-							.message("CLICK Thành công")
-							.data(Arrays.asList(socialEntity.getUrl()))
-							.build();
+				.success(true)
+				.message("CLICK Thành công")
+				.data(Arrays.asList(socialEntity.getUrl()))
+				.build();
 	}
 
 	@Override
@@ -151,10 +151,10 @@ public class ProfileServiceImpl implements ProfileService {
 		t.start();
 
 		return ResponseData.builder()
-							.success(true)
-							.message("CLICK Thành công")
-							.data(Arrays.asList(pluginsEntity.getUrl()))
-							.build();
+				.success(true)
+				.message("CLICK Thành công")
+				.data(Arrays.asList(pluginsEntity.getUrl()))
+				.build();
 	}
 
 	@Override
@@ -175,9 +175,9 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public Status createFirstLogin(String name, String bio, Long userId) throws IOException {
-		
+
 		ProfileEntity profile = new ProfileEntity();
-		
+
 		profile.setUserId(userId);
 		profile.setName(name);
 		profile.setBio(bio);
@@ -294,18 +294,18 @@ public class ProfileServiceImpl implements ProfileService {
 
 		List<PluginsEntity> listPlugins = pluginsService.getAllPluginsByUserId(userId);
 
-        DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
-        ProfileDto profileDto = new ProfileDto( null ,
-                profileEntity.getName(),
-                profileEntity.getBio(),
-                profileEntity.getImage(),
-                profileEntity.getShowLogo(),
-                profileEntity.getShowNSFW(),
-                profileEntity.getActiveDesign(),
-                listSocial ,
-                listPlugins,
-                designEntity);
-        return profileDto;
+		DesignEntity designEntity = designRepository.findDesignEntityById(profileEntity.getActiveDesign());
+		ProfileDto profileDto = new ProfileDto( null ,
+				profileEntity.getName(),
+				profileEntity.getBio(),
+				profileEntity.getImage(),
+				profileEntity.getShowLogo(),
+				profileEntity.getShowNSFW(),
+				profileEntity.getActiveDesign(),
+				listSocial ,
+				listPlugins,
+				designEntity);
+		return profileDto;
 	}
 
 
@@ -315,7 +315,14 @@ public class ProfileServiceImpl implements ProfileService {
 	public List<AllProfileDto> getAllProfile(String jwt) {
 		List<LikesEntity> likesEntities = likesRepository.findAll();
 		List<ProfileEntity> entities = profileRepository.findAll();
-		Long userId = convertJwt(jwt);
+
+		Long userId ;
+		if(jwt.equals("Bearer null")) {
+			userId = null;
+		}
+		else {
+			userId = convertJwt(jwt);
+		}
 
 		List<AllProfileDto> allProfileDtos = new ArrayList<>();
 		for (ProfileEntity e : entities) {
@@ -328,16 +335,12 @@ public class ProfileServiceImpl implements ProfileService {
 			profileDto.setListSocial(socialService.getAllSocialsByUserId(e.getUserId()));
 			profileDto.setImage(e.getImage());
 			likesEntities.stream().forEach(l -> {
-						if (e.getId().equals(l.getProfileId())) {
-							if (l.getStatusLike() != null) {
-								if (l.getStatusLike().equals(true)) {
-									if (userId != null && userId.equals(l.getUserId())) {
-										profileDto.setUserLike(true);
-									}
-									likes.incrementAndGet();
-								} else if (l.getStatusLike().equals(false)) {
-									likes.incrementAndGet();
+						if (e.getId().equals(l.getProfileId()) && l.getStatusLike() != null) {
+							if (l.getStatusLike().equals("true")) {
+								if (userId != null && userId.equals(l.getUserId())) {
+									profileDto.setStatusLike(true);
 								}
+								likes.incrementAndGet();
 							}
 						}
 					}
@@ -345,6 +348,7 @@ public class ProfileServiceImpl implements ProfileService {
 			profileDto.setTotalLike(likes.longValue());
 			allProfileDtos.add(profileDto);
 		}
+
 		Collections.sort(allProfileDtos, new Comparator<AllProfileDto>() {
 			@Override
 			public int compare(AllProfileDto o1, AllProfileDto o2) {

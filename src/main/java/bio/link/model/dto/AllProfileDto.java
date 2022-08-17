@@ -24,5 +24,5 @@ public class AllProfileDto {
 
     private List<SocialEntity> listSocial;
 
-    private boolean userLike = false;
+    private boolean statusLike = false;
 }

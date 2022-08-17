@@ -7,6 +7,7 @@ import bio.link.model.entity.LikesEntity;
 import bio.link.model.entity.ProfileEntity;
 import bio.link.model.entity.UserEntity;
 import bio.link.repository.LikesRepository;
+import bio.link.repository.ProfileRepository;
 import bio.link.repository.UserRepository;
 import bio.link.service.LikesService;
 import bio.link.service.ProfileService;
@@ -30,11 +31,15 @@ public class LikesServiceImpl implements LikesService {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private ProfileRepository profileRepository;
+
 
 
 
     @Override
     public List<LikesEntity> getAllByUserId(Long userId) {
+
         return likesRepository.getAllByUserId(userId);
     }
 
@@ -51,25 +56,33 @@ public class LikesServiceImpl implements LikesService {
 
     @Override
     public LikesEntity saveLike(
-            Boolean statusLike,
+            String statusLike,
             Long userId,
-            String usernameCmt
-            ) throws Exception {
+            String username
+    ) throws Exception {
 
         Optional<UserEntity> userEntity = userRepository.findById(userId);
+        UserEntity usernameLikes = userRepository.findByUsername(username);
+        ProfileEntity profileEntity = profileRepository.findByUserId(usernameLikes.getId());
 
-        LikesEntity likesEntity = likesRepository.status(profileService.getUserByUsername(usernameCmt).getId(),userId);
+        LikesEntity likesEntity = likesRepository.status(profileEntity.getId(),userId);
 
         if (likesEntity == null){
             LikesEntity likeEntity = new LikesEntity();
-            likeEntity.setProfileId(profileService.getUserByUsername(usernameCmt).getId());
+            likeEntity.setProfileId(profileEntity.getId());
             likeEntity.setUserId(userId);
-            likeEntity.setUsernameCmt(userEntity.get().getUsername());
-            likeEntity.setStatusLike(statusLike);
+            likeEntity.setUsernameLike(userEntity.get().getUsername());
+            likeEntity.setStatusLike("true");
             return likesRepository.save(likeEntity);
         }else {
-            likesEntity.setStatusLike(false);
+            if (likesEntity.getStatusLike() .equals("") || likesEntity.getStatusLike().equals("true")){
+                likesEntity.setStatusLike("false");
+            }else{
+                likesEntity.setStatusLike("true");
+            }
+
             return likesRepository.save(likesEntity);
         }
     }
+
 }
