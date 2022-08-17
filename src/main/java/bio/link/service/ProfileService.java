@@ -45,6 +45,8 @@ public interface  ProfileService {
 	ProfileEntity updateSetting(Long userId, Boolean showLogo, Boolean showNSFW);
 
 	String uploadImage(MultipartFile file, String containerName);
+
+	void deleteImage(String url, String containerName);
 	Long convertJwt(String jwt);
 
 	ResponseData clickSocialOfProfile(SocialEntity socialEntity);

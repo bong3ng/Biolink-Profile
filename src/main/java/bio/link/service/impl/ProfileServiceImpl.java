@@ -188,6 +188,15 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
+	public void deleteImage(String url, String containerName) {
+		BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
+		int index = 40 + containerName.length();
+		String filename = url.substring(index);
+		BlockBlobClient blockBlobClient = blobContainerClient.getBlobClient(filename).getBlockBlobClient();
+		blockBlobClient.delete();
+	}
+
+	@Override
 	public String uploadImage(MultipartFile file, String containerName) {
 		BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
 		String filename = file.getOriginalFilename();
@@ -216,17 +225,22 @@ public class ProfileServiceImpl implements ProfileService {
 		return "https://anhtcogn.blob.core.windows.net/" + filePath;
 	}
 
-
 	@Override
 	public ProfileEntity update(String name, String bio, MultipartFile image, Long userId) throws IOException {
 
 		ProfileEntity profile = profileRepository.getProfileByUserId(userId);
+
+
 		profile.setName(name);
 		profile.setBio(bio);
 
 		if (image != null && !image.isEmpty()) {
+			String deleteFile = profile.getImage();
+			deleteImage(deleteFile, "files");
+			System.out.println("success");
 			profile.setImage(uploadImage(image, "files"));
 		}
+
 		else profile.setImage(profile.getImage());
 		return profileRepository.save(profile);
 	}
