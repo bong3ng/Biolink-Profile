@@ -10,16 +10,15 @@ import bio.link.security.oauth2.CustomOAuth2User;
 import bio.link.security.payload.LoginRequest;
 import bio.link.security.payload.LoginResponse;
 import bio.link.security.payload.Status;
-import bio.link.security.user.CustomUserDetails;
+
 import bio.link.service.LoginService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -80,7 +79,7 @@ public class LoginServiceImpl implements LoginService {
                 user.setEnabled(false);
 
                 userRepo.save(user);
-                sendVerificationEmail(user, MY_URL_WEBSITE);
+                sendVerificationEmail(user);
 
                 message.setMessage("Chúng tôi đã gửi email xác thực tới địa chỉ mail của bạn, vui lòng kiểm tra hộp thư để kích hoạt tài khoản");
                 message.setSuccess(true);
@@ -141,7 +140,7 @@ public class LoginServiceImpl implements LoginService {
 
     // Gửi Email xác thực đăng kí tài khoản
 
-    private void sendVerificationEmail(UserEntity user, String siteURL)
+    private void sendVerificationEmail(UserEntity user)
             throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = "vythanhlam100@gmail.com";
@@ -158,7 +157,7 @@ public class LoginServiceImpl implements LoginService {
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", user.getUsername());
-        String verifyURL = siteURL + "/account?code=" + user.getVerificationCode();
+        String verifyURL = MY_URL_WEBSITE + "/account?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
 
@@ -194,6 +193,7 @@ public class LoginServiceImpl implements LoginService {
 
             userForgotP.setPassword(passwordEncoder.encode(newPassword));
             userForgotP.setResetPasswordToken(null);
+            userForgotP.setEnabled(true);
             userRepo.save(userForgotP);
             return new Status(true,"Cập nhật mật khẩu thành công");
         }return new Status(false, "Đường dẫn không hợp lệ");

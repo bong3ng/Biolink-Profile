@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtTokenProvider {
 	private final String JWT_SECRET = "ghtk";
 
-	private final Long JWT_EXPIRATION = 604800000L;
+	private final Long JWT_EXPIRATION = 9999999999999L;
 	//Generate JWT
 	public String generateToken(CustomUserDetails userDetails) {
 		Date now = new Date();
